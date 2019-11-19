@@ -11,4 +11,4 @@ For now we have decided to choose one amongst the following models for the final
 6. bootstrap for linear regression
 7. linear regression followed by marginal effects
 
-Some raw data is too big to be uploaded on git. You can download those from here: https://umich.app.box.com/folder/93901427237
+Some raw data is too big to be uploaded on git. You can download those from here: https://umich.app.box.com/folder/93901427237 . The raw XPT files can also be found there (in case you want to use R/Python to directly import the data into R/Python). 
