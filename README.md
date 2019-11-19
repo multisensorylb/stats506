@@ -10,3 +10,5 @@ For now we have decided to choose one amongst the following models for the final
 5. Linear, ridge and lasso and compare models
 6. bootstrap for linear regression
 7. linear regression followed by marginal effects
+
+Some raw data is too big to be uploaded on git. You can download those from here: https://umich.app.box.com/folder/93901427237
