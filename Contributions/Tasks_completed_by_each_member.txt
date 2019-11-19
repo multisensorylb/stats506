@@ -1,6 +1,6 @@
 Karthik: 
 11/19/2019
-- Setup GitHUB
+- Setup GitHub
 - Data converted to excel (using SAS)
 - Data dictionary created (using R)
 
