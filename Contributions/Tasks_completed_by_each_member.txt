@@ -1,7 +1,7 @@
 Karthik: 
 11/19/2019
 - Setup GitHub
-- Data converted to excel (using SAS)
+- Data converted to excel (using SAS- could have been done using R, but could be useful when implementing modelling algorithms using SAS)
 - Data dictionary created (using R)
 
 Jingyan
