@@ -4,8 +4,16 @@ Karthik:
 - Data converted to excel (using SAS- could have been done using R, but could be useful when implementing modelling algorithms using SAS)
 - Data dictionary created (using R)
 
+11/20/2019
+Proposed idea for project: "Test whether the salt intake behavior of a person is related to the person's blood pressure levels and analyze if this relationship is dependent on the waist measurement of the person" We will use nutrient_1day, body_measures, blood_pressure for this and the analysis would be a moderation analysis testing whether there exists a relationship between salt intake and blood pressure levels and if this relationship is moderated by waist measurement. 
+
+As a follow up analysis, we will study "whether the quantity of salt intake of a person is related to the person's blood pressure levels and identify whether age is a mechanism underlying the relationship between the two", i.e., is age a mediator between the relationship between salt intake and blood pressure levels? This would be a  mediation analysis with a confidence interval-based bootstrapping approach. This analysis will use demographics, nutrients_1day and blood_pressure data. 
+
+
 Jingyan
 
+11/19/2019
+Proposed idea for project: We can use the datasets nutrient_1day, supplements_1day and demographic (as the name on Github) to deal with the question "Do people who have less daily nutrient intake tend to take more supplements?" (nutrient here can be protein, Vitamin, etc.). The response is one of the dietary supplements and the predictors can include nutrient intake, age, gender, and pir (more predictors can be included). Linear regression is used first and then the advanced technique. If the coefficient of nutrient is negative, the answer could be yes.
 -
 -
 -
