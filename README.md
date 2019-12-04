@@ -62,5 +62,5 @@ Or just group the blood pressure by hypertension, normal, hypotensio, and regres
 
 There are some studies show that some genetic factors may affect blood pressure.
 However, in this topic we may want to focus on the influence of diet habbit, age and waist size on blood pressure.
-We may want to treat race, gender BMI etc. as control variables. But, currently, we are interested in studying the moderation and 
+We may want to treat race, gender BMI etc. as control variables. But, currently, we are interested in studying moderation and 
 mediation effects, which might not require control variables that need to be explicity stated as part of the model. 
