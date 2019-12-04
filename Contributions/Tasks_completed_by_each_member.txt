@@ -24,7 +24,10 @@ question "Do people who have less daily nutrient intake tend to take more supple
 response is one of the dietary supplements and the predictors can include nutrient intake, age, gender, and pir (more predictors can be 
 included). Linear regression is used first and then the advanced technique. If the coefficient of nutrient is negative, the answer could be 
 yes.
--
+
+
+12/3/2019
+Uploaded R script for implementing the models. 
 -
 -
 
@@ -32,7 +35,9 @@ Xinjun
 
 11/21/2019
 Project idea: https://bit.ly/34bMbEx
--
+
+12/3/2019
+Made edits to the readme file.
 -
 -
 
