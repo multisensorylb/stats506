@@ -71,3 +71,5 @@ Though we have all the framework and analysis in, we will have to work on interp
 story. 
 Perform slope analysis as an additional interpretation of the results for moderation. 
 Put together the reports in the form of a html tutorial. 
+
+We will also incorporate descriptive statistics and exploratory analysis of the data in the final report. 
