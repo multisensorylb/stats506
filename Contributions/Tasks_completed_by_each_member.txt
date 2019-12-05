@@ -32,11 +32,11 @@ The concise list of the files I have worked on are:
 
 --> stats506/Codes/R/
 	createDataDict.R
-	med_mod_code.R (Initial draft of the analysis)
+	med_mod_code.R (Initial draft of the analysis committed on 11/27/2019)
   
 --> stats506/Codes/SAS/
 	covertData_toExcel.sas
-	sastutorial_506.sas
+	sastutorial_506.sas (SAS version of the model analysis committed on 12/4/2019).
   
 --> stats506/RawData/
 	All of the files under this folder.
