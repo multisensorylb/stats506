@@ -65,4 +65,8 @@ There are some studies show that some genetic factors may affect blood pressure.
 However, in this project we may want to focus on the influence of diet habits, age and waist size on blood pressure.
 We may want to treat race, gender BMI etc. as control variables. But, currently, we are interested in studying moderation and
 mediation effects, which might not require control variables that need to be explicity stated as part of the model.
--->
+
+### List of outstanding items
+--> Though we have all the framework and analysis in, we will have to work on interpreting the results in a way that can build up a nice story. 
+--> Perform slope analysis as an additional interpretation of the results for moderation. 
+--> Put together the reports in the form of a html tutorial. 
