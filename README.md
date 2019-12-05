@@ -69,7 +69,9 @@ mediation effects, which might not require control variables that need to be exp
 ### List of outstanding items
 Though we have all the framework and analysis in, we will have to work on interpreting the results in a way that can build up a nice 
 story. 
-Perform slope analysis as an additional interpretation of the results for moderation. 
+
+Perform slope analysis as an additional interpretation of the results for moderation.
+
 Put together the reports in the form of a html tutorial. 
 
 We will also incorporate descriptive statistics and exploratory analysis of the data in the final report. 
