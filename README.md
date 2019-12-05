@@ -58,7 +58,7 @@ There is also possible a possibility to treat blood pressure as a categorical va
 For example hypertension, normal, hypotension ([Softmax](http://deeplearning.stanford.edu/tutorial/supervised/SoftmaxRegression/) can
 deal with this).
 Or just group the blood pressure by hypertension, normal, hypotensio, and regress respectively.
-
+--> 
 ### Choose control variables
 
 There are some studies show that some genetic factors may affect blood pressure.
