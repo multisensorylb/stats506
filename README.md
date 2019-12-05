@@ -66,6 +66,11 @@ However, in this project we may want to focus on the influence of diet habits, a
 We may want to treat race, gender BMI etc. as control variables. But, currently, we are interested in studying moderation and
 mediation effects, which might not require control variables that need to be explicity stated as part of the model.
 
+### Tasks completed so far
+
+Initial moderation and mediation models (direct effects, indirect effects and indirect effects using bootstrap) have been built using R, SAS and Python. 
+
+
 ### List of outstanding items
 Though we have all the framework and analysis in, we will have to work on interpreting the results in a way that can build up a nice 
 story. 
