@@ -25,6 +25,27 @@ Committed a rough draft of the initial R script for implementing a moderation me
 12/4/2019
 Committed the SAS version of the above script. This includes comments and observations taken from Jingyan's submission in this file. 
 
+12/5/2019
+Created a report of the results using output from the SAS scripts for the models. 
+
+The concise list of the files I have worked on are: 
+
+--> stats506/Codes/R/
+	createDataDict.R
+	med_mod_code.R (Initial draft of the analysis)
+  
+--> stats506/Codes/SAS/
+	covertData_toExcel.sas
+	sastutorial_506.sas
+  
+--> stats506/RawData/
+	All of the files under this folder.
+
+--> stats506/Results&Reports/
+	SAS Report- sastutorial_506.htm
+	SAS Report- sastutorial_506.pdf
+
+
 Jingyan
 
 11/19/2019
