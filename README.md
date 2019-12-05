@@ -21,17 +21,17 @@ Some raw data is too big to be uploaded on git. You can download those from [her
 
 ## Motivation to the Topic
 
-By raising the above question, we want to know whether the salt intake behavior of a person is related to the person's blood pressure 
+By raising the above question, we want to know whether the salt intake behavior of a person is related to the person's blood pressure
 levels and want to know further if this relationship is dependent on the waist measurement of the person.
 
- 
- We will use [nutrients_1day], [body_measures], [blood_pressure] for this and the analysis would be a moderation analysis testing 
- whether there exists a relationship between salt intake and blood pressure levels and if this relationship is moderated by waist 
+
+ We will use [nutrients_1day], [body_measures], [blood_pressure] for this and the analysis would be a moderation analysis testing
+ whether there exists a relationship between salt intake and blood pressure levels and if this relationship is moderated by waist
  measurement.
 
-As a follow up analysis, we will study "whether the salt intake habit of a person is related to the person's blood pressure levels and 
-identify whether age is a mechanism underlying the relationship between the two", i.e., is age a mediator between the relationship 
-between salt intake and blood pressure levels? This would be a  mediation analysis with a confidence interval-based bootstrapping 
+As a follow up analysis, we will study "whether the salt intake habit of a person is related to the person's blood pressure levels and
+identify whether age is a mechanism underlying the relationship between the two", i.e., is age a mediator between the relationship
+between salt intake and blood pressure levels? This would be a  mediation analysis with a confidence interval-based bootstrapping
 approach. This analysis will use [demographics], [nutrients_1day], and [blood_pressure] data.
 
 [nutrients_1day]:https://github.com/multisensorylb/stats506/blob/master/RawData/Dietary_nutrients_firstday_2015_16.xlsx
@@ -50,11 +50,11 @@ Note: we need to drop missing values and '9' or '99' which represent "don't know
 
 ### Choose dependent variables
 
-Blood pressure includes Systolic and Diastolic meeasurements from each participant. We can regress by building individual models for 
+Blood pressure includes Systolic and Diastolic measurements from each participant. We can regress by building individual models for
 each DV.
 
 There is also possible a possibility to treat blood pressure as category variable.
-For example hypertension, normal, hypotension ([Softmax](http://deeplearning.stanford.edu/tutorial/supervised/SoftmaxRegression/) can 
+For example hypertension, normal, hypotension ([Softmax](http://deeplearning.stanford.edu/tutorial/supervised/SoftmaxRegression/) can
 deal with this).
 Or just group the blood pressure by hypertension, normal, hypotensio, and regress respectively.
 
@@ -62,5 +62,5 @@ Or just group the blood pressure by hypertension, normal, hypotensio, and regres
 
 There are some studies show that some genetic factors may affect blood pressure.
 However, in this topic we may want to focus on the influence of diet habbit, age and waist size on blood pressure.
-We may want to treat race, gender BMI etc. as control variables. But, currently, we are interested in studying moderation and 
-mediation effects, which might not require control variables that need to be explicity stated as part of the model. 
+We may want to treat race, gender BMI etc. as control variables. But, currently, we are interested in studying moderation and
+mediation effects, which might not require control variables that need to be explicity stated as part of the model.
