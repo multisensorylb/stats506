@@ -13,6 +13,7 @@ library(SASxport)
 library(tidyverse)
 library(MBESS)
 
+# just for test
 # read the data
 demographics = read.xport("./DEMO_I.XPT")
 blood_pressure = read.xport("./BPX_I.XPT")
