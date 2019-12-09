@@ -3,13 +3,13 @@ title: 'Stats 506 Group Project '
 author: "Group 10: Karthik G, Xinjun Li and Jingyan Lu"
 date: "12/9/2019"
 output:
-  html_document:
-    df_print: paged
-    toc: true
-    toc_depth: 2
-    toc_float: true
+html_document:
+df_print: paged
+toc: true
+toc_depth: 2
+toc_float: true
 ---
-
+  
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
@@ -31,35 +31,36 @@ library(MBESS)
 
 ##### As a follow up analysis, we will study "whether the salt intake habit of a person is related to the person's blood pressure levels and identify whether age is a mechanism underlying the relationship between the two", i.e., is age a mediator between the relationship between salt intake and blood pressure levels? This would be a mediation analysis with a confidence interval-based bootstrapping approach. This analysis will use demographics, nutrients_1day, and blood_pressure data.
 <br>
-
+  
 # Data
-
+  
 ##### We use [NHANES](https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes/default.aspx) data in 2015-2016 for analysis. Data of salt intake and people's diastole and systole blood pressure are needed in both moderation and mediation analysis. You can find them in the datasets [Dietary Interview - Total Nutient intakes, First Day](https://wwwn.cdc.gov/Nchs/Nhanes/2015-2016/DR1TOT_I.htm), [Blood Pressure](https://wwwn.cdc.gov/Nchs/Nhanes/2015-2016/BPX_I.htm) respectively.
-
+  
 ##### For the moderation analysis, we use another dataset [Body Measures](https://wwwn.cdc.gov/Nchs/Nhanes/2015-2016/BMX_I.htm) for data of waist measurement.
-
-##### For the mediation analysisi, data of participants' age from [Demographic variables and Sample Weights](https://wwwn.cdc.gov/Nchs/Nhanes/2015-2016/DEMO_I.htm) is used.
+  
+##### For the mediation analysis, data of participants' age from [Demographic variables and Sample Weights](https://wwwn.cdc.gov/Nchs/Nhanes/2015-2016/DEMO_I.htm) is used.
 <br>
-
+  
 # Methods
 <br>
-
+  
 # Moderation and Mediation {.tabset}
 
+
 ## R
-
+  
 ### Load the data
-
+  
 ```{r}
-demographics = read.xport("./DEMO_I.XPT")
-blood_pressure = read.xport("./BPX_I.XPT")
-nutrients_1day = read.xport("./DR1TOT_I.XPT")
-BMI = read.xport("./BMX_I.XPT")
+demographics = read.xport("C:/Users/djbranglab-admin/Desktop/stats506-master/stats506-master/RawData/Demographics_2015_16.XPT")
+blood_pressure = read.xport("C:/Users/djbranglab-admin/Desktop/stats506-master/stats506-master/RawData/Blood_Pressure_2015_16.XPT")
+nutrients_1day = read.xport("C:/Users/djbranglab-admin/Desktop/stats506-master/stats506-master/RawData/Dietary_nutrients_firstday_2015_16.XPT")
+BMI = read.xport("C:/Users/djbranglab-admin/Desktop/stats506-master/stats506-master/RawData/Body_measures_2015_16.XPT")
 ```
 <br>
-
+  
 ### Data processing
-
+  
 ```{r}
 blood_pressure = blood_pressure %>%
   select(SEQN, BPXSY1, BPXSY2, BPXSY3, BPXDI1, BPXDI2, BPXDI3) %>%
@@ -94,20 +95,20 @@ data[c("RIDAGEYR", "BMXWAIST", "DBD100", "DI", "SY")] =
          function(x) scale(x, center=TRUE, scale=FALSE))
 ```
 <br>
-
-### Analyse the relationsip between salt intake and two kinds of blood pressure
+  
+### Analyse the relationship between salt intake and two kinds of blood pressure
 <br>
-
+  
 #### For diastole blood pressure
-
+  
 ```{r}
 model_DI = lm(DI ~ DBD100, data)
 summary(model_DI)
 ```
 <br>
-
+  
 #### For systole blood pressure
-
+  
 ```{r}
 model_SY = lm(SY ~ DBD100, data)
 summary(model_SY)
@@ -116,49 +117,53 @@ summary(model_SY)
 
 ##### Both p-values are less than 0.001, which shows strong evidence that salt intake have siginificant influence on both kinds of blood pressure.
 <br>
-
+  
 ### Moderation part
 
+The structural model for the moderation analysis can be defined as seen in Figure 1
+
+![Fig 1: Structural model for the moderation analysis](C:\\Users\\djbranglab-admin\\Desktop\\stats506-master\\stats506-master\\RawData\\fig1.png)
+
 ##### We perform moderation to test if the relationship is dependent on the waist size. Three levels of a moderator(mean, one standard deviation above the mean and one standard deviation below the mean) is chosen.
-<br>
+ <br>
 
 #### Moderation at mean for diastole blood pressure
-
+  
 ```{r}
 moderation_DI = lm(DI ~ DBD100 + BMXWAIST + DBD100 * BMXWAIST, data)
 summary(moderation_DI)
 ```
 <br>
-
+  
 #### Moderation at one standard deviation above mean for diastole blood pressure
-
+  
 ```{r}
 data$BMXWAIST_high = data$BMXWAIST + sd(data$BMXWAIST)
 moderation_DI_high = lm(DI ~ DBD100 + BMXWAIST_high + DBD100 * BMXWAIST_high, data)
 summary(moderation_DI_high)
 ```
 <br>
-
+  
 #### Modetation at one standard deviation below mean for diastole blood pressure
-
+  
 ```{r}
 data$BMXWAIST_low = data$BMXWAIST - sd(data$BMXWAIST)
 moderation_DI_low = lm(DI ~ DBD100 + BMXWAIST_low + DBD100 * BMXWAIST_low, data)
 summary(moderation_DI_low)
 ```
- 
- 
-##### Since the regression coefficient for the interation term is not significant with p value 0.41, there does not exist a significant moderation effect. the effect of salt intake on diastole blood pressure may not depends on waist size.
-<br>
 
+
+##### Since the regression coefficient for the interation term is not significant with p value 0.41, there does not exist a significant moderation effect. the effect of salt intake on diastole blood pressure may not depend on waist size.
+<br>
+  
 #### Simple Slope analysis for diastole blood pressure
 <br>
-
+  
 ##### We find beta0 and beta1 values of the independent variable DBD100 (salt intake) from the three regression models: (1) with the moderator held at mean (2) with the moderator held at one standard deviation below mean (3) with the moderator held at one standard deviation above mean.
-
+  
 ##### Then, for each of these three models, we predict the dependent variable Y = beta0 + beta1 * X (here Y is blood pressure DI and X is the salt intake DBD100). By analysing the characteristic of Y at three levels of the moderator, we can compare the behaviors of moderator at three levels. In our case, we are seeing if people with waist size one standard deviation below mean and one standard deviation above mean have different blood pressure characteristics compared to people with waist size at mean.
 <br>
-
+  
 ```{r}
 # moderator is at mean: b0 = 0.010034, b1 = 0.596273
 meanDI = moderation_DI$coefficients[1] + moderation_DI$coefficients[2] * data$DBD100
@@ -179,26 +184,26 @@ lines(data$DBD100, highDI, col = "blue")
 
 ##### we can see from the plot that people with a higher waist size have a higher effect on the blood pressure, meaning the moderation effect of waist size on blood pressure through salt intake is higher for people with a higher waist size, but they are not significantly different between different levels of waist sizes.
 <br>
-
+  
 #### Moderation at mean for systole blood pressure
-
+  
 ```{r}
 moderation_SY = lm(SY ~ DBD100 + BMXWAIST + DBD100 * BMXWAIST, data)
 summary(moderation_SY)
 ```
 <br>
-
+  
 #### Moderation at one standard deviation above mean for systole blood pressure
-
+  
 ```{r}
 data$BMXWAIST_high = data$BMXWAIST + sd(data$BMXWAIST)
 moderation_SY_high = lm(SY ~ DBD100 + BMXWAIST_high + DBD100 * BMXWAIST_high, data)
 summary(moderation_SY_high)
 ```
 <br>
-
-#### Modetation at one standard deviation below mean for diastole blood pressure
-
+  
+#### Moderation at one standard deviation below mean for diastole blood pressure
+  
 ```{r}
 data$BMXWAIST_low = data$BMXWAIST - sd(data$BMXWAIST)
 moderation_SY_low = lm(SY ~ DBD100 + BMXWAIST_low + DBD100 * BMXWAIST_low, data)
@@ -206,14 +211,14 @@ summary(moderation_SY_low)
 ```
 
 
-##### Since the regression coefficient for the interation term is not significant with p value 0.51, there does not exist a significant moderation effect. the effect of salt intake on systole blood pressure may not depends on waist size as well.
+##### Since the regression coefficient for the interation term is not significant with p value 0.51, there does not exist a significant moderation effect. the effect of salt intake on systole blood pressure may not depend on waist size as well.
 <br>
-
+  
 #### Simple slope analysis for systole blood pressure
 <br>
-
+  
 ##### The method is the same as diastole blood pressure.
-
+  
 ```{r}
 
 # moderator is at mean: b0 = -0.009924, b1 = 0.610168
@@ -235,12 +240,12 @@ lines(data$DBD100, highSY, col = "blue")
 
 ##### we can see from the plot that people with a lower waist size have a higher effect on the systole blood pressure, meaning the moderation effect of waist size on blood pressure through salt intake is higher for people with a lower waist size, but they are also not significantly different between different levels of waist sizes.
 <br>
-
+  
 ### Mediation Part
-
+  
 ##### We perform mediation to test if the relationship between salt intake and blood pressure mediated by age.
 ##### First, test if there is relationship between age and salt intake, since mediation makes sense only if they have relationship 
-
+  
 ```{r}
 age_salt_DI = lm(RIDAGEYR ~ DBD100, data)
 summary(age_salt_DI)
@@ -249,58 +254,58 @@ summary(age_salt_DI)
 
 ##### The p_value is 5.31e-10. They have strong relationship.
 <br>
-
-#### Second, perform the mediation 
+  
+#### Second, perform the mediation analysis
 <br>
-
+  
 ##### For diastole blood pressure
-
+  
 ```{r}
 mediation_DI = lm(DI ~ DBD100 + RIDAGEYR, data)
 summary(mediation_DI)
 ```
 
 
-##### The effect of salt intake on diastole blood pressure still exists(p-value is 0.021), but in a smaller magnitude.Age partially mediates between salt intake and diastole blood pressure.
-<br>
-
-##### For systole blood pressure
-
-```{r}
-mediation_SY = lm(SY ~ DBD100 + RIDAGEYR, data)
-summary(mediation_SY)
-```
-
-
-##### The effect of salt intake on systole blood pressure disappear (p-value is 0.741), age fully mediates salt intake and systole blood pressure.
-<br>
-
 #### Third, perform the mediation through bootstrapping
 <br>
-
+  
 ##### For diastole blood pressure
-
-```{r, echo = FALSE}
+  
+```{r}
 mediation_boot_DI1 = mediation(x = data$DBD100, 
-                              mediator = data$RIDAGEYR,
-                              dv = data$DI,
-                              conf.level = 0.95,
-                              bootstrap = TRUE,
-                              B = 1000, 
-                              which.boot = "Percentile")
+                               mediator = data$RIDAGEYR,
+                               dv = data$DI,
+                               conf.level = 0.95,
+                               bootstrap = TRUE,
+                               B = 1000, 
+                               which.boot = "Percentile")
 ```
 
 ```{r}
 mediation_boot_DI1
 ```
-
-
 ##### The indirect effect (0.37655) and its confidence interval is different from zero. Age is a mediator between salt intake and diastole blood pressure.
+<br>
+  
+
+![Fig 2: Direct and indirect effects of the mediation analysis for Diastole ](C:\\Users\\djbranglab-admin\\Desktop\\stats506-master\\stats506-master\\RawData\\fig2.png)
+
+
+##### The effect of salt intake on diastole blood pressure still exists(p-value is 0.021), but in a smaller magnitude.Age partially mediates between salt intake and diastole blood pressure.
 <br>
 
 ##### For systole blood pressure
+  
+```{r}
+mediation_SY = lm(SY ~ DBD100 + RIDAGEYR, data)
+summary(mediation_SY)
+```
 
-```{r, echo = FALSE}
+##### The effect of salt intake on systole blood pressure disappear (p-value is 0.741), age fully mediates salt intake and systole blood pressure.
+<br>
+  
+#### Perform the mediation through bootstrapping for systole
+```{r }
 mediation_boot_SY1 = mediation(x = data$DBD100, 
                                mediator = data$RIDAGEYR,
                                dv = data$SY,
@@ -314,18 +319,352 @@ mediation_boot_SY1 = mediation(x = data$DBD100,
 mediation_boot_SY1
 ```
 
+![Fig 3: Direct and indirect effects of the mediation analysis for Diastole ](C:\\Users\\djbranglab-admin\\Desktop\\stats506-master\\stats506-master\\RawData\\fig3.png)
 
 ##### The estimate indirect effect(1.054) and its confidence interval is different from zero. Age is a mediator between salt intake and systole blood pressure.
 
-## Python
-
 ## SAS
 
-# Results
+```{r, echo = TRUE, eval = FALSE}
+libname results 'C:/Users/djbranglab-admin/Desktop/stats506-master/stats506-master/results';
+libname rawdata 'C:/Users/djbranglab-admin/Desktop/stats506-master/stats506-master/RawData';
+libname home 'C:/Users/djbranglab-admin/Desktop/stats506-master/stats506-master/home';
+```
+
+
+### Load the data
+
+```{r, echo = TRUE, eval = FALSE}
+
+%let demographics = 'C:/Users/djbranglab-admin/Desktop/stats506-master/stats506-master/RawData/demographics_15_16.csv';
+%let BMI = 'C:/Users/djbranglab-admin/Desktop/stats506-master/stats506-master/RawData/Body_measures_2015_16.csv';
+%let blood_pressure = 'C:/Users/djbranglab-admin/Desktop/stats506-master/stats506-master/RawData/Blood_Pressure_2015_16.csv';
+%let nutrients_1day = 'C:/Users/djbranglab-admin/Desktop/stats506-master/stats506-master/RawData/Dietary_nutrients_firstday_2015_16.csv';
+
+/* Import demographic data */ 
+  proc import file = &demographics 
+out=home.demographics dbms=csv replace; 
+guessingrows=max; 
+getnames = Yes ; 
+run;
+
+/* Import BMI data */ 
+  proc import file = &BMI   
+out=home.BMI dbms=csv replace; 
+guessingrows=max;
+getnames = Yes ;
+run;
+
+/* Import blood pressure data */ 
+  proc import file = &blood_pressure   
+out=home.blood_pressure  dbms=csv replace; 
+guessingrows=max;
+getnames = Yes ;
+run;
+
+/* Import nutrients data */ 
+  proc import file = &nutrients_1day   
+out=home.nutrients_1day  dbms=csv replace; 
+guessingrows=max;
+getnames = Yes ;
+run;
+
+```
+<br>
+  
+### Data processing
+  
+```{r, echo = TRUE, eval = FALSE}
+/* Merge all required data with SEQN as key*/ 
+  proc sql;
+create table home.merged_data as select 
+A.SEQN, A.RIDAGEYR, 
+B.BMXWAIST, 
+C.DBD100,
+D.BPXSY1, D.BPXSY2, D.BPXSY3, D.BPXDI1, D.BPXDI2, D.BPXDI3 from
+home.demographics as A inner join 
+home.BMI as B on 
+A.SEQN = B.SEQN inner join 
+home.nutrients_1day as C on 
+A.SEQN = C.SEQN inner join 
+home.blood_pressure as D on
+A.SEQN = D.SEQN;
+quit;
+
+/* Find mean of systole and diastole from all three observations*/ 
+  data home.mean_merged_data(DROP=BPXSY1 BPXSY2 BPXSY3 BPXDI1 BPXDI2 BPXDI3);
+set home.merged_data;
+BPXSY=mean(of BPXSY1-BPXSY3);
+BPXDI=mean(of BPXDI1-BPXDI3);
+run;
+
+/* Drop rows with missing values*/ 
+  data home.mean_merged_data;
+set home.mean_merged_data;
+if not cmiss(BMXWAIST,DBD100,BPXSY,BPXDI);
+run;
+
+```
+
+#### Center means to reduce multicolinearity
+
+```{r, echo = TRUE, eval = FALSE}
+proc sql; 
+create table home.mean_centered_data as
+select SEQN,
+RIDAGEYR - mean(RIDAGEYR) as RIDAGEYRmc, 
+BMXWAIST - mean(BMXWAIST) as BMXWAISTmc,
+DBD100 - mean(DBD100) as DBD100mc,
+BPXDI - mean(BPXDI) as BPXDImc,
+BPXSY - mean(BPXSY) as BPXSYmc
+from home.mean_merged_data;
+quit;
+```
+<br>
+  
+#### Create the moderator variables at one SD above and below mean and the interaction terms  
+```{r, echo = TRUE, eval = FALSE}
+/* Create + and - one SD of the dependent variable for moderation analysis */ 
+proc sql;
+create table home.mean_centered_data as 
+select *, 
+BMXWAISTmc - std(BMXWAISTmc) as BMXWAISTlow,
+BMXWAISTmc + std(BMXWAISTmc) as BMXWAISThigh  
+from home.mean_centered_data;
+quit; 
+
+/* Create the interaction term for use in the moderator model */ 
+data home.mean_centered_data;
+set home.mean_centered_data;
+DBD100mc_BMXWAISTmc=DBD100mc*BMXWAISTmc;
+DBD100mc_BMXWAISTlow=DBD100mc*BMXWAISTlow;
+DBD100mc_BMXWAISThigh=DBD100mc*BMXWAISThigh;
+run;
+
+```
+### Analyse the relationship between salt intake and two kinds of blood pressure
+<br>
+  
+#### For diastole blood pressure
+  
+```{r, echo = TRUE, eval = FALSE}
+proc reg data= home.mean_centered_data;
+model BPXDImc = DBD100mc;
+title ' Regression model / testing relationship between Diastole and salt intake' ;
+run; 
+```
+![](C:\\Users\\djbranglab-admin\\Desktop\\stats506-master\\stats506-master\\RawData\\fig4.png)
+<br>
+  
+#### For systole blood pressure
+  
+```{r, echo = TRUE, eval = FALSE}
+proc reg data= home.mean_centered_data;
+model BPXSYmc = DBD100mc;
+title ' Regression model / testing relationship between Systole and salt intake' ;
+run; 
+```
+
+![](C:\\Users\\djbranglab-admin\\Desktop\\stats506-master\\stats506-master\\RawData\\fig5.png)
 <br>
 
+##### Both p-values are less than 0.001, which shows strong evidence that salt intake have siginificant influence on both kinds of blood pressure.
+<br>
+  
+### Moderation part
+  
+##### We perform moderation to test if the relationship is dependent on the waist size. Three levels of a moderator(mean, one standard deviation above the mean and one standard deviation below the mean) is chosen.
+<br>
+  
+#### Moderation at mean for diastole blood pressure
+  
+```{r, echo = TRUE, eval = FALSE}
+proc reg data=home.mean_centered_data;
+model BPXDImc = DBD100mc BMXWAISTmc DBD100mc_BMXWAISTmc / pcorr2 scorr2;
+title ' Regression model / testing moderator effect of waist size on diastole and salt intake at mean' ;
+run;
+```
+![](C:\\Users\\djbranglab-admin\\Desktop\\stats506-master\\stats506-master\\RawData\\fig6.png)
+<br>
+
+<br>
+  
+#### Moderation at one standard deviation above mean for diastole blood pressure
+  
+```{r, echo = TRUE, eval = FALSE}
+proc reg data=home.mean_centered_data;
+model BPXDImc = DBD100mc BMXWAISTmc DBD100mc_BMXWAISThigh / pcorr2 scorr2;
+title ' Regression model / testing moderator effect of waist size on diastole and salt intake one SD above mean' ;
+run;
+```
+![](C:\\Users\\djbranglab-admin\\Desktop\\stats506-master\\stats506-master\\RawData\\fig7.png)
+<br>
+
+<br>
+  
+#### Moderation at one standard deviation below mean for diastole blood pressure
+  
+```{r, echo = TRUE, eval = FALSE}
+proc reg data=home.mean_centered_data;
+model BPXDImc = DBD100mc BMXWAISTlow DBD100mc_BMXWAISTlow / pcorr2 scorr2;
+title ' Regression model / testing moderator effect of waist size on diastole and salt intake one SD below mean' ;
+run;
+```
+
+![](C:\\Users\\djbranglab-admin\\Desktop\\stats506-master\\stats506-master\\RawData\\fig8.png)
+<br>
+
+##### Since the regression coefficient for the interation term is not significant with p value 0.41, there does not exist a significant moderation effect. the effect of salt intake on diastole blood pressure may not depend on waist size.
+
+<br>
+  
+  
+#### Moderation at mean for systole blood pressure
+  
+```{r, echo = TRUE, eval = FALSE}
+proc reg data=home.mean_centered_data;
+model BPXSYmc = DBD100mc BMXWAISTmc DBD100mc_BMXWAISTmc / pcorr2 scorr2;
+title ' Regression model / testing moderator effect of waist size on systole and salt intake at mean' ;
+run;
+```
+![](C:\\Users\\djbranglab-admin\\Desktop\\stats506-master\\stats506-master\\RawData\\fig9.png)
+
+<br>
+  
+#### Moderation at one standard deviation above mean for systole blood pressure
+  
+```{r, echo = TRUE, eval = FALSE}
+proc reg data=home.mean_centered_data;
+model BPXSYmc = DBD100mc BMXWAISThigh DBD100mc_BMXWAISThigh / pcorr2 scorr2;
+title ' Regression model / testing moderator effect of waist size on systole and salt intake one SD above mean' ;
+run;
+```
+![](C:\\Users\\djbranglab-admin\\Desktop\\stats506-master\\stats506-master\\RawData\\fig10.png)
+
+<br>
+  
+  
+#### Moderation at one standard deviation below mean for systole blood pressure
+  
+```{r, echo = TRUE, eval = FALSE}
+proc reg data=home.mean_centered_data;
+model BPXSYmc = DBD100mc BMXWAISTlow DBD100mc_BMXWAISTlow / pcorr2 scorr2;
+title ' Regression model / testing moderator effect of waist size on systole and salt intake one SD below mean' ;
+run;
+```
+![](C:\\Users\\djbranglab-admin\\Desktop\\stats506-master\\stats506-master\\RawData\\fig11.png)
+
+##### Since the regression coefficient for the interation term is not significant with p value 0.51, there does not exist a significant moderation effect. the effect of salt intake on systole blood pressure may not depend on waist size as well.
+<br>
+
+  
+### Mediation Part
+  
+##### We perform mediation to test if the relationship between salt intake and blood pressure mediated by age.
+##### First, test if there is relationship between age and salt intake, since mediation makes sense only if they have relationship 
+  
+```{r, echo = TRUE, eval = FALSE}
+proc reg data = home.mean_centered_data;
+model RIDAGEYRmc = DBD100mc; 
+title ' Regression model / Checking relationship between age and salt intake' ;
+run;
+```
+![](C:\\Users\\djbranglab-admin\\Desktop\\stats506-master\\stats506-master\\RawData\\fig12.png)
+
+##### The p_value is 5.31e-10. They have strong relationship.
+<br>
+  
+#### Second, perform the mediation 
+<br>
+  
+##### For diastole blood pressure
+  
+```{r, echo = TRUE, eval = FALSE}
+proc causalmed data=home.mean_centered_data;
+model BPXDImc = DBD100mc RIDAGEYRmc;
+mediator RIDAGEYRmc = DBD100mc;
+title ' Regression model / check the effect of age as a mediator between the relationship of Diastolic BP and salt intake' ;
+run;
+```
+![](C:\\Users\\djbranglab-admin\\Desktop\\stats506-master\\stats506-master\\RawData\\fig13.png)
+
+##### The effect of salt intake on diastole blood pressure still exists(p-value is 0.021), but in a smaller magnitude.Age partially mediates between salt intake and diastole blood pressure.
+<br>
+  
+##### For systole blood pressure
+  
+```{r, echo = TRUE, eval = FALSE}
+proc causalmed data=home.mean_centered_data;
+model BPXSYmc = DBD100mc RIDAGEYRmc;
+mediator RIDAGEYRmc = DBD100mc;
+title ' Regression model / check the effect of age as a mediator between the relationship of Systolic BP and salt intake' ;
+run;
+```
+
+![](C:\\Users\\djbranglab-admin\\Desktop\\stats506-master\\stats506-master\\RawData\\fig14.png)
+##### The effect of salt intake on systole blood pressure disappear (p-value is 0.741), age fully mediates salt intake and systole blood pressure.
+<br>
+  
+#### Third, perform the mediation through bootstrapping
+<br>
+  
+##### For diastole blood pressure
+  
+```{r, echo = TRUE, eval = FALSE}
+proc causalmed data=home.mean_centered_data;
+model BPXDImc = DBD100mc RIDAGEYRmc;
+mediator RIDAGEYRmc = DBD100mc;
+bootstrap NBOOT = 1000;
+title ' Regression model / check the effect of age as a mediator between the relationship of Diastolic BP and salt intake using bootstrap' ;
+run;
+```
+![](C:\\Users\\djbranglab-admin\\Desktop\\stats506-master\\stats506-master\\RawData\\fig15.png)
+
+![Direct and indirect effects of the mediation analysis for Diastole ](C:\\Users\\djbranglab-admin\\Desktop\\stats506-master\\stats506-master\\RawData\\fig2.png)
+
+##### The indirect effect (0.37655) and its confidence interval is different from zero. Age is a mediator between salt intake and diastole blood pressure.
+<br>
+  
+##### For systole blood pressure
+  
+```{r, echo = TRUE, eval = FALSE}
+proc causalmed data=home.mean_centered_data;
+model BPXSYmc = DBD100mc RIDAGEYRmc;
+mediator RIDAGEYRmc = DBD100mc;
+bootstrap NBOOT = 1000;
+title ' Regression model / check the effect of age as a mediator between the relationship of Systolic BP and salt intake using bootstrap' ;
+run;
+```
+
+![](C:\\Users\\djbranglab-admin\\Desktop\\stats506-master\\stats506-master\\RawData\\fig16.png)
+
+##### The estimate indirect effect(1.054) and its confidence interval is different from zero. Age is a mediator between salt intake and systole blood pressure.
+
+![Direct and indirect effects of the mediation analysis for Systole ](C:\\Users\\djbranglab-admin\\Desktop\\stats506-master\\stats506-master\\RawData\\fig3.png)
+
+## Python
+
+
+# Results
+Moderation analysis results are seen in the tables above. 
+#### Moderation results for Diastole: 
+The overall model was significant F(3, 4678) = 154.5, p<0.001, \(R\)^2^ = 0.09, with main effect of waist size positively predicting diastolic blood pressure. However, the interaction was not significant, indicating that though there exists a positive relation between waist size and diastolic blood pressure as well as a positive relation between salt intake and diastolic blood pressure, there does not exist a moderating effect of waist size on the relationship between salt intake and diastolic blood pressure. Simple slopes analysis does not indicate significant differences between predictions at different levels of standard deviations of the moderator. 
+
+#### Moderation results for Systole: 
+The overall model was significant F(3, 4678) = 333.7, p<0.001, \(R\)^2^ = 0.17, with main effect of waist size positively predicting systolic blood pressure. However, the interaction was not significant, indicating that though there exists a positive relation between waist size and systolic blood pressure as well as a positive relation between salt intake and systolic blood pressure, there does not exist a moderating effect of waist size on the relationship between salt intake and systolic blood pressure.Simple slopes analysis does not indicate significant differences between predictions at different levels of standard deviations of the moderator. 
+
+#### Mediation results for diastole: 
+
+Mediation analysis performed to analyze the mediating effect of age on the relationship between salt intake and diastolic blood pressure was significant, F(2,4679) = 182.7, p <0.001, \(R\)^2^ = 0.07, indicating that there exists a positive relationship between salt intake and blood pressure. More importantly, there exists a positive, significant indirect effect in the relationship between salt intake and diastolic blood pressure, b = 0.38, 95% CI (0.25, 0.52), p < 0.001, indicating a mediating effect of age on the effect of salt intake and diastolic blood pressure. 
+
+#### Mediation results for systole: 
+
+Mediation analysis performed to analyze the mediating effect of age on the relationship between salt intake and systolic blood pressure was significant, F(2,4679) = 1133, p <0.001, \(R\)^2^ = 0.32, indicating that there exists a positive relationship between salt intake and blood pressure. More importantly, there exists a positive, significant indirect effect in the relationship between salt intake and diastolic blood pressure, b = 1.05, 95% CI (0.71, 1.40), p < 0.001, indicating a mediating effect of age on the effect of salt intake and systolic blood pressure. 
+
+<br>
+  
 # Discussion
 <br>
-
+  
 # Reference
-
+  
