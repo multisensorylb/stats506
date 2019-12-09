@@ -40,22 +40,23 @@ BMI = BMI %>%
 data = demographics %>%
   left_join(BMI, by = "SEQN") %>%
   left_join(nutrients_1day, by = "SEQN") %>%
-  left_join(blood_pressure, by = "SEQN") 
+  left_join(blood_pressure, by = "SEQN") %>%
+  select(id = SEQN, age = RIDAGEYR, waist = BMXWAIST, salt_intake = DBD100, SY, DI)
 
 # remove the missing values
 data = data[complete.cases(data), ] 
 
 # center means to reduce multicolinearity
-data[c("RIDAGEYR", "BMXWAIST", "DBD100", "DI", "SY")] = 
-  lapply(data[c("RIDAGEYR", "BMXWAIST", "DBD100", "DI", "SY")],  function(x) scale(x, center=TRUE, scale=FALSE))
+data[c("age", "waist", "salt_intake", "DI", "SY")] = 
+  lapply(data[c("age", "waist", "salt_intake", "DI", "SY")],  function(x) scale(x, center=TRUE, scale=FALSE))
 
 # first, analyse the relationsip between salt intake and two kinds of blood pressure.
 # for diastole
-model_DI = lm(DI ~ DBD100, data)
+model_DI = lm(DI ~ salt_intake, data)
 summary(model_DI)
 
 # for systole
-model_SY = lm(SY ~ DBD100, data)
+model_SY = lm(SY ~ salt_intake, data)
 summary(model_SY)
 
 # Both p-values are less than 0.001, which shows strong evidence that salt intake have siginificant influence 
@@ -64,17 +65,17 @@ summary(model_SY)
 # second, using moderation to test if the relationship is dependent on the waist size 
 # choose three levels of a moderator(mean, one standard deviation above the mean and one standard deviation below the mean)
 # moderation for diastole at mean
-moderation_DI = lm(DI ~ DBD100 + BMXWAIST + DBD100 * BMXWAIST, data)
+moderation_DI = lm(DI ~ salt_intake + waist + salt_intake * waist, data)
 summary(moderation_DI)
 
 # at one standard deviation above mean
-data$BMXWAIST_high = data$BMXWAIST + sd(data$BMXWAIST)
-moderation_DI_high = lm(DI ~ DBD100 + BMXWAIST_high + DBD100 * BMXWAIST_high, data)
+data$waist_high = data$waist + sd(data$waist)
+moderation_DI_high = lm(DI ~ salt_intake + waist_high + salt_intake * waist_high, data)
 summary(moderation_DI_high)
 
 # at one standard deviation below mean
-data$BMXWAIST_low = data$BMXWAIST - sd(data$BMXWAIST)
-moderation_DI_low = lm(DI ~ DBD100 + BMXWAIST_low + DBD100 * BMXWAIST_low, data)
+data$waist_low = data$waist - sd(data$waist)
+moderation_DI_low = lm(DI ~ salt_intake + waist_low + salt_intake * waist_low, data)
 summary(moderation_DI_low)
 
 # Since the regression coefficient for the interation term is not significant with p value 0.41,
@@ -82,18 +83,19 @@ summary(moderation_DI_low)
 
 # slope analysis
 # moderator is at mean: b0 = 0.010034, b1 = 0.596273
-meanDI = moderation_DI$coefficients[1] + moderation_DI$coefficients[2] * data$DBD100
+meanDI = moderation_DI$coefficients[1] + moderation_DI$coefficients[2] * data$salt_intake
 
 # moderator is one standard deviation above mean: b0 = -3.928731, b1 = 0.785543
-highDI = moderation_DI_high$coefficients[1] + moderation_DI_high$coefficients[2] * data$DBD100
+highDI = moderation_DI_high$coefficients[1] + moderation_DI_high$coefficients[2] * data$salt_intake
 
 # moderator is one standard deviation below mean: bo = 3.948800, b1 = 0.407004
-lowDI = moderation_DI_low$coefficients[1] + moderation_DI_low$coefficients[2] * data$DBD100
+lowDI = moderation_DI_low$coefficients[1] + moderation_DI_low$coefficients[2] * data$salt_intake
 
 # plot the three dependent values vs salt intake
-plot(data$DBD100, meanDI, type = "l", col = "green", ylim = c(-5, 7), xlab = "Salt intake", ylab = "Diastole blood pressure")
-lines(data$DBD100, lowDI, col = "red")
-lines(data$DBD100, highDI, col = "blue")
+plot(data$salt_intake, meanDI, type = "l", col = "green", ylim = c(-5, 7), xlab = "Salt intake", ylab = "Diastole blood pressure",
+     main = "The effect of salt intake on diastole blood pressure when the wasit size at three different levels")
+lines(data$salt_intake, lowDI, col = "red")
+lines(data$salt_intake, highDI, col = "blue")
 # The green line shows the relationship between salt intake and diastole blood pressure when the moderator waist size is at mean.
 # The red line is for the moderator one standard deviation below the mean snd the blue line is for one standard deviation below mean.
 # we can see from the plot that people with a higher waist size have a higher effect on the blood pressure, meaning the moderation effect of waist size on blood pressure through salt intake 
@@ -101,52 +103,53 @@ lines(data$DBD100, highDI, col = "blue")
 
 
 # moderation for systole
-moderation_SY = lm(SY ~ DBD100 + BMXWAIST + DBD100 * BMXWAIST, data)
+moderation_SY = lm(SY ~ salt_intake + waist + salt_intake * waist, data)
 summary(moderation_SY)
 
 # at one standard deviation above mean
-data$BMXWAIST_high = data$BMXWAIST + sd(data$BMXWAIST)
-moderation_SY_high = lm(SY ~ DBD100 + BMXWAIST_high + DBD100 * BMXWAIST_high, data)
+data$waist_high = data$waist + sd(data$waist)
+moderation_SY_high = lm(SY ~ salt_intake + waist_high + salt_intake * waist_high, data)
 summary(moderation_SY_high)
 
 # at one standard deviation below mean
-data$BMXWAIST_low = data$BMXWAIST - sd(data$BMXWAIST)
-moderation_SY_low = lm(SY ~ DBD100 + BMXWAIST_low + DBD100 * BMXWAIST_low, data)
+data$waist_low = data$waist - sd(data$waist)
+moderation_SY_low = lm(SY ~ salt_intake + waist_low + salt_intake * waist_low, data)
 summary(moderation_SY_low)
 
 # Since the regression coefficient for the interation term is not significant with p value 0.51,
 # there does not exist a significant moderation effect. the effect of salt intake on systole blood pressure may not depends on waist size as well.
 
 # moderator is at mean: b0 = -0.009924, b1 = 0.610168
-meanSY = moderation_SY$coefficients[1] + moderation_SY$coefficients[2] * data$DBD100
+meanSY = moderation_SY$coefficients[1] + moderation_SY$coefficients[2] * data$salt_intake
 
 # moderator is one standard deviation above mean: b0 = -7.230880, b1 = 0.422982
-highSY = moderation_SY_high$coefficients[1] + moderation_SY_high$coefficients[2] * data$DBD100
+highSY = moderation_SY_high$coefficients[1] + moderation_SY_high$coefficients[2] * data$salt_intake
 
 # moderator is one standard deviation below mean: bo = 7.221033, b1 = 0.797353
-lowSY = moderation_SY_low$coefficients[1] + moderation_SY_low$coefficients[2] * data$DBD100
+lowSY = moderation_SY_low$coefficients[1] + moderation_SY_low$coefficients[2] * data$salt_intake
 
 # plot the three dependent values vs salt intake
-plot(data$DBD100, meanSY, type = "l", col = "green", ylim = c(-10, 15), xlab = "Salt intake", ylab = "Systole blood pressure")
-lines(data$DBD100, lowSY, col = "red")
-lines(data$DBD100, highSY, col = "blue")
+plot(data$salt_intake, meanSY, type = "l", col = "green", ylim = c(-10, 15), xlab = "Salt intake", ylab = "Systole blood pressure", 
+     main = "The effect of salt intake on systole blood pressure when the wasit size at three different levels")
+lines(data$salt_intake, lowSY, col = "red")
+lines(data$salt_intake, highSY, col = "blue")
 
 # mediation for diastole
 
 # test if there is relationship between age and salt intake, since mediation makes sense only if 
 # they have relationship 
-age_salt_DI = lm(RIDAGEYR ~ DBD100, data)
+age_salt_DI = lm(age ~ salt_intake, data)
 summary(age_salt_DI)
 # The p_value is 5.31e-10. They have strong relationship.
 
-mediation_DI = lm(DI ~ DBD100 + RIDAGEYR, data)
+mediation_DI = lm(DI ~ salt_intake + age, data)
 summary(mediation_DI)
 # The effect of salt intake on diastole blood pressure still exists(p-value is 0.021), but in a smaller magnitude.
 # Age partially mediates between salt intake and diastole blood pressure.
 
 # through bootstrapping
-mediation_boot_DI1 = mediation(x = data$DBD100, 
-                              mediator = data$RIDAGEYR,
+mediation_boot_DI1 = mediation(x = data$salt_intake, 
+                              mediator = data$age,
                               dv = data$DI,
                               conf.level = 0.95,
                               bootstrap = TRUE,
@@ -158,13 +161,13 @@ mediation_boot_DI1
 
 # mediation for systole
 
-mediation_SY = lm(SY ~ DBD100 + RIDAGEYR, data)
+mediation_SY = lm(SY ~ salt_intake + age, data)
 summary(mediation_SY)
 # The effect of salt intake on systole blood pressure disappear (p-value is 0,741), age fully mediates salt intake and systole blood pressure
 
 # through bootstrapping
-mediation_boot_SY1 = mediation(x = data$DBD100, 
-                               mediator = data$RIDAGEYR,
+mediation_boot_SY1 = mediation(x = data$salt_intake, 
+                               mediator = data$age,
                                dv = data$SY,
                                conf.level = 0.95,
                                bootstrap = TRUE,

@@ -115,7 +115,7 @@ summary(model_SY)
 ```
 
 
-##### Both p-values are less than 0.001, which shows strong evidence that salt intake have siginificant influence on both kinds of blood pressure.
+##### Both p-values are less than 0.001, which show strong evidence that salt intake have siginificant influence on both kinds of blood pressure.
 <br>
   
 ### Moderation part
@@ -153,7 +153,7 @@ summary(moderation_DI_low)
 ```
 
 
-##### Since the regression coefficient for the interation term is not significant with p value 0.41, there does not exist a significant moderation effect. the effect of salt intake on diastole blood pressure may not depend on waist size.
+##### Since the regression coefficient for the interation term is not significant with p value 0.41, there does not exist a significant moderation effect. The effect of salt intake on diastole blood pressure may not depend on waist size.
 <br>
   
 #### Simple Slope analysis for diastole blood pressure
@@ -180,7 +180,7 @@ lines(data$DBD100, lowDI, col = "red")
 lines(data$DBD100, highDI, col = "blue")
 ```
 
-#####  The green line shows the relationship between salt intake and diastole blood pressure when the moderator waist size is at mean.The red line is for the moderator one standard deviation below the mean snd the blue line is for one standard deviation below mean.
+#####  The green line shows the relationship between salt intake and diastole blood pressure when the moderator waist size is at mean.The red line is for the moderator one standard deviation below the mean snd the blue line is for one standard deviation above mean.
 
 ##### we can see from the plot that people with a higher waist size have a higher effect on the blood pressure, meaning the moderation effect of waist size on blood pressure through salt intake is higher for people with a higher waist size, but they are not significantly different between different levels of waist sizes.
 <br>
@@ -211,7 +211,7 @@ summary(moderation_SY_low)
 ```
 
 
-##### Since the regression coefficient for the interation term is not significant with p value 0.51, there does not exist a significant moderation effect. the effect of salt intake on systole blood pressure may not depend on waist size as well.
+##### Since the regression coefficient for the interation term is not significant with p value 0.51, there does not exist a significant moderation effect. The effect of salt intake on systole blood pressure may not depend on waist size as well.
 <br>
   
 #### Simple slope analysis for systole blood pressure
@@ -236,7 +236,7 @@ lines(data$DBD100, lowSY, col = "red")
 lines(data$DBD100, highSY, col = "blue")
 ```
 
-#####  The green line shows the relationship between salt intake and systole blood pressure when the moderator waist size is at mean.The red line is for the moderator one standard deviation below the mean snd the blue line is for one standard deviation below mean.
+#####  The green line shows the relationship between salt intake and systole blood pressure when the moderator waist size is at mean.The red line is for the moderator one standard deviation below the mean and the blue line is for one standard deviation above mean.
 
 ##### we can see from the plot that people with a lower waist size have a higher effect on the systole blood pressure, meaning the moderation effect of waist size on blood pressure through salt intake is higher for people with a lower waist size, but they are also not significantly different between different levels of waist sizes.
 <br>
@@ -244,7 +244,7 @@ lines(data$DBD100, highSY, col = "blue")
 ### Mediation Part
   
 ##### We perform mediation to test if the relationship between salt intake and blood pressure mediated by age.
-##### First, test if there is relationship between age and salt intake, since mediation makes sense only if they have relationship 
+##### First, we test if there is relationship between age and salt intake, since mediation makes sense only if they have relationship.
   
 ```{r}
 age_salt_DI = lm(RIDAGEYR ~ DBD100, data)
@@ -291,7 +291,7 @@ mediation_boot_DI1
 ![Fig 2: Direct and indirect effects of the mediation analysis for Diastole ](C:\\Users\\djbranglab-admin\\Desktop\\stats506-master\\stats506-master\\RawData\\fig2.png)
 
 
-##### The effect of salt intake on diastole blood pressure still exists(p-value is 0.021), but in a smaller magnitude.Age partially mediates between salt intake and diastole blood pressure.
+##### The effect of salt intake on diastole blood pressure still exists(p-value is 0.021), but in a smaller magnitude. Age partially mediates between salt intake and diastole blood pressure.
 <br>
 
 ##### For systole blood pressure
@@ -301,7 +301,7 @@ mediation_SY = lm(SY ~ DBD100 + RIDAGEYR, data)
 summary(mediation_SY)
 ```
 
-##### The effect of salt intake on systole blood pressure disappear (p-value is 0.741), age fully mediates salt intake and systole blood pressure.
+##### The effect of salt intake on systole blood pressure disappear (p-value is 0.741). Age fully mediates salt intake and systole blood pressure.
 <br>
   
 #### Perform the mediation through bootstrapping for systole
@@ -468,12 +468,12 @@ run;
 ![](C:\\Users\\djbranglab-admin\\Desktop\\stats506-master\\stats506-master\\RawData\\fig5.png)
 <br>
 
-##### Both p-values are less than 0.001, which shows strong evidence that salt intake have siginificant influence on both kinds of blood pressure.
+##### Both p-values are less than 0.001, which show strong evidence that salt intake have siginificant influence on both kinds of blood pressure.
 <br>
   
 ### Moderation part
   
-##### We perform moderation to test if the relationship is dependent on the waist size. Three levels of a moderator(mean, one standard deviation above the mean and one standard deviation below the mean) is chosen.
+##### We perform moderation to test if the relationship is dependent on the waist size. Three levels of a moderator(mean, one standard deviation above the mean and one standard deviation below the mean) are chosen.
 <br>
   
 #### Moderation at mean for diastole blood pressure
@@ -514,7 +514,7 @@ run;
 ![](C:\\Users\\djbranglab-admin\\Desktop\\stats506-master\\stats506-master\\RawData\\fig8.png)
 <br>
 
-##### Since the regression coefficient for the interation term is not significant with p value 0.41, there does not exist a significant moderation effect. the effect of salt intake on diastole blood pressure may not depend on waist size.
+##### Since the regression coefficient for the interation term is not significant with p value 0.41, there does not exist a significant moderation effect. The effect of salt intake on diastole blood pressure may not depend on waist size.
 
 <br>
   
@@ -554,14 +554,14 @@ run;
 ```
 ![](C:\\Users\\djbranglab-admin\\Desktop\\stats506-master\\stats506-master\\RawData\\fig11.png)
 
-##### Since the regression coefficient for the interation term is not significant with p value 0.51, there does not exist a significant moderation effect. the effect of salt intake on systole blood pressure may not depend on waist size as well.
+##### Since the regression coefficient for the interation term is not significant with p value 0.51, there does not exist a significant moderation effect. The effect of salt intake on systole blood pressure may not depend on waist size as well.
 <br>
 
   
 ### Mediation Part
   
 ##### We perform mediation to test if the relationship between salt intake and blood pressure mediated by age.
-##### First, test if there is relationship between age and salt intake, since mediation makes sense only if they have relationship 
+##### First, we test if there is relationship between age and salt intake, since mediation makes sense only if they have relationship.
   
 ```{r, echo = TRUE, eval = FALSE}
 proc reg data = home.mean_centered_data;
@@ -588,7 +588,7 @@ run;
 ```
 ![](C:\\Users\\djbranglab-admin\\Desktop\\stats506-master\\stats506-master\\RawData\\fig13.png)
 
-##### The effect of salt intake on diastole blood pressure still exists(p-value is 0.021), but in a smaller magnitude.Age partially mediates between salt intake and diastole blood pressure.
+##### The effect of salt intake on diastole blood pressure still exists(p-value is 0.021), but in a smaller magnitude. Age partially mediates between salt intake and diastole blood pressure.
 <br>
   
 ##### For systole blood pressure
@@ -602,7 +602,7 @@ run;
 ```
 
 ![](C:\\Users\\djbranglab-admin\\Desktop\\stats506-master\\stats506-master\\RawData\\fig14.png)
-##### The effect of salt intake on systole blood pressure disappear (p-value is 0.741), age fully mediates salt intake and systole blood pressure.
+##### The effect of salt intake on systole blood pressure disappear (p-value is 0.741). Age fully mediates salt intake and systole blood pressure.
 <br>
   
 #### Third, perform the mediation through bootstrapping
