@@ -1,5 +1,5 @@
 # Stats 506, Fall 2019
-# Group project first draft
+# Group project
 
 # The script solves the question "Is salt intake associated with blood pressure?
 # If so, to what extent is that relationship mediated or moderated by age or waist size?" 
@@ -12,8 +12,8 @@
 library(SASxport)
 library(tidyverse)
 library(MBESS)
+library(pequod)
 
-# just for test
 # read the data
 demographics = read.xport("./DEMO_I.XPT")
 blood_pressure = read.xport("./BPX_I.XPT")
@@ -63,7 +63,7 @@ summary(model_SY)
 
 # second, using moderation to test if the relationship is dependent on the waist size 
 # choose three levels of a moderator(mean, one standard deviation above the mean and one standard deviation below the mean)
-# moderation for diastole
+# moderation for diastole at mean
 moderation_DI = lm(DI ~ DBD100 + BMXWAIST + DBD100 * BMXWAIST, data)
 summary(moderation_DI)
 
@@ -78,7 +78,27 @@ moderation_DI_low = lm(DI ~ DBD100 + BMXWAIST_low + DBD100 * BMXWAIST_low, data)
 summary(moderation_DI_low)
 
 # Since the regression coefficient for the interation term is not significant with p value 0.41,
-# there does not exist a significant moderation effect. the effect of salt intake on diastole blood pressure may not depends on waist size.
+# there does not exist a significant moderation effect. The effect of salt intake on diastole blood pressure may not depend on waist size.
+
+# slope analysis
+# moderator is at mean: b0 = 0.010034, b1 = 0.596273
+meanDI = moderation_DI$coefficients[1] + moderation_DI$coefficients[2] * data$DBD100
+
+# moderator is one standard deviation above mean: b0 = -3.928731, b1 = 0.785543
+highDI = moderation_DI_high$coefficients[1] + moderation_DI_high$coefficients[2] * data$DBD100
+
+# moderator is one standard deviation below mean: bo = 3.948800, b1 = 0.407004
+lowDI = moderation_DI_low$coefficients[1] + moderation_DI_low$coefficients[2] * data$DBD100
+
+# plot the three dependent values vs salt intake
+plot(data$DBD100, meanDI, type = "l", col = "green", ylim = c(-5, 7), xlab = "Salt intake", ylab = "Diastole blood pressure")
+lines(data$DBD100, lowDI, col = "red")
+lines(data$DBD100, highDI, col = "blue")
+# The green line shows the relationship between salt intake and diastole blood pressure when the moderator waist size is at mean.
+# The red line is for the moderator one standard deviation below the mean snd the blue line is for one standard deviation below mean.
+# we can see from the plot that people with a higher waist size have a higher effect on the blood pressure, meaning the moderation effect of waist size on blood pressure through salt intake 
+# is higher for people with a higher waist size, but they are not significantly different between different levels of waist sizes.
+
 
 # moderation for systole
 moderation_SY = lm(SY ~ DBD100 + BMXWAIST + DBD100 * BMXWAIST, data)
@@ -97,6 +117,19 @@ summary(moderation_SY_low)
 # Since the regression coefficient for the interation term is not significant with p value 0.51,
 # there does not exist a significant moderation effect. the effect of salt intake on systole blood pressure may not depends on waist size as well.
 
+# moderator is at mean: b0 = -0.009924, b1 = 0.610168
+meanSY = moderation_SY$coefficients[1] + moderation_SY$coefficients[2] * data$DBD100
+
+# moderator is one standard deviation above mean: b0 = -7.230880, b1 = 0.422982
+highSY = moderation_SY_high$coefficients[1] + moderation_SY_high$coefficients[2] * data$DBD100
+
+# moderator is one standard deviation below mean: bo = 7.221033, b1 = 0.797353
+lowSY = moderation_SY_low$coefficients[1] + moderation_SY_low$coefficients[2] * data$DBD100
+
+# plot the three dependent values vs salt intake
+plot(data$DBD100, meanSY, type = "l", col = "green", ylim = c(-10, 15), xlab = "Salt intake", ylab = "Systole blood pressure")
+lines(data$DBD100, lowSY, col = "red")
+lines(data$DBD100, highSY, col = "blue")
 
 # mediation for diastole
 
