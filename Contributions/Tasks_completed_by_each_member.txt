@@ -57,7 +57,16 @@ negative, the answer could be yes.
 
 12/3/2019
 Uploaded R script for implementing the moderation and mediation models. 
--
+
+12/5/2019
+Uploaded stats506/Results&Reports/
+            group-project.html
+            group-project.pdf
+
+12/8/2019
+Uploaded stats506/Results&Reports/
+           group project.Rmd
+
 -
 
 Xinjun
