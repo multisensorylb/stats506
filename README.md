@@ -66,17 +66,17 @@ However, in this project we may want to focus on the influence of diet habits, a
 We may want to treat race, gender BMI etc. as control variables. But, currently, we are interested in studying moderation and
 mediation effects, which might not require control variables that need to be explicity stated as part of the model.
 
-### Tasks completed so far
+### Code reviews via e-mails
 
-Initial moderation and mediation models (direct effects, indirect effects and indirect effects using bootstrap) have been built using R, SAS and Python. 
+From Jingyan Lu to Xinjun Li:
+Hi,
+Good job! But I think if it could be better if you can include the simple slope analysis after moderation. You can have a look at my r code.
+Jingyan
 
-
-### List of outstanding items
-Though we have all the framework and analysis in, we will have to work on interpreting the results in a way that can build up a nice 
-story. 
-
-Perform slope analysis as an additional interpretation of the results for moderation.
-
-Put together the reports in the form of a html tutorial. 
-
-We will also incorporate descriptive statistics and exploratory analysis of the data in the final report. 
+Fron Jingyan Lu to Karthik G:
+Hi Karthik,
+When I try to do slope analysis, I have some confusion.
+1. Since the result of moderation at mean and both +1 SD, -1SD for diastole, the p value of the interaction term is quite high (0.410), is it necessary to perform the simple slope analysis?
+2. I found B0 3.948800, 0.010034 and -3.928731 respectively, instead of 3.267099 , -0.988679 and -5.244457. And B1 values are the same. I also try to use your code from the draft code and the corrected part you noted. The results are the same as mine.
+3. I do the anova test for the three models (mean, +1 SD and -1SD), the result is shown below. I am not sure if there is something wrong, or the anova test is not appropriate here.
+Jingyan
