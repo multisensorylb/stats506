@@ -11,12 +11,14 @@ toc_float: true
 ---
   
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-
+knitr::opts_chunk$set(echo = TRUE,
+                      engine.path = list(
+  python = 'C:/Users/xinjun li/AppData/Local/Programs/Python/Python37/python.exe')
+  )
 # libraries:
-library(SASxport)
+# library(SASxport)
 library(tidyverse)
-library(MBESS)
+# library(MBESS)
 ```
 
 
@@ -331,7 +333,7 @@ summary(mediation_SY)
 <br>
   
 #### Perform the mediation through bootstrapping for systole
-```{r }
+```{r}
 mediation_boot_SY1 = mediation(x = data$DBD100, 
                                mediator = data$RIDAGEYR,
                                dv = data$SY,
@@ -349,9 +351,12 @@ mediation_boot_SY1
 
 ##### The estimate indirect effect(1.054) and its confidence interval is different from zero. Age is a mediator between salt intake and systole blood pressure.
 
+
+
+
 ## SAS
 
-```{r, echo = TRUE, eval = FALSE}
+```{r, echo = TRUE, eval=FALSE}
 libname results 'C:/Users/djbranglab-admin/Desktop/stats506-master/stats506-master/results';
 libname rawdata 'C:/Users/djbranglab-admin/Desktop/stats506-master/stats506-master/RawData';
 libname home 'C:/Users/djbranglab-admin/Desktop/stats506-master/stats506-master/home';
@@ -360,7 +365,7 @@ libname home 'C:/Users/djbranglab-admin/Desktop/stats506-master/stats506-master/
 
 ### Load the data
 
-```{r, echo = TRUE, eval = FALSE}
+```{r, echo = TRUE, eval=FALSE}
 
 %let demographics = 'C:/Users/djbranglab-admin/Desktop/stats506-master/stats506-master/RawData/demographics_15_16.csv';
 %let BMI = 'C:/Users/djbranglab-admin/Desktop/stats506-master/stats506-master/RawData/Body_measures_2015_16.csv';
@@ -669,6 +674,254 @@ run;
 ![Direct and indirect effects of the mediation analysis for Systole ](C:\\Users\\djbranglab-admin\\Desktop\\stats506-master\\stats506-master\\RawData\\fig3.png)
 
 ## Python
+
+Required software and packages to run the code are as follows:
+* Python3 
+* os
+* pandas
+* statsmodels
+* patsy
+* matplotlib
+
+```{python, eval=F}
+# Import packages
+import os
+import pandas as pd
+from statsmodels.formula.api import ols
+from statsmodels.stats.anova import anova_lm
+import patsy
+from statsmodels.api import OLS
+from statsmodels.stats.mediation import Mediation
+import matplotlib.pyplot as plt
+```
+```{python, eval=F}
+# Set working directory
+os.chdir('D:/学习/密歇根/STAT506/Group project/stats506/')
+
+# read data
+demo = pd.read_excel("RawData/Demographics_15_16.xlsx")
+BMI = pd.read_excel("RawData/Body_measures_2015_16.xlsx")
+bp = pd.read_excel('RawData/Blood_Pressure_2015_16.xlsx')
+nutr = pd.read_excel("RawData/Dietary_nutrients_firstday_2015_16.xlsx")
+```
+
+### Data cleaning
+
+We need first clean the raw data and join different dataset.
+
+```{python, eval=F}
+# select useful columns
+# ! Note: we need to drop values '9' or '99' which represent "don't know"
+demo=demo.set_index('SEQN'
+                    ).filter(items=['RIDAGEYR']  # 'RIAGENDR','RIDRETH3'
+                    ).dropna()
+# demo[['RIAGENDR','RIDRETH3']]=demo[['RIAGENDR','RIDRETH3']].astype('category')
+BMI=BMI.set_index('SEQN'
+                  ).filter(items=['BMXWAIST']   # ,'BMXWT','BMXHT'
+                  ).dropna()
+nutr=nutr.set_index('SEQN'
+                    ).filter(items=['DBD100']  #,'DBQ095Z','DRQSPREP'
+                    ).dropna(
+                    ).query('DBD100 != 9'
+                    ).astype('category')
+
+# Calculate mean of blood pressure
+bp=bp.set_index('SEQN'
+                ).filter(regex='(BPXSY*)|(BPXDI*)')
+bp=bp.assign(SY=bp.filter(regex='BPXSY*').mean(axis=1, skipna = True),
+             DI=bp.filter(regex='BPXDI*').mean(axis=1, skipna = True)
+             ).filter(items=['SY','DI']).dropna()
+
+# Merge all data set
+df=bp.join(demo,how='inner').join(BMI,how='inner').join(nutr,how='inner')
+```
+Take a look at the data we worked on.
+
+```{python, eval=F}
+# Show data summary of numeric variables
+df.describe()
+# Show data summary of categorical variables
+df.describe(include='category')
+# plot Diastolic and salt intakes
+DI_salt=df[['DBD100','DI']
+            ].pivot(columns='DBD100', values='DI'
+            )
+DI_salt.columns=["Rarely","Occasionally","Very often"]
+DI_salt.boxplot(grid=False)
+plt.title("Boxplot of Diastolic and frequency of add salt to food at table")
+plt.suptitle("")
+plt.show()
+# plot Systolic and salt intakes
+SY_salt=df[['DBD100','SY']
+            ].pivot(columns='DBD100', values='SY'
+            )
+SY_salt.columns=["Rarely","Occasionally","Very often"]
+SY_salt.boxplot(grid=False)
+plt.title("Boxplot of Systolic and frequency of add salt to food at table")
+plt.suptitle("")
+plt.show()
+```
+```{python}
+# Test normality of Diastolic given salt intake
+ax1 = plt.subplot(131)
+a=DI_salt[['Rarely']].dropna().to_numpy()
+a=np.reshape(a,(len(a)))
+qqplot = stats.probplot(a, plot=plt)
+plt.yticks([])
+
+ax2 = plt.subplot(132)
+b=DI_salt[['Occasionally']].dropna().to_numpy()
+b=np.reshape(b,(len(b)))
+qqplot = stats.probplot(b, plot=plt)
+plt.yticks([])
+
+ax3 = plt.subplot(133)
+c=DI_salt[['Very often']].dropna().to_numpy()
+c=np.reshape(c,(len(c)))
+qqplot = stats.probplot(c, plot=plt)
+plt.yticks([])
+
+ax1.set_title('Rarely')
+ax2.set_title('Occasionally')
+ax3.set_title('Very often')
+
+plt.show()
+# Test normality of Systolic given salt intake
+ax1 = plt.subplot(131)
+a=SY_salt[['Rarely']].dropna().to_numpy()
+a=np.reshape(a,(len(a)))
+qqplot = stats.probplot(a, plot=plt)
+plt.yticks([])
+
+ax2 = plt.subplot(132)
+b=SY_salt[['Occasionally']].dropna().to_numpy()
+b=np.reshape(b,(len(b)))
+qqplot = stats.probplot(b, plot=plt)
+plt.yticks([])
+
+ax3 = plt.subplot(133)
+c=SY_salt[['Very often']].dropna().to_numpy()
+c=np.reshape(c,(len(c)))
+qqplot = stats.probplot(c, plot=plt)
+plt.yticks([])
+
+ax1.set_title('Rarely')
+ax2.set_title('Occasionally')
+ax3.set_title('Very often')
+
+plt.show()
+```
+
+
+### Fit OLS
+
+Now fit the ordinary least square to the data.
+The models used are:
+`DI ~ DBD100` and `SY ~ DBD100`
+
+#### Diastolic
+```{python}
+# fit ols to Diastolic measurements
+ols_DI=ols('DI~DBD100',data=df).fit()
+# Print the summary
+ols_DI.summary()
+anova_lm(ols_DI)
+```
+
+#### Systolic
+```{python}
+# fit ols to Systolic measurements
+ols_SY=ols('SY~DBD100',data=df).fit()
+# Print the summary
+ols_SY.summary()
+anova_lm(ols_SY)
+```
+### Moderation effect of waist size
+First, add two columns recording a standiviation above and below of waist size.
+
+```{python}
+f['waist_sd'] = df['BMXWAIST'].std()
+df['waist_up']=df['BMXWAIST']+df['waist_sd']
+df['waist_down']=df['BMXWAIST']-df['waist_sd']
+```
+
+#### Diastolic
+Fit model: DI ~ DBD100 + BMXWAIST + DBD100 * BMXWAIST
+```{python}
+moderation_DI = ols('DI ~ DBD100 + BMXWAIST + DBD100 * BMXWAIST', data=df).fit()
+moderation_DI.summary()
+anova_lm(moderation_DI)
+# one standard deviation above mean
+moderation_DI_up = ols('DI ~ DBD100 + waist_up + DBD100 * waist_up', data=df).fit()
+moderation_DI_up.summary()
+# one standard deviation below mean
+moderation_DI_down = ols('DI ~ DBD100 + waist_down + DBD100 * waist_down', data=df).fit()
+moderation_DI_down.summary()
+```
+#### Systolic
+Fit model: SY ~ DBD100 + BMXWAIST + DBD100 * BMXWAIST
+
+```{python}
+moderation_SY = ols('SY ~ DBD100 + BMXWAIST + DBD100 * BMXWAIST', data=df).fit()
+moderation_SY.summary()
+anova_lm(moderation_SY)
+# one standard deviation above mean
+moderation_SY_up = ols('SY ~ DBD100 + waist_up + DBD100 * waist_up', data=df).fit()
+moderation_SY_up.summary()
+# one standard deviation below mean
+moderation_SY_down = ols('SY ~ DBD100 + waist_down + DBD100 * waist_down', data=df).fit()
+moderation_SY_down.summary()
+```
+### Mediation effect of age
+Fit model: RIDAGEYR ~ DBD100 to see if there are relationships between age and salt intake
+
+```{python}
+# test if there is relationship between age and salt intake.
+age_D = ols('RIDAGEYR ~ DBD100', data=df).fit()
+age_D.summary()
+```
+#### Diastolic
+Fit model: DI ~ DBD100 + RIDAGEYR.
+
+```{python}
+mediation_DI = ols('DI ~ DBD100 + RIDAGEYR', data=df).fit()
+mediation_DI.summary()
+# Create design matrix
+DI,model_mat = patsy.dmatrices("DI ~ DBD100 + RIDAGEYR", data=df)
+df_med_DI=pd.DataFrame(model_mat).iloc[:,1:]
+df_med_DI.columns=['DBD2','DBD3','RIDAGEYR']
+df_med_DI['DI']=DI
+
+# origin model and mediator model
+med_model_DI=OLS.from_formula('DI ~ RIDAGEYR+DBD2+DBD3', data=df_med_DI)
+mediator_DI=OLS.from_formula('RIDAGEYR ~ DBD2+DBD3', data=df_med_DI)
+
+# origin model and mediator model
+med_DI = Mediation(med_model_DI,mediator_DI,['DBD2','DBD3'],'RIDAGEYR').fit()
+med_DI.summary()
+```
+#### Systolic
+Fit model: SY ~ DBD100 + RIDAGEYR.
+
+```{python}
+mediation_SY = ols('SY ~ DBD100 + RIDAGEYR', data=df).fit()
+mediation_SY.summary()
+
+# Create design matrix
+SY,model_mat = patsy.dmatrices("SY ~ DBD100 + RIDAGEYR", data=df)
+df_med_SY=pd.DataFrame(model_mat).iloc[:,1:]
+df_med_SY.columns=['DBD2','DBD3','RIDAGEYR']
+df_med_SY['SY']=SY
+
+# origin model and mediator model
+med_model_SY=OLS.from_formula('SY ~ RIDAGEYR+DBD2+DBD3', data=df_med_SY)
+mediator_SY=OLS.from_formula('RIDAGEYR ~ DBD2+DBD3', data=df_med_SY)
+
+# origin model and mediator model
+med_SY = Mediation(med_model_SY,mediator_SY,['DBD2','DBD3'],'RIDAGEYR').fit()
+med_SY.summary()
+```
+
 
 
 # Results
