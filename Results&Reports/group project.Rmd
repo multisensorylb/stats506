@@ -22,26 +22,52 @@ library(MBESS)
 
 # Introduction
 
-##### Our project aims to answer the question:
-##### "Is salt intake associated with blood pressure? If so, to what extent is that relationship mediated or moderated by age or waist size?" 
+Our project aims to answer the question:
+"Is salt intake associated with blood pressure? If so, to what extent is that relationship mediated or moderated by age or waist size?" 
 
-##### By raising the question, we want to know whether the salt intake behavior of a person is related to the person's blood pressure levels and want to know further if this relationship is dependent on the waist measurement of the person.
+By raising the question, we want to know whether the salt intake behavior of a person is related to the person's blood pressure levels and want to know further if this relationship is dependent on the waist measurement of the person.
 
-##### The analysis would be a moderation analysis testing whether there exists a relationship between salt intake and blood pressure levels and if this relationship is moderated by waist measurement.
+The analysis would be a moderation analysis testing whether there exists a relationship between salt intake and blood pressure levels and if this relationship is moderated by waist measurement.
 
-##### As a follow up analysis, we will study "whether the salt intake habit of a person is related to the person's blood pressure levels and identify whether age is a mechanism underlying the relationship between the two", i.e., is age a mediator between the relationship between salt intake and blood pressure levels? This would be a mediation analysis with a confidence interval-based bootstrapping approach. This analysis will use demographics, nutrients_1day, and blood_pressure data.
+As a follow up analysis, we will study "whether the salt intake habit of a person is related to the person's blood pressure levels and identify whether age is a mechanism underlying the relationship between the two", i.e., is age a mediator between the relationship between salt intake and blood pressure levels? This would be a mediation analysis with a confidence interval-based bootstrapping approach.
 <br>
   
 # Data
   
-##### We use [NHANES](https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes/default.aspx) data in 2015-2016 for analysis. Data of salt intake and people's diastole and systole blood pressure are needed in both moderation and mediation analysis. You can find them in the datasets [Dietary Interview - Total Nutient intakes, First Day](https://wwwn.cdc.gov/Nchs/Nhanes/2015-2016/DR1TOT_I.htm), [Blood Pressure](https://wwwn.cdc.gov/Nchs/Nhanes/2015-2016/BPX_I.htm) respectively.
+We use [NHANES](https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes/default.aspx) data in 2015-2016 for analysis. Data of salt intake and people's diastole and systole blood pressure are needed in both moderation and mediation analysis. You can find them in the datasets [Dietary Interview - Total Nutient intakes, First Day](https://wwwn.cdc.gov/Nchs/Nhanes/2015-2016/DR1TOT_I.htm), [Blood Pressure](https://wwwn.cdc.gov/Nchs/Nhanes/2015-2016/BPX_I.htm) respectively.
   
-##### For the moderation analysis, we use another dataset [Body Measures](https://wwwn.cdc.gov/Nchs/Nhanes/2015-2016/BMX_I.htm) for data of waist measurement.
+For the moderation analysis, we use another dataset [Body Measures](https://wwwn.cdc.gov/Nchs/Nhanes/2015-2016/BMX_I.htm) for data of waist measurement.
   
-##### For the mediation analysis, data of participants' age from [Demographic variables and Sample Weights](https://wwwn.cdc.gov/Nchs/Nhanes/2015-2016/DEMO_I.htm) is used.
+For the mediation analysis, data of participants' age from [Demographic variables and Sample Weights](https://wwwn.cdc.gov/Nchs/Nhanes/2015-2016/DEMO_I.htm) is used.
 <br>
-  
+```{r, echo = FALSE}
+name = c("DBD100", "DI", "SY", "RIDAGEYR", "BMXWAIST")
+description = c("How often add salt to food at table", 
+                "Diastolic: Mean of blood pressure from three times reading (mm Hg)", 
+                "Systole: Mean of blood pressure from three times reading (mm Hg)", 
+                "Age in years at screeening", 
+                "Wasit circumference (cm)")
+dataset = c("DR1TOT_I.XPT", "BPX_I.XPT", "BPX_I.XPT", "DEMO_I.XPT", "BMX_I.XPT")
+data.table(Variables = name, Descriptions = description, Datasets = dataset) %>%
+  knitr::kable(align = "l") %>%
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover"), latex_options = c("hold_position", "scale_down"), position = "left")
+```
+<br>
+
 # Methods
+
+Moderation and Mediation analysis are used in our projects. To explain the moderation analysis, We start with the relationship between an independent variable x and a dependent variable Y. For example, in our case, X is the salt intake and Y is the blood pressure. we will prove it later that there is a relationship between them, which can be expressed as Y = beta0 + beta1 * X + error.
+
+A moderator Z is a variable that can affect the direction or strength of the relationship between X and Y. If the effect of salt intake on the blood pressure depends on the level of waist size, then waist size is a moderator. Otherwise, blood pressure is not a moderator.
+
+We perform moderation analysis by adding interaction term, which can be expressed as Y = beta0 + beta1 * X + beta2 * Z + beta3 * X * Z + error. If beta3 does not equal to 0, Z is supposed to be a moderator. In the regression model, we test whether the regression coefficient for the interaction term is significant or not.
+
+Mediator explains the underlying mechanism of the relationship between independent variable and dependent variable. Let's assume that the independent variable X is a predictor for the dependent variable Y and the relationship is that X boosts Y. If M is a mediator, then the hypothesis is that X boosts M and then M boosts Y. Three steps of regression comprise a medation analysis: X to Y, X to M, X + M to Y. 
+
+First, we need to illustrate that X affects Y. If not, there is no need to mediate. Second, we try to figure out if X affect M. If there is no relationship between them, M may be another predictor or does not affect Y at all, instead of a mediator. M is a mediator only when there is relationship between X and M. The last step is to find if M affects Y, but X no longer affects Y. If the medation effect exists, the effect of X on Y will disappear or reduce to a samll magnitude when M is included in the model.
+
+We use R, Python and SAS to perform the analysis.
+
 <br>
   
 # Moderation and Mediation {.tabset}
@@ -50,7 +76,7 @@ library(MBESS)
 ## R
   
 ### Load the data
-  
+
 ```{r}
 demographics = read.xport("C:/Users/djbranglab-admin/Desktop/stats506-master/stats506-master/RawData/Demographics_2015_16.XPT")
 blood_pressure = read.xport("C:/Users/djbranglab-admin/Desktop/stats506-master/stats506-master/RawData/Blood_Pressure_2015_16.XPT")
@@ -666,5 +692,11 @@ Mediation analysis performed to analyze the mediating effect of age on the relat
 # Discussion
 <br>
   
-# Reference
-  
+# References
+Baron, R. M., & Kenny, D. A. (1986). The moderator–mediator variable distinction in social psychological research: Conceptual, strategic, and statistical considerations. Journal of Personality and Social Psychology, 5, 1173-1182.
+
+Imai, K., Keele, L., & Tingley, D. (2010). A general approach to causal mediation analysis. Psychological methods, 15(4), 309.
+
+Shrout, P. E., & Bolger, N. (2002). Mediation in experimental and nonexperimental studies: new procedures and recommendations. Psychological Methods, 7, 422-445.
+
+Tingley, D., Yamamoto, T., Hirose, K., Keele, L., & Imai, K. (2014). Mediation: R package for causal mediation analysis.
