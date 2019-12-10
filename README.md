@@ -80,3 +80,10 @@ When I try to do slope analysis, I have some confusion.
 2. I found B0 3.948800, 0.010034 and -3.928731 respectively, instead of 3.267099 , -0.988679 and -5.244457. And B1 values are the same. I also try to use your code from the draft code and the corrected part you noted. The results are the same as mine.
 3. I do the anova test for the three models (mean, +1 SD and -1SD), the result is shown below. I am not sure if there is something wrong, or the anova test is not appropriate here.
 Jingyan
+
+From Karthik to Jingyan: 
+HI Jingyan, 
+The original draft code that I had uploaded had a slight error. The moderator is the one that needs to be analyzed at one SD below and above mean. I think in the draft code, I set the independent variable to be one SD below and above mean by mistake. The corrected part of the code is below (for diastole). 
+
+I think I did not center the DBD100 variable in my resutls. I centered it now and got the same results as you for both B0 and B1. 
+Karthik
