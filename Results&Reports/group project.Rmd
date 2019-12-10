@@ -11,14 +11,15 @@ toc_float: true
 ---
   
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE,
-                      engine.path = list(
-  python = 'C:/Users/xinjun li/AppData/Local/Programs/Python/Python37/python.exe')
-  )
-# libraries:
-# library(SASxport)
+knitr::opts_chunk$set(echo = TRUE)
+libraries:
+library(SASxport)
 library(tidyverse)
-# library(MBESS)
+library(MBESS)
+
+# set working directory
+setwd("C:/Users/djbranglab-admin/Desktop/stats506-master/stats506-master/")
+
 ```
 
 
@@ -80,10 +81,10 @@ We use R, Python and SAS to perform the analysis.
 ### Load the data
 
 ```{r}
-demographics = read.xport("C:/Users/djbranglab-admin/Desktop/stats506-master/stats506-master/RawData/Demographics_2015_16.XPT")
-blood_pressure = read.xport("C:/Users/djbranglab-admin/Desktop/stats506-master/stats506-master/RawData/Blood_Pressure_2015_16.XPT")
-nutrients_1day = read.xport("C:/Users/djbranglab-admin/Desktop/stats506-master/stats506-master/RawData/Dietary_nutrients_firstday_2015_16.XPT")
-BMI = read.xport("C:/Users/djbranglab-admin/Desktop/stats506-master/stats506-master/RawData/Body_measures_2015_16.XPT")
+demographics = read.xport("RawData/Demographics_2015_16.XPT")
+blood_pressure = read.xport("RawData/Blood_Pressure_2015_16.XPT")
+nutrients_1day = read.xport("RawData/Dietary_nutrients_firstday_2015_16.XPT")
+BMI = read.xport("RawData/Body_measures_2015_16.XPT")
 ```
 <br>
   
@@ -113,6 +114,37 @@ data = demographics %>%
 
 
 data = data[complete.cases(data), ]
+```
+
+```{r plots}
+
+df=data %>%
+  na.omit() %>%
+  filter(DBD100!=9,DI>0,SY>0) %>%
+  mutate(DBD100=as.character(DBD100)) %>%
+  mutate(DBD100=ifelse(DBD100=='1','Rarely',
+                       ifelse(DBD100=='2','Occasionally',
+                              'Very often')))%>%
+  mutate(DBD100=as.factor(DBD100))
+
+summary(df)
+
+ggplot(data=df,aes(x=DBD100))+
+  geom_boxplot(aes(y=DI))+
+  ggtitle("Boxplot of Diastolic and frequency of add salt to food at table")
+
+ggplot(data=df,aes(x=DBD100))+
+  geom_boxplot(aes(y=SY))+
+  ggtitle("Boxplot of Systolic and frequency of add salt to food at table")
+
+model_DI = lm(DI ~ DBD100, data)
+qqnorm(model_DI$residuals)
+qqline(model_DI$residuals, col = "blue")
+
+model_SY = lm(SY ~ DBD100, data)
+qqnorm(model_SY$residuals)
+qqline(model_SY$residuals, col = "blue")
+
 ```
 
 #### Center means to reduce multicolinearity
@@ -683,7 +715,7 @@ Required software and packages to run the code are as follows:
 * patsy
 * matplotlib
 
-```{python, eval=F}
+```
 # Import packages
 import os
 import pandas as pd
@@ -693,10 +725,9 @@ import patsy
 from statsmodels.api import OLS
 from statsmodels.stats.mediation import Mediation
 import matplotlib.pyplot as plt
-```
-```{python, eval=F}
+
 # Set working directory
-os.chdir('D:/学习/密歇根/STAT506/Group project/stats506/')
+os.chdir('D:/STAT506/Group project/stats506/')
 
 # read data
 demo = pd.read_excel("RawData/Demographics_15_16.xlsx")
@@ -709,7 +740,7 @@ nutr = pd.read_excel("RawData/Dietary_nutrients_firstday_2015_16.xlsx")
 
 We need first clean the raw data and join different dataset.
 
-```{python, eval=F}
+```
 # select useful columns
 # ! Note: we need to drop values '9' or '99' which represent "don't know"
 demo=demo.set_index('SEQN'
@@ -737,7 +768,7 @@ df=bp.join(demo,how='inner').join(BMI,how='inner').join(nutr,how='inner')
 ```
 Take a look at the data we worked on.
 
-```{python, eval=F}
+```
 # Show data summary of numeric variables
 df.describe()
 # Show data summary of categorical variables
@@ -761,7 +792,7 @@ plt.title("Boxplot of Systolic and frequency of add salt to food at table")
 plt.suptitle("")
 plt.show()
 ```
-```{python}
+```
 # Test normality of Diastolic given salt intake
 ax1 = plt.subplot(131)
 a=DI_salt[['Rarely']].dropna().to_numpy()
@@ -820,7 +851,7 @@ The models used are:
 `DI ~ DBD100` and `SY ~ DBD100`
 
 #### Diastolic
-```{python}
+```
 # fit ols to Diastolic measurements
 ols_DI=ols('DI~DBD100',data=df).fit()
 # Print the summary
@@ -829,7 +860,7 @@ anova_lm(ols_DI)
 ```
 
 #### Systolic
-```{python}
+```
 # fit ols to Systolic measurements
 ols_SY=ols('SY~DBD100',data=df).fit()
 # Print the summary
@@ -839,7 +870,7 @@ anova_lm(ols_SY)
 ### Moderation effect of waist size
 First, add two columns recording a standiviation above and below of waist size.
 
-```{python}
+```
 f['waist_sd'] = df['BMXWAIST'].std()
 df['waist_up']=df['BMXWAIST']+df['waist_sd']
 df['waist_down']=df['BMXWAIST']-df['waist_sd']
@@ -847,7 +878,7 @@ df['waist_down']=df['BMXWAIST']-df['waist_sd']
 
 #### Diastolic
 Fit model: DI ~ DBD100 + BMXWAIST + DBD100 * BMXWAIST
-```{python}
+```
 moderation_DI = ols('DI ~ DBD100 + BMXWAIST + DBD100 * BMXWAIST', data=df).fit()
 moderation_DI.summary()
 anova_lm(moderation_DI)
@@ -861,7 +892,7 @@ moderation_DI_down.summary()
 #### Systolic
 Fit model: SY ~ DBD100 + BMXWAIST + DBD100 * BMXWAIST
 
-```{python}
+```
 moderation_SY = ols('SY ~ DBD100 + BMXWAIST + DBD100 * BMXWAIST', data=df).fit()
 moderation_SY.summary()
 anova_lm(moderation_SY)
@@ -875,7 +906,7 @@ moderation_SY_down.summary()
 ### Mediation effect of age
 Fit model: RIDAGEYR ~ DBD100 to see if there are relationships between age and salt intake
 
-```{python}
+```
 # test if there is relationship between age and salt intake.
 age_D = ols('RIDAGEYR ~ DBD100', data=df).fit()
 age_D.summary()
@@ -883,7 +914,7 @@ age_D.summary()
 #### Diastolic
 Fit model: DI ~ DBD100 + RIDAGEYR.
 
-```{python}
+```
 mediation_DI = ols('DI ~ DBD100 + RIDAGEYR', data=df).fit()
 mediation_DI.summary()
 # Create design matrix
@@ -903,7 +934,7 @@ med_DI.summary()
 #### Systolic
 Fit model: SY ~ DBD100 + RIDAGEYR.
 
-```{python}
+```
 mediation_SY = ols('SY ~ DBD100 + RIDAGEYR', data=df).fit()
 mediation_SY.summary()
 
