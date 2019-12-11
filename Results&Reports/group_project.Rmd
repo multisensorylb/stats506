@@ -10,7 +10,7 @@ output:
     toc_float: TRUE
 ---
 
-```{r header, include=FALSE}
+```{r header, include=FALSE, eval = FALSE}
 # Stats 506, Fall 2019
 # Group project, R version: Jingyan Lu
 #
@@ -405,7 +405,7 @@ mediation_boot_SY1
 
 ## SAS
 
-``{r, echo = TRUE, eval=FALSE}
+```{r, echo = TRUE, eval=FALSE}
  /* 
 Stats 506, Fall 2019
  Group project, SAS version: Karthik G
