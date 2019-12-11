@@ -10,7 +10,7 @@ output:
     toc_float: TRUE
 ---
 
-```{r header, include=FALSE, eval = FALSE}
+```{r, echo=TRUE, eval = FALSE}
 # Stats 506, Fall 2019
 # Group project, R version: Jingyan Lu
 #
