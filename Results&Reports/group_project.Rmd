@@ -3,13 +3,26 @@ title: 'Stats 506 Group Project '
 author: "Group 10: Karthik G, Xinjun Li and Jingyan Lu"
 date: "12/9/2019"
 output:
-  html_document:
-    df_print: paged
-    toc: TRUE
-    toc_depth: 2
-    toc_float: TRUE
+html_document:
+df_print: paged
+toc: TRUE
+toc_depth: 2
+toc_float: TRUE
 ---
-  
+
+```{r setup, include=FALSE}
+# Stats 506, Fall 2019
+# Group project, R version: Jingyan Lu
+#
+# This script contains the script for implementing a R tutorial for the final
+# group project for the course Stats 506, Fall 2019. 
+# The script implements a moderation and mediation model for finding the effects 
+# of salt intake behaviour on the blood pressure (both diastole and systole) of 
+# a person with waist size and age acting as moderator and mediator respectively. 
+# Author: Jingyan Lu (andrealu@umich.edu)
+# Date: December 11, 2019
+```
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 knitr::opts_knit$set(root.dir = normalizePath("C:/Users/13063/Documents/GitHub/stats506"))
@@ -392,7 +405,23 @@ mediation_boot_SY1
 
 ## SAS
 
+``{r, echo = TRUE, eval=FALSE}
+ /* 
+Stats 506, Fall 2019
+ Group project, SAS version: Karthik G
+
+ This script contains the script for implementing a SAS tutorial for the final
+ group project for the course Stats 506, Fall 2019. 
+ The script implements a moderation and mediation model for finding the effects 
+ of salt intake behaviour on the blood pressure (both diastole and systole) of 
+ a person with waist size and age acting as moderator and mediator respectively. 
+ Author: Karthik G (gkarthik@umich.edu)
+ Date: December 11, 2019
+*/
+```
+
 ```{r, echo = TRUE, eval=FALSE}
+/* libraries */
 libname results 'C:/Users/djbranglab-admin/Desktop/stats506-master/stats506-master/results';
 libname rawdata 'C:/Users/djbranglab-admin/Desktop/stats506-master/stats506-master/RawData';
 libname home 'C:/Users/djbranglab-admin/Desktop/stats506-master/stats506-master/home';
@@ -409,28 +438,28 @@ libname home 'C:/Users/djbranglab-admin/Desktop/stats506-master/stats506-master/
 %let nutrients_1day = 'C:/Users/djbranglab-admin/Desktop/stats506-master/stats506-master/RawData/Dietary_nutrients_firstday_2015_16.csv';
 
 /* Import demographic data */ 
-  proc import file = &demographics 
+proc import file = &demographics 
 out=home.demographics dbms=csv replace; 
 guessingrows=max; 
 getnames = Yes ; 
 run;
 
 /* Import BMI data */ 
-  proc import file = &BMI   
+proc import file = &BMI   
 out=home.BMI dbms=csv replace; 
 guessingrows=max;
 getnames = Yes ;
 run;
 
 /* Import blood pressure data */ 
-  proc import file = &blood_pressure   
+proc import file = &blood_pressure   
 out=home.blood_pressure  dbms=csv replace; 
 guessingrows=max;
 getnames = Yes ;
 run;
 
 /* Import nutrients data */ 
-  proc import file = &nutrients_1day   
+proc import file = &nutrients_1day   
 out=home.nutrients_1day  dbms=csv replace; 
 guessingrows=max;
 getnames = Yes ;
@@ -443,7 +472,7 @@ run;
   
 ```{r, echo = TRUE, eval = FALSE}
 /* Merge all required data with SEQN as key*/ 
-  proc sql;
+proc sql;
 create table home.merged_data as select 
 A.SEQN, A.RIDAGEYR, 
 B.BMXWAIST, 
@@ -459,14 +488,14 @@ A.SEQN = D.SEQN;
 quit;
 
 /* Find mean of systole and diastole from all three observations*/ 
-  data home.mean_merged_data(DROP=BPXSY1 BPXSY2 BPXSY3 BPXDI1 BPXDI2 BPXDI3);
+data home.mean_merged_data(DROP=BPXSY1 BPXSY2 BPXSY3 BPXDI1 BPXDI2 BPXDI3);
 set home.merged_data;
 BPXSY=mean(of BPXSY1-BPXSY3);
 BPXDI=mean(of BPXDI1-BPXDI3);
 run;
 
 /* Drop rows with missing values*/ 
-  data home.mean_merged_data;
+data home.mean_merged_data;
 set home.mean_merged_data;
 if not cmiss(BMXWAIST,DBD100,BPXSY,BPXDI);
 run;
@@ -718,11 +747,6 @@ run;
 
 
 
-
-
-
-
-
 Required software and packages to run the code are as follows:
 * Python3 
 * os
@@ -733,6 +757,19 @@ Required software and packages to run the code are as follows:
 * patsy
 * matplotlib
 
+```python
+#Stats 506, Fall 2019
+ #Group project, Python version: Xinjun Li
+
+ #This script contains the script for implementing a Python tutorial for the final
+ #group project for the course Stats 506, Fall 2019. 
+ #The script implements a moderation and mediation model for finding the effects 
+ #of salt intake behaviour on the blood pressure (both diastole and systole) of 
+ #a person with waist size and age acting as moderator and mediator respectively. 
+ #Author: Xinjun Li (lixinjun@umich.edu)
+ #Date: December 11, 2019
+
+```
 
 ```python
 # Import packages
