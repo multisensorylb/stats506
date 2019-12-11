@@ -25,7 +25,7 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
-knitr::opts_knit$set(root.dir = normalizePath("C:/Users/13063/Documents/GitHub/stats506"))
+knitr::opts_knit$set(root.dir = normalizePath('D:/学习/密歇根/STAT506/Group project/stats506'))
 #libraries:
 #library(SASxport)
 library(tidyverse)
@@ -33,8 +33,7 @@ library(data.table)
 library(MBESS)
 library(kableExtra)
 # set working directory
-setwd("C:/Users/13063/Documents/GitHub/stats506")
-#setwd("C:/Users/djbranglab-admin/Desktop/stats506-master/stats506-master/")
+setwd("D:/学习/密歇根/STAT506/Group project/stats506")
 
 ```
 
@@ -75,13 +74,13 @@ data.table(Variables = name, Descriptions = description, Datasets = dataset) %>%
 
 # Methods
 
-Moderation and Mediation analysis are used in our projects. To explain the moderation analysis, We start with the relationship between an independent variable x and a dependent variable Y. For example, in our case, X is the salt intake and Y is the blood pressure. we will prove it later that there is a relationship between them, which can be expressed as Y = beta0 + beta1 * X + error.
+Moderation and Mediation analysis are used in our projects. To explain the moderation analysis, We start with the relationship between an independent variable x and a dependent variable Y. For example, in our case, X is the salt intake and Y is the blood pressure. we will prove it later that there is a relationship between them, which can be expressed as $y = \beta_0 + \beta_1 x + \epsilon$.
 
 A moderator Z is a variable that can affect the direction or strength of the relationship between X and Y. If the effect of salt intake on the blood pressure depends on the level of waist size, then waist size is a moderator. Otherwise, blood pressure is not a moderator.
 
-We perform moderation analysis by adding interaction term, which can be expressed as Y = beta0 + beta1 * X + beta2 * Z + beta3 * X * Z + error. If beta3 does not equal to 0, Z is supposed to be a moderator. In the regression model, we test whether the regression coefficient for the interaction term is significant or not.
+We perform moderation analysis by adding interaction term, which can be expressed as $y = \beta_0 + \beta_1 x + \beta_2 z + \beta_3 x * z + \epsilon$. If $\beta_3$ does not equal to 0, Z is supposed to be a moderator. In the regression model, we test whether the regression coefficient for the interaction term is significant or not.
 
-Mediator explains the underlying mechanism of the relationship between independent variable and dependent variable. Let's assume that the independent variable X is a predictor for the dependent variable Y and the relationship is that X boosts Y. If M is a mediator, then the hypothesis is that X boosts M and then M boosts Y. Three steps of regression comprise a medation analysis: X to Y, X to M, X + M to Y. 
+Mediator explains the underlying mechanism of the relationship between independent variable and dependent variable. Let's assume that the independent variable X is a predictor for the dependent variable Y and the relationship is that X boosts Y. If M is a mediator, then the hypothesis is that X boosts M and then M boosts Y. Three steps of regression comprise a medation analysis: X to Y, X to M, X+M to Y. 
 
 First, we need to illustrate that X affects Y. If not, there is no need to mediate. Second, we try to figure out if X affect M. If there is no relationship between them, M may be another predictor or does not affect Y at all, instead of a mediator. M is a mediator only when there is relationship between X and M. The last step is to find if M affects Y, but X no longer affects Y. If the medation effect exists, the effect of X on Y will disappear or reduce to a samll magnitude when M is included in the model.
 
@@ -405,7 +404,7 @@ mediation_boot_SY1
 
 ## SAS
 
-``{r, echo = TRUE, eval=FALSE}
+```{r, echo = TRUE, eval=FALSE}
  /* 
 Stats 506, Fall 2019
  Group project, SAS version: Karthik G
@@ -1538,32 +1537,31 @@ From the analysis above, we know that the salt intake behavior have significant 
 The influence of salt intake behavior on blood pressure(both diastolic and systolic) is not modirated by waist size.
 Age is a Mediator between salt intake behavior and blood pressure(both diastolic and systolic).
 
-<br>
-<br>
 
 # Results
+
 
 Moderation analysis results are seen in the tables above. 
 
 #### Moderation results for Diastole: 
 
-The overall model was significant F(3, 4678) = 154.5, p<0.001, \(R\)^2^ = 0.09, with main effect of waist size positively predicting diastolic blood pressure. However, the interaction was not significant, indicating that though there exists a positive relation between waist size and diastolic blood pressure as well as a positive relation between salt intake and diastolic blood pressure, there does not exist a moderating effect of waist size on the relationship between salt intake and diastolic blood pressure. Simple slopes analysis does not indicate significant differences between predictions at different levels of standard deviations of the moderator. 
+The overall model was significant $F(3,4678) = 154.5$, $p<0.001$, $R^2 = 0.09$, with main effect of waist size positively predicting diastolic blood pressure. However, the interaction was not significant, indicating that though there exists a positive relation between waist size and diastolic blood pressure as well as a positive relation between salt intake and diastolic blood pressure, there does not exist a moderating effect of waist size on the relationship between salt intake and diastolic blood pressure. Simple slopes analysis does not indicate significant differences between predictions at different levels of standard deviations of the moderator. 
 
 #### Moderation results for Systole: 
 
-The overall model was significant F(3, 4678) = 333.7, p<0.001, \(R\)^2^ = 0.17, with main effect of waist size positively predicting systolic blood pressure. However, the interaction was not significant, indicating that though there exists a positive relation between waist size and systolic blood pressure as well as a positive relation between salt intake and systolic blood pressure, there does not exist a moderating effect of waist size on the relationship between salt intake and systolic blood pressure.Simple slopes analysis does not indicate significant differences between predictions at different levels of standard deviations of the moderator. 
+The overall model was significant $F(3,4678) = 333.7$, $p<0.001$, $R^2 = 0.17$, with main effect of waist size positively predicting systolic blood pressure. However, the interaction was not significant, indicating that though there exists a positive relation between waist size and systolic blood pressure as well as a positive relation between salt intake and systolic blood pressure, there does not exist a moderating effect of waist size on the relationship between salt intake and systolic blood pressure.Simple slopes analysis does not indicate significant differences between predictions at different levels of standard deviations of the moderator. 
 
 #### Mediation results for diastole: 
 
-Mediation analysis performed to analyze the mediating effect of age on the relationship between salt intake and diastolic blood pressure was significant, F(2,4679) = 182.7, p <0.001, \(R\)^2^ = 0.07, indicating that there exists a positive relationship between salt intake and blood pressure. More importantly, there exists a positive, significant indirect effect in the relationship between salt intake and diastolic blood pressure, b = 0.38, 95% CI (0.25, 0.52), p < 0.001, indicating a mediating effect of age on the effect of salt intake and diastolic blood pressure. 
+Mediation analysis performed to analyze the mediating effect of age on the relationship between salt intake and diastolic blood pressure was significant, $F(2,4679) = 182.7$, $p <0.001$, $R^2= 0.07$, indicating that there exists a positive relationship between salt intake and blood pressure. More importantly, there exists a positive, significant indirect effect in the relationship between salt intake and diastolic blood pressure, $b = 0.38$, 95% CI is (0.25, 0.52), $p < 0.001$, indicating a mediating effect of age on the effect of salt intake and diastolic blood pressure. 
 
 #### Mediation results for systole: 
 
-Mediation analysis performed to analyze the mediating effect of age on the relationship between salt intake and systolic blood pressure was significant, F(2,4679) = 1133, p <0.001, \(R\)^2^ = 0.32, indicating that there exists a positive relationship between salt intake and blood pressure. More importantly, there exists a positive, significant indirect effect in the relationship between salt intake and diastolic blood pressure, b = 1.05, 95% CI (0.71, 1.40), p < 0.001, indicating a mediating effect of age on the effect of salt intake and systolic blood pressure. 
-<br>
-<br>  
+Mediation analysis performed to analyze the mediating effect of age on the relationship between salt intake and systolic blood pressure was significant, $F(2,4679) = 1133$, $p <0.001$, $R^2 = 0.32$, indicating that there exists a positive relationship between salt intake and blood pressure. More importantly, there exists a positive, significant indirect effect in the relationship between salt intake and diastolic blood pressure, $b = 1.05$, 95% CI (0.71, 1.40), $p < 0.001$, indicating a mediating effect of age on the effect of salt intake and systolic blood pressure. 
+
 
 # Discussion
+
 
 We have independent variable which is the frequency of add salt to food 
 at table represented the salt intake behavior of each subject.
@@ -1581,7 +1579,6 @@ may lose some information on the on relative salt intake frequency difference be
 while treated it as numeric variable may lead to misspecified frequency difference between subject.
 
 For R and SAS the results of analysis are same. The conclusion of all three different implimentation
-<<<<<<< HEAD
 are the same. There are some difference between R, SAS and Python impliment since we treated
 independent variable differently and add extra degrees of freedom.
 However, if our independent variable is of two levels, 
@@ -1607,12 +1604,7 @@ The mediation (indirect) effect is significant whether we treat salt intake as c
 For direct effect, there are difference between diastolic and systole. The direct effect of salt intake
 on systole is not significant while the direct effect of salt intake on diastolic is significant.
 
-=======
-are the same. However, there are some difference between R, SAS and Python impliment since we treated
-independent variable differently.
-<br>
-<br>
->>>>>>> 594e706f3619a6fa22eef9212034fd32fcdaca72
+
 
 # References
 Baron, R. M., & Kenny, D. A. (1986). The moderator–mediator variable distinction in social psychological research: Conceptual, strategic, and statistical considerations. Journal of Personality and Social Psychology, 5, 1173-1182.
