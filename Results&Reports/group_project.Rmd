@@ -1,6 +1,6 @@
 ---
 title: 'Stats 506 Group Project '
-author: "Group 10: Karthik G, Xinjun Li and Jingyan Lu"
+author: "Group 10: (Author wishes to remain anonymous), Xinjun Li and Jingyan Lu"
 date: "12/11/2019"
 output:
   html_document:
@@ -407,23 +407,23 @@ mediation_boot_SY1
 ```{r, echo = TRUE, eval=FALSE}
  /* 
 Stats 506, Fall 2019
- Group project, SAS version: Karthik G
+ Group project, SAS version: __Anon
 
  This script contains the script for implementing a SAS tutorial for the final
  group project for the course Stats 506, Fall 2019. 
  The script implements a moderation and mediation model for finding the effects 
  of salt intake behaviour on the blood pressure (both diastole and systole) of 
  a person with waist size and age acting as moderator and mediator respectively. 
- Author: Karthik G (gkarthik@umich.edu)
+ Author: ___Anon (___@umich.edu)
  Date: December 11, 2019
 */
 ```
 
 ```{r, echo = TRUE, eval=FALSE}
 /* libraries */
-libname results 'C:/Users/djbranglab-admin/Desktop/stats506-master/stats506-master/results';
-libname rawdata 'C:/Users/djbranglab-admin/Desktop/stats506-master/stats506-master/RawData';
-libname home 'C:/Users/djbranglab-admin/Desktop/stats506-master/stats506-master/home';
+libname results './results';
+libname rawdata './RawData';
+libname home './home';
 ```
 
 
@@ -431,10 +431,10 @@ libname home 'C:/Users/djbranglab-admin/Desktop/stats506-master/stats506-master/
 
 ```{r, echo = TRUE, eval=FALSE}
 
-%let demographics = 'C:/Users/djbranglab-admin/Desktop/stats506-master/stats506-master/RawData/demographics_15_16.csv';
-%let BMI = 'C:/Users/djbranglab-admin/Desktop/stats506-master/stats506-master/RawData/Body_measures_2015_16.csv';
-%let blood_pressure = 'C:/Users/djbranglab-admin/Desktop/stats506-master/stats506-master/RawData/Blood_Pressure_2015_16.csv';
-%let nutrients_1day = 'C:/Users/djbranglab-admin/Desktop/stats506-master/stats506-master/RawData/Dietary_nutrients_firstday_2015_16.csv';
+%let demographics = './demographics_15_16.csv';
+%let BMI = './Body_measures_2015_16.csv';
+%let blood_pressure = './Blood_Pressure_2015_16.csv';
+%let nutrients_1day = './Dietary_nutrients_firstday_2015_16.csv';
 
 /* Import demographic data */ 
 proc import file = &demographics 
