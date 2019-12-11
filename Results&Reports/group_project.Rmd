@@ -1563,38 +1563,37 @@ Mediation analysis performed to analyze the mediating effect of age on the relat
 # Discussion
 
 
-We have independent variable which is the frequency of add salt to food 
-at table represented the salt intake behavior of each subject.
-We can either treat this as a categorical variable with three level
+Our independent variable is the salt intake behavior of each subject.
+We can either treat this as a categorical variable with three levels
 ("Rarely", "Occasionally" or "Very often" to add salt), or we can treat 
-this variable as numeric variable represented the relative frequency of 
-add salt to food.
+this variable as numeric, representing the relative frequency of 
+adding salt to food at the table.
 
-For R and SAS, we impliment the analysis methods treated variable "the frequency of add salt to food 
-at table" as numeric variable.
-For Python, we impliment the analysis methods treated variable "the frequency of add salt to food 
-at table" as categorical variable.
-Treat "the frequency of add salt to food at table" as categorical variable
-may lose some information on the on relative salt intake frequency difference between subject,
-while treated it as numeric variable may lead to misspecified frequency difference between subject.
+For R and SAS, we implemented the analysis methods by treating the variable 
+"the frequency of add salt to food at table" as numeric.
+For Python, we implemented the analysis methods by treating the variable 
+"the frequency of add salt to food at table" as categorical.
+Treating "the frequency of add salt to food at table" as categorical variable
+may lose some information on the relative salt intake frequency difference between subject,
+while treating it as a numeric variable may lead to misspecified frequency difference between subject.
 
-For R and SAS the results of analysis are same. The conclusion of all three different implimentation
-are the same. There are some difference between R, SAS and Python impliment since we treated
-independent variable differently and add extra degrees of freedom.
-However, if our independent variable is of two levels, 
-treating it as categorical variable or as numeric variable are essentially the same.  
+For R and SAS the results of the analysis are same. The conclusion obtained from all three different 
+implementation are the same. There are some differences between R, SAS and Python implementations since we 
+treated independent variables differently and added extra degrees of freedom.
+However, if our independent variable is of two levels, treating it as categorical variable or as numeric 
+variable are essentially the same.  
 
-When fit least square to model `DI ~ DBD100`, the coefficient of numeric variable is significant
+When we fit a least square model for `DI ~ DBD100`, the coefficient of numeric variable is significant
 (for both diastolic and systolic).
 The two coefficients of factor variable of 3 levels are both significant
 (for both diastolic and systolic), and the effect of independent variable on blood pressure 
 are significant from the result of anova analysis.
 
 When we analyse the moderation effect of waist size on the relationship between salt intake behavior
-and blood pressure, all analysis show that the interactions between waist size and salt intake are
+and blood pressure, all analysis showed that the interactions between waist size and salt intake are
 not siginificant. The main difference is that anova of categorical data shows that salt intake behavior
 have significant influence on blood pressure, while regression results shows that salt intake behavior
-do not have significant influence on blood pressure. But this difference will not affect the result that
+do not have significant influence on blood pressure. But this difference will not affect the result since
 there are no moderation effect of waist size.
 
 When we analyse the moderation effect of waist size on the relationship between salt intake behavior
