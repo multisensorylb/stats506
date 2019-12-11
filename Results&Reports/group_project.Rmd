@@ -5,13 +5,13 @@ date: "12/9/2019"
 output:
 html_document:
 df_print: paged
-toc: true
+toc: TRUE
 toc_depth: 2
-toc_float: true
+toc_float: TRUE
 ---
   
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 knitr::opts_knit$set(root.dir = normalizePath("D:/学习/密歇根/STAT506/Group project/stats506/"))
 #libraries:
 #library(SASxport)
@@ -717,8 +717,13 @@ run;
 ## Python
 
 
-Required software and packages to run the code are as follows:
 
+
+
+
+
+
+Required software and packages to run the code are as follows:
 * Python3 
 * os
 * pandas
@@ -795,13 +800,16 @@ Take a look at the data we are about to work on.
 print(df.describe())
 ```
 
-
-      File "<ipython-input-29-3e8b582dd116>", line 2
-        print(df.describe()
-                           ^
-    SyntaxError: unexpected EOF while parsing
+                    SY           DI     RIDAGEYR     BMXWAIST
+    count  4670.000000  4670.000000  4670.000000  4670.000000
+    mean    119.510921    66.050393    38.107281    93.630557
+    std      17.292694    13.378804    21.598139    19.019918
+    min      74.000000     0.000000     8.000000    46.300000
+    25%     107.333333    58.666667    18.000000    79.700000
+    50%     116.666667    66.666667    35.000000    93.000000
+    75%     128.000000    74.666667    56.000000   105.900000
+    max     206.666667   124.000000    80.000000   171.600000
     
-
 
 
 ```python
@@ -938,7 +946,7 @@ print(ols_DI.summary())
     Model:                            OLS   Adj. R-squared:                  0.003
     Method:                 Least Squares   F-statistic:                     7.993
     Date:                Tue, 10 Dec 2019   Prob (F-statistic):           0.000343
-    Time:                        13:35:08   Log-Likelihood:                -18730.
+    Time:                        17:45:18   Log-Likelihood:                -18730.
     No. Observations:                4670   AIC:                         3.747e+04
     Df Residuals:                    4667   BIC:                         3.749e+04
     Df Model:                           2                                         
@@ -986,7 +994,7 @@ print(ols_SY.summary())
     Model:                            OLS   Adj. R-squared:                  0.003
     Method:                 Least Squares   F-statistic:                     8.841
     Date:                Tue, 10 Dec 2019   Prob (F-statistic):           0.000147
-    Time:                        13:35:08   Log-Likelihood:                -19928.
+    Time:                        17:45:18   Log-Likelihood:                -19928.
     No. Observations:                4670   AIC:                         3.986e+04
     Df Residuals:                    4667   BIC:                         3.988e+04
     Df Model:                           2                                         
@@ -1048,7 +1056,7 @@ print(moderation_DI.summary())
     Model:                            OLS   Adj. R-squared:                  0.089
     Method:                 Least Squares   F-statistic:                     92.35
     Date:                Tue, 10 Dec 2019   Prob (F-statistic):           5.66e-93
-    Time:                        13:35:08   Log-Likelihood:                -18518.
+    Time:                        17:45:18   Log-Likelihood:                -18518.
     No. Observations:                4670   AIC:                         3.705e+04
     Df Residuals:                    4664   BIC:                         3.709e+04
     Df Model:                           5                                         
@@ -1100,7 +1108,7 @@ print(moderation_DI_up.summary())
     Model:                            OLS   Adj. R-squared:                  0.089
     Method:                 Least Squares   F-statistic:                     92.35
     Date:                Tue, 10 Dec 2019   Prob (F-statistic):           5.66e-93
-    Time:                        13:35:08   Log-Likelihood:                -18518.
+    Time:                        17:45:18   Log-Likelihood:                -18518.
     No. Observations:                4670   AIC:                         3.705e+04
     Df Residuals:                    4664   BIC:                         3.709e+04
     Df Model:                           5                                         
@@ -1140,7 +1148,7 @@ print(moderation_DI_down.summary())
     Model:                            OLS   Adj. R-squared:                  0.089
     Method:                 Least Squares   F-statistic:                     92.35
     Date:                Tue, 10 Dec 2019   Prob (F-statistic):           5.66e-93
-    Time:                        13:35:08   Log-Likelihood:                -18518.
+    Time:                        17:45:18   Log-Likelihood:                -18518.
     No. Observations:                4670   AIC:                         3.705e+04
     Df Residuals:                    4664   BIC:                         3.709e+04
     Df Model:                           5                                         
@@ -1186,7 +1194,7 @@ print(moderation_SY.summary())
     Model:                            OLS   Adj. R-squared:                  0.175
     Method:                 Least Squares   F-statistic:                     199.6
     Date:                Tue, 10 Dec 2019   Prob (F-statistic):          2.71e-193
-    Time:                        13:35:08   Log-Likelihood:                -19484.
+    Time:                        17:45:18   Log-Likelihood:                -19484.
     No. Observations:                4670   AIC:                         3.898e+04
     Df Residuals:                    4664   BIC:                         3.902e+04
     Df Model:                           5                                         
@@ -1244,7 +1252,7 @@ print(moderation_SY_up.summary())
     Model:                            OLS   Adj. R-squared:                  0.175
     Method:                 Least Squares   F-statistic:                     199.6
     Date:                Tue, 10 Dec 2019   Prob (F-statistic):          2.71e-193
-    Time:                        13:35:09   Log-Likelihood:                -19484.
+    Time:                        17:45:19   Log-Likelihood:                -19484.
     No. Observations:                4670   AIC:                         3.898e+04
     Df Residuals:                    4664   BIC:                         3.902e+04
     Df Model:                           5                                         
@@ -1284,7 +1292,7 @@ print(moderation_SY_down.summary())
     Model:                            OLS   Adj. R-squared:                  0.175
     Method:                 Least Squares   F-statistic:                     199.6
     Date:                Tue, 10 Dec 2019   Prob (F-statistic):          2.71e-193
-    Time:                        13:35:09   Log-Likelihood:                -19484.
+    Time:                        17:45:19   Log-Likelihood:                -19484.
     No. Observations:                4670   AIC:                         3.898e+04
     Df Residuals:                    4664   BIC:                         3.902e+04
     Df Model:                           5                                         
@@ -1331,7 +1339,7 @@ print(age_D.summary())
     Model:                            OLS   Adj. R-squared:                  0.008
     Method:                 Least Squares   F-statistic:                     20.96
     Date:                Tue, 10 Dec 2019   Prob (F-statistic):           8.67e-10
-    Time:                        13:35:09   Log-Likelihood:                -20954.
+    Time:                        17:45:19   Log-Likelihood:                -20954.
     No. Observations:                4670   AIC:                         4.191e+04
     Df Residuals:                    4667   BIC:                         4.193e+04
     Df Model:                           2                                         
@@ -1371,7 +1379,7 @@ print(mediation_DI.summary())
     Model:                            OLS   Adj. R-squared:                  0.072
     Method:                 Least Squares   F-statistic:                     121.6
     Date:                Tue, 10 Dec 2019   Prob (F-statistic):           7.67e-76
-    Time:                        13:35:09   Log-Likelihood:                -18563.
+    Time:                        17:45:19   Log-Likelihood:                -18563.
     No. Observations:                4670   AIC:                         3.713e+04
     Df Residuals:                    4666   BIC:                         3.716e+04
     Df Model:                           3                                         
@@ -1414,16 +1422,16 @@ print(med_DI.summary())
 ```
 
                               Estimate  Lower CI bound  Upper CI bound  P-value
-    ACME (control)            1.338709        0.907954        1.817986    0.000
-    ACME (treated)            1.338709        0.907954        1.817986    0.000
-    ADE (control)             1.658755        0.076155        3.221708    0.034
-    ADE (treated)             1.658755        0.076155        3.221708    0.034
-    Total effect              2.997464        1.340941        4.630169    0.000
-    Prop. mediated (control)  0.448475        0.267928        0.949488    0.000
-    Prop. mediated (treated)  0.448475        0.267928        0.949488    0.000
-    ACME (average)            1.338709        0.907954        1.817986    0.000
-    ADE (average)             1.658755        0.076155        3.221708    0.034
-    Prop. mediated (average)  0.448475        0.267928        0.949488    0.000
+    ACME (control)            1.325481        0.882149        1.817338    0.000
+    ACME (treated)            1.325481        0.882149        1.817338    0.000
+    ADE (control)             1.689822        0.133945        3.195800    0.038
+    ADE (treated)             1.689822        0.133945        3.195800    0.038
+    Total effect              3.015304        1.377978        4.588222    0.002
+    Prop. mediated (control)  0.439429        0.262442        0.890685    0.002
+    Prop. mediated (treated)  0.439429        0.262442        0.890685    0.002
+    ACME (average)            1.325481        0.882149        1.817338    0.000
+    ADE (average)             1.689822        0.133945        3.195800    0.038
+    Prop. mediated (average)  0.439429        0.262442        0.890685    0.002
     
 
 All the mediation effect(ACME) are significant(at level of 95%).
@@ -1445,7 +1453,7 @@ print(mediation_SY.summary())
     Model:                            OLS   Adj. R-squared:                  0.326
     Method:                 Least Squares   F-statistic:                     753.2
     Date:                Tue, 10 Dec 2019   Prob (F-statistic):               0.00
-    Time:                        13:38:32   Log-Likelihood:                -19015.
+    Time:                        17:49:04   Log-Likelihood:                -19015.
     No. Observations:                4670   AIC:                         3.804e+04
     Df Residuals:                    4666   BIC:                         3.806e+04
     Df Model:                           3                                         
@@ -1490,22 +1498,22 @@ print(med_SY.summary())
 ```
 
                               Estimate  Lower CI bound  Upper CI bound  P-value
-    ACME (control)            3.715009        2.462244        4.958673    0.000
-    ACME (treated)            3.715009        2.462244        4.958673    0.000
-    ADE (control)             0.529456       -1.115372        2.215795    0.534
-    ADE (treated)             0.529456       -1.115372        2.215795    0.534
-    Total effect              4.244465        2.097054        6.243702    0.000
-    Prop. mediated (control)  0.871542        0.614593        1.485909    0.000
-    Prop. mediated (treated)  0.871542        0.614593        1.485909    0.000
-    ACME (average)            3.715009        2.462244        4.958673    0.000
-    ADE (average)             0.529456       -1.115372        2.215795    0.534
-    Prop. mediated (average)  0.871542        0.614593        1.485909    0.000
+    ACME (control)            3.725348        2.470640        4.927865    0.000
+    ACME (treated)            3.725348        2.470640        4.927865    0.000
+    ADE (control)             0.547837       -1.021655        2.148920    0.506
+    ADE (treated)             0.547837       -1.021655        2.148920    0.506
+    Total effect              4.273185        2.252254        6.263328    0.000
+    Prop. mediated (control)  0.878754        0.617803        1.427143    0.000
+    Prop. mediated (treated)  0.878754        0.617803        1.427143    0.000
+    ACME (average)            3.725348        2.470640        4.927865    0.000
+    ADE (average)             0.547837       -1.021655        2.148920    0.506
+    Prop. mediated (average)  0.878754        0.617803        1.427143    0.000
     
 
 All the mediation effect(ACME) are significant.
 Which means that age is a mediator between salt intake and systolic.
 
-### Summary
+## Summary
 
 From the analysis above, we know that the salt intake behavior have significant influence on people's blood pressure
 (both diastolic and systolic).
@@ -1515,10 +1523,30 @@ Age is a Mediator between salt intake behavior and blood pressure(both diastolic
 
 
 
+
 <br>
   
 # Discussion
 <br>
+
+We have independent variable which is the frequency of add salt to food 
+at table represented the salt intake behavior of each subject.
+We can either treat this as a categorical variable with three level
+("Rarely", "Occasionally" or "Very often" to add salt), or we can treat 
+this variable as numeric variable represented the relative frequency of 
+add salt to food.
+
+For R and SAS, we impliment the analysis methods treated variable "the frequency of add salt to food 
+at table" as numeric variable.
+For Python, we impliment the analysis methods treated variable "the frequency of add salt to food 
+at table" as categorical variable.
+
+For R and SAS the results of analysis are same. The conclusion of all three different implimentation
+are the same. However, there are some difference between R, SAS and Python impliment since we treated
+independent variable differently.
+
+
+
   
 # References
 Baron, R. M., & Kenny, D. A. (1986). The moderator–mediator variable distinction in social psychological research: Conceptual, strategic, and statistical considerations. Journal of Personality and Social Psychology, 5, 1173-1182.
