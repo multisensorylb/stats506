@@ -28,6 +28,9 @@ Committed the SAS version of the above script. This includes comments and observ
 12/5/2019
 Created a report of the results using output from the SAS scripts for the models. 
 
+12/11/2019
+Helped with the group-project.htm which is the final version of the report for the project. 
+
 The concise list of the files I have worked on are: 
 
 --> stats506/Codes/R/
@@ -44,7 +47,9 @@ The concise list of the files I have worked on are:
 --> stats506/Results&Reports/
 	SAS Report- sastutorial_506.htm
 	SAS Report- sastutorial_506.pdf
-
+--> stats506/Results&Reports/
+	group-project.html
+	group-project.rmd
 
 Jingyan
 
