@@ -1,7 +1,7 @@
 ---
 title: 'Stats 506 Group Project '
 author: "Group 10: Karthik G, Xinjun Li and Jingyan Lu"
-date: "12/10/2019"
+date: "12/11/2019"
 output:
   html_document:
     df_print: paged
@@ -10,7 +10,7 @@ output:
     toc_float: TRUE
 ---
 
-```{r header, include=FALSE}
+```{r header, include=FALSE, eval = FALSE}
 # Stats 506, Fall 2019
 # Group project, R version: Jingyan Lu
 #
