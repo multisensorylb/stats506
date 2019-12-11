@@ -3,24 +3,24 @@ title: 'Stats 506 Group Project '
 author: "Group 10: Karthik G, Xinjun Li and Jingyan Lu"
 date: "12/9/2019"
 output:
-html_document:
-df_print: paged
-toc: TRUE
-toc_depth: 2
-toc_float: TRUE
+  html_document:
+    df_print: paged
+    toc: TRUE
+    toc_depth: 2
+    toc_float: TRUE
 ---
   
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
-knitr::opts_knit$set(root.dir = normalizePath("D:/学习/密歇根/STAT506/Group project/stats506/"))
+knitr::opts_knit$set(root.dir = normalizePath("C:/Users/13063/Documents/GitHub/stats506"))
 #libraries:
 #library(SASxport)
 library(tidyverse)
 library(data.table)
 library(MBESS)
-
+library(kableExtra)
 # set working directory
-setwd("D:/学习/密歇根/STAT506/Group project/stats506/")
+setwd("C:/Users/13063/Documents/GitHub/stats506")
 #setwd("C:/Users/djbranglab-admin/Desktop/stats506-master/stats506-master/")
 
 ```
@@ -56,7 +56,7 @@ description = c("How often add salt to food at table",
 dataset = c("DR1TOT_I.XPT", "BPX_I.XPT", "BPX_I.XPT", "DEMO_I.XPT", "BMX_I.XPT")
 data.table(Variables = name, Descriptions = description, Datasets = dataset) %>%
   knitr::kable(align = "l") %>%
-  kableExtra::kable_styling(bootstrap_options = c("striped", "hover"), latex_options = c("hold_position", "scale_down"), position = "left")
+  kable_styling(bootstrap_options = c("striped", "hover"), latex_options = c("hold_position", "scale_down"), position = "left")
 ```
 <br>
 
@@ -1513,21 +1513,39 @@ print(med_SY.summary())
 All the mediation effect(ACME) are significant.
 Which means that age is a mediator between salt intake and systolic.
 
-## Summary
+### Summary
 
 From the analysis above, we know that the salt intake behavior have significant influence on people's blood pressure
 (both diastolic and systolic).
 The influence of salt intake behavior on blood pressure(both diastolic and systolic) is not modirated by waist size.
 Age is a Mediator between salt intake behavior and blood pressure(both diastolic and systolic).
 
-
-
-
-
 <br>
-  
+<br>
+
+# Results
+
+Moderation analysis results are seen in the tables above. 
+
+#### Moderation results for Diastole: 
+
+The overall model was significant F(3, 4678) = 154.5, p<0.001, \(R\)^2^ = 0.09, with main effect of waist size positively predicting diastolic blood pressure. However, the interaction was not significant, indicating that though there exists a positive relation between waist size and diastolic blood pressure as well as a positive relation between salt intake and diastolic blood pressure, there does not exist a moderating effect of waist size on the relationship between salt intake and diastolic blood pressure. Simple slopes analysis does not indicate significant differences between predictions at different levels of standard deviations of the moderator. 
+
+#### Moderation results for Systole: 
+
+The overall model was significant F(3, 4678) = 333.7, p<0.001, \(R\)^2^ = 0.17, with main effect of waist size positively predicting systolic blood pressure. However, the interaction was not significant, indicating that though there exists a positive relation between waist size and systolic blood pressure as well as a positive relation between salt intake and systolic blood pressure, there does not exist a moderating effect of waist size on the relationship between salt intake and systolic blood pressure.Simple slopes analysis does not indicate significant differences between predictions at different levels of standard deviations of the moderator. 
+
+#### Mediation results for diastole: 
+
+Mediation analysis performed to analyze the mediating effect of age on the relationship between salt intake and diastolic blood pressure was significant, F(2,4679) = 182.7, p <0.001, \(R\)^2^ = 0.07, indicating that there exists a positive relationship between salt intake and blood pressure. More importantly, there exists a positive, significant indirect effect in the relationship between salt intake and diastolic blood pressure, b = 0.38, 95% CI (0.25, 0.52), p < 0.001, indicating a mediating effect of age on the effect of salt intake and diastolic blood pressure. 
+
+#### Mediation results for systole: 
+
+Mediation analysis performed to analyze the mediating effect of age on the relationship between salt intake and systolic blood pressure was significant, F(2,4679) = 1133, p <0.001, \(R\)^2^ = 0.32, indicating that there exists a positive relationship between salt intake and blood pressure. More importantly, there exists a positive, significant indirect effect in the relationship between salt intake and diastolic blood pressure, b = 1.05, 95% CI (0.71, 1.40), p < 0.001, indicating a mediating effect of age on the effect of salt intake and systolic blood pressure. 
+<br>
+<br>  
+
 # Discussion
-<br>
 
 We have independent variable which is the frequency of add salt to food 
 at table represented the salt intake behavior of each subject.
@@ -1544,10 +1562,9 @@ at table" as categorical variable.
 For R and SAS the results of analysis are same. The conclusion of all three different implimentation
 are the same. However, there are some difference between R, SAS and Python impliment since we treated
 independent variable differently.
+<br>
+<br>
 
-
-
-  
 # References
 Baron, R. M., & Kenny, D. A. (1986). The moderator–mediator variable distinction in social psychological research: Conceptual, strategic, and statistical considerations. Journal of Personality and Social Psychology, 5, 1173-1182.
 
