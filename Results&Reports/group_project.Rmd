@@ -964,9 +964,6 @@ print(ols_DI.summary())
     Kurtosis:                       5.570   Cond. No.                         3.29
     ==============================================================================
     
-    Warnings:
-    [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
-    
 
 
 ```python
@@ -1011,9 +1008,6 @@ print(ols_SY.summary())
     Skew:                           1.084   Prob(JB):                         0.00
     Kurtosis:                       4.923   Cond. No.                         3.29
     ==============================================================================
-    
-    Warnings:
-    [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
     
 
 
@@ -1077,12 +1071,6 @@ print(moderation_DI.summary())
     Kurtosis:                       6.057   Cond. No.                     1.62e+03
     ==============================================================================
     
-    Warnings:
-    [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
-    [2] The condition number is large, 1.62e+03. This might indicate that there are
-    strong multicollinearity or other numerical problems.
-    
-
 
 ```python
 print(anova_lm(moderation_DI))
@@ -1128,12 +1116,7 @@ print(moderation_DI_up.summary())
     Skew:                          -0.685   Prob(JB):                         0.00
     Kurtosis:                       6.057   Cond. No.                     2.32e+03
     ==============================================================================
-    
-    Warnings:
-    [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
-    [2] The condition number is large, 2.32e+03. This might indicate that there are
-    strong multicollinearity or other numerical problems.
-    
+ 
 
 
 ```python
@@ -1169,11 +1152,7 @@ print(moderation_DI_down.summary())
     Kurtosis:                       6.057   Cond. No.                     1.06e+03
     ==============================================================================
     
-    Warnings:
-    [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
-    [2] The condition number is large, 1.06e+03. This might indicate that there are
-    strong multicollinearity or other numerical problems.
-    
+ 
 
 For the models above, coefficients for the interaction terms and salt intake itself are not significant(at level of 95%).
 There are not moderation effect of waist size on salt intake and diastole.
@@ -1214,11 +1193,6 @@ print(moderation_SY.summary())
     Skew:                           1.320   Prob(JB):                         0.00
     Kurtosis:                       6.236   Cond. No.                     1.62e+03
     ==============================================================================
-    
-    Warnings:
-    [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
-    [2] The condition number is large, 1.62e+03. This might indicate that there are
-    strong multicollinearity or other numerical problems.
     
 
 
@@ -1273,11 +1247,7 @@ print(moderation_SY_up.summary())
     Kurtosis:                       6.236   Cond. No.                     2.32e+03
     ==============================================================================
     
-    Warnings:
-    [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
-    [2] The condition number is large, 2.32e+03. This might indicate that there are
-    strong multicollinearity or other numerical problems.
-    
+  
 
 
 ```python
@@ -1313,11 +1283,7 @@ print(moderation_SY_down.summary())
     Kurtosis:                       6.236   Cond. No.                     1.06e+03
     ==============================================================================
     
-    Warnings:
-    [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
-    [2] The condition number is large, 1.06e+03. This might indicate that there are
-    strong multicollinearity or other numerical problems.
-    
+
 
 For the models above, coefficients for the interation terms and salt intake itself are not significant(at level of 95%). 
 There are not moderation effect of waist size on salt intake and diastole.
@@ -1357,9 +1323,7 @@ print(age_D.summary())
     Kurtosis:                       1.908   Cond. No.                         3.29
     ==============================================================================
     
-    Warnings:
-    [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
-    
+
 
 The model is significant. There are relationships between age and salt intake behavior.
 
@@ -1398,9 +1362,18 @@ print(mediation_DI.summary())
     Kurtosis:                       6.391   Cond. No.                         136.
     ==============================================================================
     
-    Warnings:
-    [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+
+
+```python
+print(anova_lm(mediation_DI))
+```
+
+                  df         sum_sq       mean_sq           F        PR(>F)
+    DBD100       2.0    2852.765900   1426.382950    8.586573  1.895590e-04
+    RIDAGEYR     1.0   57756.868745  57756.868745  347.686130  6.716480e-75
+    Residual  4666.0  775105.839635    166.117840         NaN           NaN
     
+
 
 The model is significant. Age might be a mediator between salt intake and diastolic.
 
@@ -1472,8 +1445,16 @@ print(mediation_SY.summary())
     Kurtosis:                       5.022   Cond. No.                         136.
     ==============================================================================
     
-    Warnings:
-    [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+
+
+```python
+print(anova_lm(mediation_SY))
+```
+
+                  df         sum_sq       mean_sq           F        PR(>F)
+    DBD100       2.0    2852.765900   1426.382950    8.586573  1.895590e-04
+    RIDAGEYR     1.0   57756.868745  57756.868745  347.686130  6.716480e-75
+    Residual  4666.0  775105.839635    166.117840         NaN           NaN
     
 
 The model is significant. 
@@ -1513,7 +1494,7 @@ print(med_SY.summary())
 All the mediation effect(ACME) are significant.
 Which means that age is a mediator between salt intake and systolic.
 
-## Summary
+### Summary
 
 From the analysis above, we know that the salt intake behavior have significant influence on people's blood pressure
 (both diastolic and systolic).
@@ -1540,10 +1521,36 @@ For R and SAS, we impliment the analysis methods treated variable "the frequency
 at table" as numeric variable.
 For Python, we impliment the analysis methods treated variable "the frequency of add salt to food 
 at table" as categorical variable.
+Treat "the frequency of add salt to food at table" as categorical variable
+may lose some information on the on relative salt intake frequency difference between subject,
+while treated it as numeric variable may lead to misspecified frequency difference between subject.
 
 For R and SAS the results of analysis are same. The conclusion of all three different implimentation
-are the same. However, there are some difference between R, SAS and Python impliment since we treated
-independent variable differently.
+are the same. There are some difference between R, SAS and Python impliment since we treated
+independent variable differently and add extra degrees of freedom.
+However, if our independent variable is of two levels, 
+treating it as categorical variable or as numeric variable are essentially the same.  
+
+When fit least square to model `DI ~ DBD100`, the coefficient of numeric variable is significant
+(for both diastolic and systolic).
+The two coefficients of factor variable of 3 levels are both significant
+(for both diastolic and systolic), and the effect of independent variable on blood pressure 
+are significant from the result of anova analysis.
+
+When we analyse the moderation effect of waist size on the relationship between salt intake behavior
+and blood pressure, all analysis show that the interactions between waist size and salt intake are
+not siginificant. The main difference is that anova of categorical data shows that salt intake behavior
+have significant influence on blood pressure, while regression results shows that salt intake behavior
+do not have significant influence on blood pressure. But this difference will not affect the result that
+there are no moderation effect of waist size.
+
+When we analyse the moderation effect of waist size on the relationship between salt intake behavior
+and blood pressure, we show that age is a mediator between salt intake and blood pressure
+(for both diastolic and systolic).
+The mediation (indirect) effect is significant whether we treat salt intake as categorical or numeric.
+For direct effect, there are difference between diastolic and systole. The direct effect of salt intake
+on systole is not significant while the direct effect of salt intake on diastolic is significant.
+
 
 
 
