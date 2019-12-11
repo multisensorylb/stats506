@@ -3,14 +3,14 @@ title: 'Stats 506 Group Project '
 author: "Group 10: Karthik G, Xinjun Li and Jingyan Lu"
 date: "12/9/2019"
 output:
-html_document:
-df_print: paged
-toc: TRUE
-toc_depth: 2
-toc_float: TRUE
+  html_document:
+    df_print: paged
+    toc: TRUE
+    toc_depth: 2
+    toc_float: TRUE
 ---
 
-```{r setup, include=FALSE}
+```{r header, include=FALSE}
 # Stats 506, Fall 2019
 # Group project, R version: Jingyan Lu
 #
