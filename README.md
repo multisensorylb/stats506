@@ -87,3 +87,7 @@ The original draft code that I had uploaded had a slight error. The moderator is
 
 I think I did not center the DBD100 variable in my resutls. I centered it now and got the same results as you for both B0 and B1. 
 Karthik
+
+From Xinjun:
+Hi,
+I think DBD100 should be treated as category variable, not numeric.
