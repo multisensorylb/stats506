@@ -1,6 +1,6 @@
 ---
 title: 'Stats 506 Group Project '
-author: "Group 10: (Author wishes to remain anonymous), Xinjun Li and Jingyan Lu"
+author: "Group 10:  Karthik G, Xinjun Li and Jingyan Lu"
 date: "12/11/2019"
 output:
   html_document:
@@ -25,7 +25,7 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
-knitr::opts_knit$set(root.dir = normalizePath('D:/STAT506/Group project/stats506'))
+knitr::opts_knit$set(root.dir = normalizePath('D:/学习/密歇根/STAT506/Group project/stats506'))
 
 #libraries:
 #library(SASxport)
@@ -35,7 +35,7 @@ library(MBESS)
 library(kableExtra)
 
 # set working directory
-setwd("D:/STAT506/Group project/stats506")
+setwd("D:/学习/密歇根/STAT506/Group project/stats506")
 
 ```
 
