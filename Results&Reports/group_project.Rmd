@@ -2001,7 +2001,7 @@ print(med_SY.summary())
 All the mediation effect(ACME) are significant.
 This means that age is a mediator between salt intake and systolic.
 
-#### Compare the difference between treating independent variable as category variable and as numeric variable
+#### Compare the difference between treating independent variable as categorical variable and as numeric variable
 
 From the analysis above, we know that salt intake behavior has a significant influence on people’s blood pressure (both diastolic and systolic). The influence of salt intake behavior on blood pressure(both diastolic and systolic) is not moderated by waist size. Age is a Mediator between salt intake behavior and blood pressure(both diastolic and systolic).
 
