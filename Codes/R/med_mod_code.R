@@ -5,10 +5,10 @@ library(dplyr)
 # free to add more and pass it around. 
 
 ## Load the data
-demographics = read.xport("C:/Users/gkarthik/Desktop/SASUniversityEdition/myfolders/home/new/stats506/Demographics_2015_16.XPT")
-BMI = read.xport("C:/Users/gkarthik/Desktop/SASUniversityEdition/myfolders/home/new/stats506/Body_measures_2015_16.XPT")
-blood_pressure = read.xport("C:/Users/gkarthik/Desktop/SASUniversityEdition/myfolders/home/new/stats506/Blood_Pressure_2015_16.XPT")
-nutrients_1day = read.xport("C:/Users/gkarthik/Desktop/SASUniversityEdition/myfolders/home/new/stats506/Dietary_nutrients_firstday_2015_16.XPT")
+demographics = read.xport("./Demographics_2015_16.XPT")
+BMI = read.xport("./Body_measures_2015_16.XPT")
+blood_pressure = read.xport("./Blood_Pressure_2015_16.XPT")
+nutrients_1day = read.xport("./Dietary_nutrients_firstday_2015_16.XPT")
 
 ################ Merge relevant data and drop NA values #######################
 merged_mod_data = 
