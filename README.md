@@ -42,29 +42,12 @@ approach. This analysis will use [demographics], [nutrients_1day], and [blood_pr
 
 ### Choose independent variable
 
-We will treat "How often add salt to food at table" as independent variable (This is a categorical variable).
-
-<!--
-Note: we need to drop missing values and '9' or '99' which represent "don't know"
--->
+We will treat "How often add salt to food at table" as independent variable.
 
 ### Choose dependent variables
 
 Blood pressure includes Systolic and Diastolic measurements from each participant. We can regress by building individual models for
 each DV.
-
-<!--
-There is also possible a possibility to treat blood pressure as a categorical variable.
-For example hypertension, normal, hypotension ([Softmax](http://deeplearning.stanford.edu/tutorial/supervised/SoftmaxRegression/) can
-deal with this).
-Or just group the blood pressure by hypertension, normal, hypotensio, and regress respectively.
---> 
-### Choose control variables
-
-There are some studies show that some genetic factors may affect blood pressure.
-However, in this project we may want to focus on the influence of diet habits, age and waist size on blood pressure.
-We may want to treat race, gender BMI etc. as control variables. But, currently, we are interested in studying moderation and
-mediation effects, which might not require control variables that need to be explicity stated as part of the model.
 
 ### Code reviews via e-mails
 
