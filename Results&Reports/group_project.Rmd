@@ -10,7 +10,7 @@ output:
     toc_float: TRUE
 ---
 
-```{r, echo=TRUE, eval = FALSE}
+```{r, echo=FALSE, eval = FALSE}
 # Stats 506, Fall 2019
 # Group project, R version: Jingyan Lu
 #
@@ -25,7 +25,7 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
-knitr::opts_knit$set(root.dir = normalizePath('D:/学习/密歇根/STAT506/Group project/stats506'))
+knitr::opts_knit$set(root.dir = normalizePath('C:/Users/13063/Documents/GitHub/stats506'))
 #libraries:
 #library(SASxport)
 library(tidyverse)
@@ -33,7 +33,7 @@ library(data.table)
 library(MBESS)
 library(kableExtra)
 # set working directory
-setwd("D:/学习/密歇根/STAT506/Group project/stats506")
+setwd("C:/Users/13063/Documents/GitHub/stats506")
 
 ```
 
