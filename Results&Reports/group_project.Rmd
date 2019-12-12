@@ -26,12 +26,14 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 knitr::opts_knit$set(root.dir = normalizePath('D:/STAT506/Group project/stats506'))
+
 #libraries:
 #library(SASxport)
 library(tidyverse)
 library(data.table)
 library(MBESS)
 library(kableExtra)
+
 # set working directory
 setwd("D:/STAT506/Group project/stats506")
 
@@ -750,6 +752,7 @@ We need first clean the raw data and join different dataset.
 
 
 ```python
+
 # select useful columns
 
 demo=demo.set_index('SEQN'
@@ -765,7 +768,7 @@ nutr1=nutr.set_index('SEQN'
                     )
                     
 nutr=nutr1.query('DBD100 != 9'
-                ).astype('category')
+                 ).astype('category')
 
 # Calculate mean of blood pressure
 bp=bp.set_index('SEQN'
@@ -780,6 +783,7 @@ df1=df1-df1.mean()
 
 # Categorical treat DBD100 as categorical variable.
 df=bp.join(demo,how='inner').join(BMI,how='inner').join(nutr,how='inner')
+
 ```
 
 Generate plots show the relationship between salt intake behaviors and blood presure.
