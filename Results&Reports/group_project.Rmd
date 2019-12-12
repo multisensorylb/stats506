@@ -78,18 +78,20 @@ data.table(Variables = name, Descriptions = description, Datasets = dataset) %>%
 
 Moderation and Mediation analysis are used in our projects. To explain the moderation analysis, We start with the relationship between an independent variable x and a dependent variable Y. For example, in our case, X is the salt intake and Y is the blood pressure. we will prove it later that there is a relationship between them, which can be expressed as $y = \beta_0 + \beta_1 x + \epsilon$.
 
-A moderator Z is a variable that can affect the direction or strength of the relationship between X and Y. If the effect of salt intake on the blood pressure depends on the level of waist size, then waist size is a moderator. Otherwise, blood pressure is not a moderator.
+Moderator Z is a variable that can affect the direction or strength of the relationship between X and Y. If the effect of salt intake on the blood pressure depends on the level of waist size, then waist size is a moderator. Otherwise, blood pressure is not a moderator.
 
-We perform moderation analysis by adding interaction term, which can be expressed as $y = \beta_0 + \beta_1 x + \beta_2 z + \beta_3 x * z + \epsilon$. If $\beta_3$ does not equal to 0, Z is supposed to be a moderator. In the regression model, we test whether the regression coefficient for the interaction term is significant or not.
+We perform moderation analysis by adding an interaction term, which can be expressed as $y = \beta_0 + \beta_1 x + \beta_2 z + \beta_3 x * z + \epsilon$.
+If $\beta_3$ does not equal to 0, Z is supposed to be a moderator. In the regression model, we test whether the regression coefficient for the interaction term is significant or not.
 
-Mediator explains the underlying mechanism of the relationship between independent variable and dependent variable. Let's assume that the independent variable X is a predictor for the dependent variable Y and the relationship is that X boosts Y. If M is a mediator, then the hypothesis is that X boosts M and then M boosts Y. Three steps of regression comprise a medation analysis: X to Y, X to M, X+M to Y. 
+Mediator explains the underlying mechanism of the relationship between the independent variable and the dependent variable. Let’s assume that the independent variable X is a predictor for the dependent variable Y and the relationship is that X boosts Y. If M is a mediator, then the hypothesis is that X boosts M and then M boosts Y. Three steps of regression comprise a mediation analysis: X to Y, X to M, X+M to Y.
 
-First, we need to illustrate that X affects Y. If not, there is no need to mediate. Second, we try to figure out if X affect M. If there is no relationship between them, M may be another predictor or does not affect Y at all, instead of a mediator. M is a mediator only when there is relationship between X and M. The last step is to find if M affects Y, but X no longer affects Y. If the medation effect exists, the effect of X on Y will disappear or reduce to a samll magnitude when M is included in the model.
+First, we need to illustrate that X affects Y. If not, there is no need to mediate. Second, we try to figure out if X affect M. If there is no relationship between them, M may be another predictor or does not affect Y at all, instead of a mediator. M is a mediator only when there is a relationship between X and M. The last step is to find if M affects Y, but X no longer affects Y. If the mediation effect exists, the effect of X on Y will disappear or reduce to a small magnitude when M is included in the model.
 
-We use R, Python and SAS to perform the analysis.
+We use R, Python, and SAS to perform the analysis.
 
 
-  
+
+
 # Core Analysis: Moderation and Mediation {.tabset}
 
 
@@ -109,6 +111,7 @@ nutrients_1day<-readxl::read_xlsx('RawData/Dietary_nutrients_firstday_2015_16.xl
 ### Data processing
   
 ```{r}
+
 blood_pressure = blood_pressure %>%
   select(SEQN, BPXSY1, BPXSY2, BPXSY3, BPXDI1, BPXDI2, BPXDI3) %>%
   rowwise() %>%
@@ -130,22 +133,17 @@ data = demographics %>%
   left_join(nutrients_1day, by = "SEQN") %>%
   left_join(blood_pressure, by = "SEQN") 
 
-
 data = data[complete.cases(data), ]
+
 ```
 
 ```{r plots}
 
+# Prepare data for ggplot
 df=data %>%
   na.omit() %>%
   filter(DBD100!=9,DI>0,SY>0) %>%
-  mutate(DBD100=as.character(DBD100)) %>%
-  mutate(DBD100=ifelse(DBD100=='1','Rarely',
-                       ifelse(DBD100=='2','Occasionally',
-                              'Very often')))%>%
   mutate(DBD100=as.factor(DBD100))
-
-summary(df)
 
 ggplot(data=df,aes(x=DBD100))+
   geom_boxplot(aes(y=DI))+
@@ -155,15 +153,20 @@ ggplot(data=df,aes(x=DBD100))+
   geom_boxplot(aes(y=SY))+
   ggtitle("Boxplot of Systolic and frequency of add salt to food at table")
 
+# Distribution of regression residuals
 model_DI = lm(DI ~ DBD100, data)
 qqnorm(model_DI$residuals)
 qqline(model_DI$residuals, col = "blue")
 
+# Distribution of regression residuals
 model_SY = lm(SY ~ DBD100, data)
 qqnorm(model_SY$residuals)
 qqline(model_SY$residuals, col = "blue")
 
 ```
+
+The residuals of diastolic have two thick tails compares to normal.
+The residuals of systolic have a thick right tail compares to normal.
 
 #### Center means to reduce multicolinearity
 
@@ -202,7 +205,7 @@ summary(model_SY)
 
 The structural model for the moderation analysis can be defined as seen in Figure 1
 
-![Fig 1: Structural model for the moderation analysis](figures_for_report/fig1.png)
+![Fig: Structural model for the moderation analysis](figures_for_report/fig1.png)
 
 ##### We perform moderation to test if the relationship is dependent on the waist size. Three levels of a moderator(mean, one standard deviation above the mean and one standard deviation below the mean) is chosen.
  <br>
@@ -314,7 +317,7 @@ mediation_boot_DI1
 <br>
   
 
-![Fig 2: Direct and indirect effects of the mediation analysis for Diastole ](figures_for_report/fig2.png)
+![Fig: Direct and indirect effects of the mediation analysis for Diastole ](figures_for_report/fig2.png)
 
 
 ##### The effect of salt intake on diastole blood pressure still exists(p-value is 0.021), but in a smaller magnitude. Age partially mediates between salt intake and diastole blood pressure.
@@ -345,7 +348,7 @@ mediation_boot_SY1 = mediation(x = data$DBD100,
 mediation_boot_SY1
 ```
 
-![Fig 3: Direct and indirect effects of the mediation analysis for Diastole ](figures_for_report/fig3.png)
+![Fig: Direct and indirect effects of the mediation analysis for Diastole ](figures_for_report/fig3.png)
 
 ##### The estimate indirect effect(1.054) and its confidence interval is different from zero. Age is a mediator between salt intake and systole blood pressure.
 
@@ -748,7 +751,7 @@ nutr = pd.read_excel("RawData/Dietary_nutrients_firstday_2015_16.xlsx")
 
 ### Data cleaning
 
-We need first clean the raw data and join different dataset.
+We need to first clean the raw data and join different datasets.
 
 
 ```python
@@ -794,7 +797,7 @@ Generate plots show the relationship between salt intake behaviors and blood pre
 DI_salt=df[['DBD100','DI']
             ].pivot(columns='DBD100', values='DI'
             )
-DI_salt.columns=["Rarely","Occasionally","Very often"]
+DI_salt.columns=["1","2","3"]
 DI_salt.boxplot(grid=False)
 plt.title("Boxplot of Diastolic and frequency of add salt to food at table")
 plt.suptitle("")
@@ -811,7 +814,7 @@ plt.show()
 SY_salt=df[['DBD100','SY']
             ].pivot(columns='DBD100', values='SY'
             )
-SY_salt.columns=["Rarely","Occasionally","Very often"]
+SY_salt.columns=["1","2","3"]
 SY_salt.boxplot(grid=False)
 plt.title("Boxplot of Systolic and frequency of add salt to food at table")
 plt.suptitle("")
@@ -826,26 +829,26 @@ plt.show()
 ```python
 # Test normality of Diastolic given salt intake
 ax1 = plt.subplot(131)
-a=DI_salt[['Rarely']].dropna().to_numpy()
+a=DI_salt[['1']].dropna().to_numpy()
 a=np.reshape(a,(len(a)))
 qqplot = stats.probplot(a, plot=plt)
 plt.yticks([])
 
 ax2 = plt.subplot(132)
-b=DI_salt[['Occasionally']].dropna().to_numpy()
+b=DI_salt[['2']].dropna().to_numpy()
 b=np.reshape(b,(len(b)))
 qqplot = stats.probplot(b, plot=plt)
 plt.yticks([])
 
 ax3 = plt.subplot(133)
-c=DI_salt[['Very often']].dropna().to_numpy()
+c=DI_salt[['3']].dropna().to_numpy()
 c=np.reshape(c,(len(c)))
 qqplot = stats.probplot(c, plot=plt)
 plt.yticks([])
 
-ax1.set_title('Rarely')
-ax2.set_title('Occasionally')
-ax3.set_title('Very often')
+ax1.set_title('1')
+ax2.set_title('2')
+ax3.set_title('3')
 
 plt.show()
 ```
@@ -853,31 +856,32 @@ plt.show()
 
 ![](figures_for_report/output_13_0.png)
 
+From the plot shown above, we know that the distribution of blood pressure given salt intake is approximately normal with a thick left tail.
 
 
 ```python
 # Test normality of Systolic given salt intake
 ax1 = plt.subplot(131)
-a=SY_salt[['Rarely']].dropna().to_numpy()
+a=SY_salt[['1']].dropna().to_numpy()
 a=np.reshape(a,(len(a)))
 qqplot = stats.probplot(a, plot=plt)
 plt.yticks([])
 
 ax2 = plt.subplot(132)
-b=SY_salt[['Occasionally']].dropna().to_numpy()
+b=SY_salt[['2']].dropna().to_numpy()
 b=np.reshape(b,(len(b)))
 qqplot = stats.probplot(b, plot=plt)
 plt.yticks([])
 
 ax3 = plt.subplot(133)
-c=SY_salt[['Very often']].dropna().to_numpy()
+c=SY_salt[['3']].dropna().to_numpy()
 c=np.reshape(c,(len(c)))
 qqplot = stats.probplot(c, plot=plt)
 plt.yticks([])
 
-ax1.set_title('Rarely')
-ax2.set_title('Occasionally')
-ax3.set_title('Very often')
+ax1.set_title('1')
+ax2.set_title('2')
+ax3.set_title('3')
 
 plt.show()
 ```
@@ -885,6 +889,7 @@ plt.show()
 
 ![](figures_for_report/output_14_0.png)
 
+The distribution of blood pressure given salt intake is approximately normal with a thick right tail.
 
 
 ### Fit OLS
@@ -964,13 +969,11 @@ print(ols_SY.summary())
 
     
 
-From the above results, we know that both models are significant and every coefficients are significant(at the level of 95%).
+From the above results, we know that both models are significant and every coefficient is significant(at the level of 95%).
 
 ### Moderation effect of waist size
 
-
-First, add two columns recording a standiviation above and below  of waist size.
-
+First, add two columns recording a standard deviation above and below of waist size.
 
 ```python
 df1['waist_sd'] = df1['BMXWAIST'].std()
@@ -1081,8 +1084,8 @@ print(moderation_DI_down.summary())
     
 
 
-For the models above, coefficients for the interaction terms and salt intake itself are not significant(at level of 95%).
-There are not moderation effect of waist size on salt intake and diastole.
+For the models above, coefficients for the interaction terms and salt intake itself are not significant(at the level of 95%).
+There is no moderation effect of waist size on salt intake and diastole.
 
 #### Systolic result
 
@@ -1190,12 +1193,12 @@ print(moderation_SY_down.summary())
 
 
 
-For the models above, coefficients for the interation terms and salt intake itself are not significant(at level of 95%). 
-There are not moderation effect of waist size on salt intake and diastole.
+For the models above, coefficients for the interaction terms and salt intake itself are not significant(at the level of 95%). 
+There is no moderation effect of waist size on salt intake and diastole.
 
 ### Mediation effect of age
 
-Fit model: `RIDAGEYR ~ DBD100` to see if there are relationships between age and salt intake
+Fit model: `RIDAGEYR ~ DBD100` to see if there are relationships between age and salt intake.
 
 
 ```python
@@ -1292,8 +1295,8 @@ print(med_DI.summary())
     Prop. mediated (average)  0.426604        0.245650        0.855243    0.000
     
 
-All the mediation effect(ACME) are significant(at level of 95%).
-Which means that age is a mediator between salt intake and diastolic.
+All the mediation effect(ACME) are significant(at the level of 95%).
+This means that age is a mediator between salt intake and diastolic.
 
 #### Systolic result
 
@@ -1332,7 +1335,7 @@ print(mediation_SY.summary())
 
 
 The model is significant. 
-Even thought the coefficients of salt intake is not significant(at level of 95%).
+Even thought the coefficients of salt intake is not significant(at the level of 95%).
 Age might be a mediator between salt intake and systolic.
 
 
@@ -1360,7 +1363,7 @@ print(med_SY.summary())
     
 
 All the mediation effect(ACME) are significant.
-Which means that age is a mediator between salt intake and systolic.
+That means that age is a mediator between salt intake and systolic.
 
 
 
@@ -1430,11 +1433,12 @@ lines(data$DBD100, highSY, col = "blue")
 
 
 ## Python
+
 ### Treat salt intakes as categorical variable
 
 Fit the ordinary least square to the data,
 and do mediate and moderate analysis treat
-salt intake as categorical variable.
+salt intake as a categorical variable.
 
 
 #### Diastolic result (ols)
@@ -1527,11 +1531,11 @@ print(anova_lm(ols_SY))
     Residual  4667.0  1.390935e+06   298.036262       NaN       NaN
     
 
-From the above results, we know that both models are significant and every coefficients are significant(at the level of 95%).
+From the above results, we know that both models are significant and every coefficient is significant(at the level of 95%).
 
 #### Diastolic result (moderation)
 
-First, add two columns recording a standiviation above and below  of waist size.
+First, add two columns recording a standard deviation above and below of waist size.
 
 
 ```python
@@ -1659,8 +1663,8 @@ print(moderation_DI_down.summary())
     
  
 
-For the models above, coefficients for the interaction terms and salt intake itself are not significant(at level of 95%).
-There are not moderation effect of waist size on salt intake and diastole.
+For the models above, coefficients for the interaction terms and salt intake itself are not significant(at the level of 95%).
+There is no moderation effect of waist size on salt intake and diastole.
 
 #### Systolic result (moderation)
 
@@ -1790,8 +1794,8 @@ print(moderation_SY_down.summary())
     
 
 
-For the models above, coefficients for the interation terms and salt intake itself are not significant(at level of 95%). 
-There are not moderation effect of waist size on salt intake and diastole.
+For the models above, coefficients for the interaction terms and salt intake itself are not significant(at level of 95%). 
+There is no moderation effects of waist size on salt intake and diastole.
 
 #### Diastolic result (mediation)
 
@@ -1910,8 +1914,8 @@ print(med_DI.summary())
     Prop. mediated (average)  0.439429        0.262442        0.890685    0.002
     
 
-All the mediation effect(ACME) are significant(at level of 95%).
-Which means that age is a mediator between salt intake and diastolic.
+All the mediation effect(ACME) are significant(at the level of 95%).
+This means that age is a mediator between salt intake and diastolic.
 
 #### Systolic result (mediation)
 
@@ -1961,7 +1965,7 @@ print(anova_lm(mediation_SY))
     
 
 The model is significant. 
-Even thought the coefficients of salt intake is not significant(at level of 95%).
+Even though the coefficients of salt intake is not significant(at the level of 95%).
 Age might be a mediator between salt intake and systolic.
 
 
@@ -1995,45 +1999,21 @@ print(med_SY.summary())
     
 
 All the mediation effect(ACME) are significant.
-Which means that age is a mediator between salt intake and systolic.
+This means that age is a mediator between salt intake and systolic.
 
-#### Summary
+#### Compare the difference between treating independent variable as category variable and as numeric variable
 
-From the analysis above, we know that the salt intake behavior have significant influence on people's blood pressure
-(both diastolic and systolic).
-The influence of salt intake behavior on blood pressure(both diastolic and systolic) is not modirated by waist size.
-Age is a Mediator between salt intake behavior and blood pressure(both diastolic and systolic).
+From the analysis above, we know that salt intake behavior has a significant influence on people’s blood pressure (both diastolic and systolic). The influence of salt intake behavior on blood pressure(both diastolic and systolic) is not moderated by waist size. Age is a Mediator between salt intake behavior and blood pressure(both diastolic and systolic).
 
-Our independent variable is the salt intake behavior of each subject.
-We can either treat this as a categorical variable with three levels
-("Rarely", "Occasionally" or "Very often" to add salt), or we can treat 
-this variable as numeric, representing the relative frequency of 
-adding salt to food at the table.
+Our independent variable is the salt intake behavior of each subject. We can either treat this as a categorical variable with three levels (“Rarely”, “Occasionally” or “Very often” to add salt), or we can treat this variable as numeric, representing the relative frequency of adding salt to food at the table.
 
+The conclusions obtained from treated salt intake differently are the same. There are some differences exist since we added extra degrees of freedom. However, if our independent variable is of two levels, treating it as a categorical variable or as a numeric variable is essentially the same.
 
-The conclusion obtained from treated salt intake differently are the same. There are some differences exist since we added extra degrees of freedom.
-However, if our independent variable is of two levels, treating it as categorical variable or as numeric 
-variable are essentially the same.  
+When we fit the least square model for DI ~ DBD100, the coefficient of the numeric variable is significant (for both diastolic and systolic). The two coefficients of factor variable of 3 levels are both significant (for both diastolic and systolic), and the effect of the independent variable on blood pressure are significant from the result of ANOVA analysis.
 
-When we fit a least square model for `DI ~ DBD100`, the coefficient of numeric variable is significant
-(for both diastolic and systolic).
-The two coefficients of factor variable of 3 levels are both significant
-(for both diastolic and systolic), and the effect of independent variable on blood pressure 
-are significant from the result of anova analysis.
+When we analyze the moderation effect of waist size on the relationship between salt intake behavior and blood pressure, both analyses showed that the interactions between waist size and salt intake are not significant. The main difference is that ANOVA of categorical data shows that salt intake behavior has a significant influence on blood pressure, while regression results show that salt intake behavior does not have a significant influence on blood pressure. The t-tests for each dummy variable are not significant while F-test is significant. But this difference will not affect the result since there is no moderation effect of waist size.
 
-When we analyse the moderation effect of waist size on the relationship between salt intake behavior
-and blood pressure, both analyses showed that the interactions between waist size and salt intake are
-not siginificant. The main difference is that anova of categorical data shows that salt intake behavior
-have significant influence on blood pressure, while regression results shows that salt intake behavior
-do not have significant influence on blood pressure. But this difference will not affect the result since
-there are no moderation effect of waist size.
-
-When we analyse the moderation effect of waist size on the relationship between salt intake behavior
-and blood pressure, we show that age is a mediator between salt intake and blood pressure
-(for both diastolic and systolic).
-The mediation (indirect) effect is significant whether we treat salt intake as categorical or numeric.
-For direct effect, there are difference between diastolic and systole. The direct effect of salt intake
-on systole is not significant while the direct effect of salt intake on diastolic is significant.
+When we analyze the moderation effect of waist size on the relationship between salt intake behavior and blood pressure, we show that age is a mediator between salt intake and blood pressure (for both diastolic and systolic). The mediation (indirect) effect is significant whether we treat salt intake as categorical or numeric. For the direct effect, there is a difference between diastolic and systole. The direct effect of salt intake on systole is not significant while the direct effect of salt intake on diastolic is significant.
 
 
 # Results
@@ -2047,7 +2027,7 @@ The overall model was significant $F(3,4678) = 154.5$, $p<0.001$, $R^2 = 0.09$, 
 
 #### Moderation results for Systole: 
 
-The overall model was significant $F(3,4678) = 333.7$, $p<0.001$, $R^2 = 0.17$, with main effect of waist size positively predicting systolic blood pressure. However, the interaction was not significant, indicating that though there exists a positive relation between waist size and systolic blood pressure as well as a positive relation between salt intake and systolic blood pressure, there does not exist a moderating effect of waist size on the relationship between salt intake and systolic blood pressure.Simple slopes analysis does not indicate significant differences between predictions at different levels of standard deviations of the moderator. 
+The overall model was significant $F(3,4678) = 333.7$, $p<0.001$, $R^2 = 0.17$, with main effect of waist size positively predicting systolic blood pressure. However, the interaction was not significant, indicating that though there exists a positive relation between waist size and systolic blood pressure as well as a positive relation between salt intake and systolic blood pressure, there does not exist a moderating effect of waist size on the relationship between salt intake and systolic blood pressure. Simple slopes analysis does not indicate significant differences between predictions at different levels of standard deviations of the moderator. 
 
 #### Mediation results for diastole: 
 
