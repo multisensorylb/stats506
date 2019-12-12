@@ -2714,12 +2714,6 @@ summary {
 }
 }
 
-@media print {
-.toc-content {
-  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
-  float: right;
-}
-}
 
 .toc-content {
   padding-left: 30px;
@@ -2881,7 +2875,6 @@ BMX_I.XPT
 </tr>
 </tbody>
 </table>
-<p><br></p>
 </div>
 <div id="methods" class="section level1">
 <h1>Methods</h1>
@@ -2891,10 +2884,9 @@ BMX_I.XPT
 <p>Mediator explains the underlying mechanism of the relationship between independent variable and dependent variable. Let’s assume that the independent variable X is a predictor for the dependent variable Y and the relationship is that X boosts Y. If M is a mediator, then the hypothesis is that X boosts M and then M boosts Y. Three steps of regression comprise a medation analysis: X to Y, X to M, X+M to Y.</p>
 <p>First, we need to illustrate that X affects Y. If not, there is no need to mediate. Second, we try to figure out if X affect M. If there is no relationship between them, M may be another predictor or does not affect Y at all, instead of a mediator. M is a mediator only when there is relationship between X and M. The last step is to find if M affects Y, but X no longer affects Y. If the medation effect exists, the effect of X on Y will disappear or reduce to a samll magnitude when M is included in the model.</p>
 <p>We use R, Python and SAS to perform the analysis.</p>
-<p><br></p>
 </div>
-<div id="moderation-and-mediation" class="section level1 tabset">
-<h1>Moderation and Mediation</h1>
+<div id="core-analysis-moderation-and-mediation" class="section level1 tabset">
+<h1>Core Analysis: Moderation and Mediation</h1>
 <div id="r" class="section level2">
 <h2>R</h2>
 <div id="load-the-data" class="section level3">
@@ -2904,7 +2896,6 @@ demographics&lt;-readxl::read_xlsx(&#39;RawData/demographics_15_16.xlsx&#39;)
 BMI&lt;-readxl::read_xlsx(&#39;RawData/Body_measures_2015_16.xlsx&#39;)
 blood_pressure&lt;-readxl::read_xlsx(&#39;RawData/Blood_Pressure_2015_16.xlsx&#39;)
 nutrients_1day&lt;-readxl::read_xlsx(&#39;RawData/Dietary_nutrients_firstday_2015_16.xlsx&#39;)</code></pre>
-<p><br></p>
 </div>
 <div id="data-processing" class="section level3">
 <h3>Data processing</h3>
@@ -2975,7 +2966,23 @@ qqline(model_SY$residuals, col = &quot;blue&quot;)</code></pre>
 <h4>Center means to reduce multicolinearity</h4>
 <pre class="r"><code>data[c(&quot;RIDAGEYR&quot;, &quot;BMXWAIST&quot;, &quot;DBD100&quot;, &quot;DI&quot;, &quot;SY&quot;)] = 
   lapply(data[c(&quot;RIDAGEYR&quot;, &quot;BMXWAIST&quot;, &quot;DBD100&quot;, &quot;DI&quot;, &quot;SY&quot;)],  
-         function(x) scale(x, center=TRUE, scale=FALSE))</code></pre>
+         function(x) scale(x, center=TRUE, scale=FALSE))
+
+summary(data)</code></pre>
+<pre><code>##       SEQN           RIDAGEYR.V1         BMXWAIST.V1    
+##  Min.   :83732   Min.   :-30.12281   Min.   :-47.31115  
+##  1st Qu.:86173   1st Qu.:-20.12281   1st Qu.:-13.91115  
+##  Median :88748   Median : -3.12281   Median : -0.61115  
+##  Mean   :88707   Mean   :  0.00000   Mean   :  0.00000  
+##  3rd Qu.:91192   3rd Qu.: 17.87719   3rd Qu.: 12.18885  
+##  Max.   :93701   Max.   : 41.87719   Max.   : 77.98885  
+##       DBD100.V1             DI.V1               SY.V1       
+##  Min.   :-0.674925   Min.   :-66.06529   Min.   :-45.50676  
+##  1st Qu.:-0.674925   1st Qu.: -7.39862   1st Qu.:-12.17343  
+##  Median :-0.674925   Median :  0.60138   Median : -2.84010  
+##  Mean   : 0.000000   Mean   :  0.00000   Mean   :  0.00000  
+##  3rd Qu.: 0.325075   3rd Qu.:  8.60138   3rd Qu.:  8.49324  
+##  Max.   : 7.325075   Max.   : 60.93471   Max.   : 87.15990</code></pre>
 <p><br></p>
 </div>
 </div>
@@ -3127,39 +3134,6 @@ summary(moderation_DI_low)</code></pre>
 ## F-statistic: 154.5 on 3 and 4678 DF,  p-value: &lt; 2.2e-16</code></pre>
 <div id="since-the-regression-coefficient-for-the-interation-term-is-not-significant-with-p-value-0.41-there-does-not-exist-a-significant-moderation-effect.-the-effect-of-salt-intake-on-diastole-blood-pressure-may-not-depend-on-waist-size." class="section level5">
 <h5>Since the regression coefficient for the interation term is not significant with p value 0.41, there does not exist a significant moderation effect. The effect of salt intake on diastole blood pressure may not depend on waist size.</h5>
-<p><br></p>
-</div>
-</div>
-<div id="simple-slope-analysis-for-diastole-blood-pressure" class="section level4">
-<h4>Simple Slope analysis for diastole blood pressure</h4>
-<p><br></p>
-<div id="we-find-beta0-and-beta1-values-of-the-independent-variable-dbd100-salt-intake-from-the-three-regression-models-1-with-the-moderator-held-at-mean-2-with-the-moderator-held-at-one-standard-deviation-below-mean-3-with-the-moderator-held-at-one-standard-deviation-above-mean." class="section level5">
-<h5>We find beta0 and beta1 values of the independent variable DBD100 (salt intake) from the three regression models: (1) with the moderator held at mean (2) with the moderator held at one standard deviation below mean (3) with the moderator held at one standard deviation above mean.</h5>
-</div>
-<div id="then-for-each-of-these-three-models-we-predict-the-dependent-variable-y-beta0-beta1-x-here-y-is-blood-pressure-di-and-x-is-the-salt-intake-dbd100.-by-analysing-the-characteristic-of-y-at-three-levels-of-the-moderator-we-can-compare-the-behaviors-of-moderator-at-three-levels.-in-our-case-we-are-seeing-if-people-with-waist-size-one-standard-deviation-below-mean-and-one-standard-deviation-above-mean-have-different-blood-pressure-characteristics-compared-to-people-with-waist-size-at-mean." class="section level5">
-<h5>Then, for each of these three models, we predict the dependent variable Y = beta0 + beta1 * X (here Y is blood pressure DI and X is the salt intake DBD100). By analysing the characteristic of Y at three levels of the moderator, we can compare the behaviors of moderator at three levels. In our case, we are seeing if people with waist size one standard deviation below mean and one standard deviation above mean have different blood pressure characteristics compared to people with waist size at mean.</h5>
-<p><br></p>
-<pre class="r"><code># moderator is at mean: b0 = 0.010034, b1 = 0.596273
-meanDI = moderation_DI$coefficients[1] + moderation_DI$coefficients[2] * data$DBD100
-
-# moderator is one standard deviation above mean: b0 = -3.928731, b1 = 0.785543
-highDI = moderation_DI_high$coefficients[1] + moderation_DI_high$coefficients[2] * data$DBD100
-
-# moderator is one standard deviation below mean: bo = 3.948800, b1 = 0.407004
-lowDI = moderation_DI_low$coefficients[1] + moderation_DI_low$coefficients[2] * data$DBD100
-
-# plot the three dependent values vs salt intake
-plot(data$DBD100, meanDI, type = &quot;l&quot;, col = &quot;green&quot;, ylim = c(-5, 7), xlab = &quot;Salt intake&quot;, ylab = &quot;Diastole blood pressure&quot;)
-lines(data$DBD100, lowDI, col = &quot;red&quot;)
-lines(data$DBD100, highDI, col = &quot;blue&quot;)</code></pre>
-<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABUAAAAPACAMAAADDuCPrAAAA3lBMVEUAAAAAADoAAGYAAP8AOjoAOmYAOpAAZmYAZrYA/wA6AAA6OgA6Ojo6OmY6ZmY6ZpA6ZrY6kLY6kNtmAABmADpmOgBmOjpmZjpmZmZmZpBmkLZmkNtmtrZmtttmtv+QOgCQZgCQZjqQZmaQkDqQkGaQkJCQkLaQtraQttuQ2/+2ZgC2Zjq2kDq2kGa2kJC2tpC2tra2ttu225C227a229u22/+2///bkDrbkGbbtmbbtpDbtrbb25Db27bb29vb2//b/7bb////AAD/tmb/25D/27b/29v//7b//9v///9Avo+oAAAACXBIWXMAAB2HAAAdhwGP5fFlAAAgAElEQVR4nO3de2Pb1L6gYYVNmBJaymlPIbCn7S4zZ1NSeghz2h1ahjI96cX+/l9oLPkSJ7UT62dp6bKe5w+SQGJbwX27JC0tFVMAQoquXwDAUAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAko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" width="672" /></p>
-</div>
-<div id="the-green-line-shows-the-relationship-between-salt-intake-and-diastole-blood-pressure-when-the-moderator-waist-size-is-at-mean.the-red-line-is-for-the-moderator-one-standard-deviation-below-the-mean-snd-the-blue-line-is-for-one-standard-deviation-above-mean." class="section level5">
-<h5>The green line shows the relationship between salt intake and diastole blood pressure when the moderator waist size is at mean.The red line is for the moderator one standard deviation below the mean snd the blue line is for one standard deviation above mean.</h5>
-</div>
-<div id="we-can-see-from-the-plot-that-people-with-a-higher-waist-size-have-a-higher-effect-on-the-blood-pressure-meaning-the-moderation-effect-of-waist-size-on-blood-pressure-through-salt-intake-is-higher-for-people-with-a-higher-waist-size-but-they-are-not-significantly-different-between-different-levels-of-waist-sizes." class="section level5">
-<h5>we can see from the plot that people with a higher waist size have a higher effect on the blood pressure, meaning the moderation effect of waist size on blood pressure through salt intake is higher for people with a higher waist size, but they are not significantly different between different levels of waist sizes.</h5>
-<p><br></p>
 </div>
 </div>
 <div id="moderation-at-mean-for-systole-blood-pressure" class="section level4">
@@ -3186,7 +3160,6 @@ summary(moderation_SY)</code></pre>
 ## Residual standard error: 15.72 on 4678 degrees of freedom
 ## Multiple R-squared:  0.1763, Adjusted R-squared:  0.1757 
 ## F-statistic: 333.7 on 3 and 4678 DF,  p-value: &lt; 2.2e-16</code></pre>
-<p><br></p>
 </div>
 <div id="moderation-at-one-standard-deviation-above-mean-for-systole-blood-pressure" class="section level4">
 <h4>Moderation at one standard deviation above mean for systole blood pressure</h4>
@@ -3244,35 +3217,6 @@ summary(moderation_SY_low)</code></pre>
 ## F-statistic: 333.7 on 3 and 4678 DF,  p-value: &lt; 2.2e-16</code></pre>
 <div id="since-the-regression-coefficient-for-the-interation-term-is-not-significant-with-p-value-0.51-there-does-not-exist-a-significant-moderation-effect.-the-effect-of-salt-intake-on-systole-blood-pressure-may-not-depend-on-waist-size-as-well." class="section level5">
 <h5>Since the regression coefficient for the interation term is not significant with p value 0.51, there does not exist a significant moderation effect. The effect of salt intake on systole blood pressure may not depend on waist size as well.</h5>
-<p><br></p>
-</div>
-</div>
-<div id="simple-slope-analysis-for-systole-blood-pressure" class="section level4">
-<h4>Simple slope analysis for systole blood pressure</h4>
-<p><br></p>
-<div id="the-method-is-the-same-as-diastole-blood-pressure." class="section level5">
-<h5>The method is the same as diastole blood pressure.</h5>
-<pre class="r"><code># moderator is at mean: b0 = -0.009924, b1 = 0.610168
-meanSY = moderation_SY$coefficients[1] + moderation_SY$coefficients[2] * data$DBD100
-
-# moderator is one standard deviation above mean: b0 = -7.230880, b1 = 0.422982
-highSY = moderation_SY_high$coefficients[1] + moderation_SY_high$coefficients[2] * data$DBD100
-
-# moderator is one standard deviation below mean: bo = 7.221033, b1 = 0.797353
-lowSY = moderation_SY_low$coefficients[1] + moderation_SY_low$coefficients[2] * data$DBD100
-
-# plot the three dependent values vs salt intake
-plot(data$DBD100, meanSY, type = &quot;l&quot;, col = &quot;green&quot;, ylim = c(-10, 15), xlab = &quot;Salt intake&quot;, ylab = &quot;Systole blood pressure&quot;)
-lines(data$DBD100, lowSY, col = &quot;red&quot;)
-lines(data$DBD100, highSY, col = &quot;blue&quot;)</code></pre>
-<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABUAAAAPACAMAAADDuCPrAAAA4VBMVEUAAAAAADoAAGYAAP8AOjoAOmYAOpAAZmYAZrYA/wA6AAA6OgA6Ojo6OmY6ZmY6ZpA6ZrY6kLY6kNtmAABmADpmOgBmOjpmZjpmZmZmZpBmkJBmkLZmkNtmtttmtv+QOgCQZgCQZjqQZmaQZpCQkDqQkGaQkJCQkLaQtraQttuQtv+Q2/+2ZgC2Zjq2kDq2kGa2kJC2kLa2tpC2tra2ttu225C229u22/+2///bkDrbkGbbtmbbtpDbtrbb27bb29vb2//b/7bb////AAD/tmb/25D/27b/29v//7b//9v///9wV3/IAAAACXBIWXMAAB2HAAAdhwGP5fFlAAAgAElEQVR4nO3d/WMT153o4XE2zmWdULKwUKcUCL33tqE1ZRtxSV0IzrLmRf7//6Cr0bttydZ8dXSOZuZ5fgjGsSWNER/m5Zwz1QUAIVXpFwDQVgIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABB+x3QCiCZ9IlK/ogJlf5pA92SvFGpHzClHfyDAfSWgAIECShAkIACBLU1oMNfB69/a/5tAgqk06aAfj6bJfPdw/H1r4PvPzR8CAEF0mlRQL88qL76Z/3B8OV8CMHB02aPIaBAOm0M6Eldzt8dHz+qE9qsoAIKpNPCgJ6Psjk5dv/0rJo2dVMCCqTTwoCOdkDvTD81HBX0fpPHEFAgnfYFtI7m/Lh9tDf6TZMLSQIKpNO+gM5PhS59bmMCCqQjoABB7QvoxUl18LfZ5z4eCShQSssCWpfzfOnCkXOgQDntCujI13948+N8F7T+lKvwQCGtC+jE+Lh9+K8j40CBcloU0FEx3796dLQIaF3UxenQjQgokE6rAjo2rugsoIe/NPtmAQXSaV9AF4b/aJhPAQVSanNAb5XjFlBAfwkoQFCnA3qdgALpCChAkIACBAkoQJCAAgS1KKDLUzmXWI0JKERAAYJaFNCLTw8FFNgjbQpo83vIXSOgQDqtCujlG8pFCCiQTrsC2vgeSFcJKJBOywJ66X4eAQIKpNO2gI4O4rfZBRVQIJ22BfTi4/HxX+PfLaBAOq0L6HYEFEhHQAGCBBQgSEABggQUIEhAAYIEFCBIQAGCBBQgSEABggQUIEhAAYIEFCBIQAGCBBQgSEABggQUIEhAAYIEFCBIQAGCBBQgSEABggQUIEhAAYIEFCBIQAGCBBQgSEABggQUIEhAAWb+Z2rDLxdQgHk5BfQGAgpcEivnlIACvbRVOacEFOiV/0lRzikBBfohZTmnBBTouPThnBFQoKt2V84pAQU6Z+flnBJQoDtylXNKQIEOyFzOKQEF2qxMOacEFGilouWcElCgVXYwnDNMQIF22KdyTgkosOf2L5wzAgrsq/0t55SAAntn78s5JaDA/mhLOacEFNgDLSvnlIACJbWznFMCChTR6nJOCSiQ1R4O5wwTUCCPLpVzSkCBHeteOGcEFNiV7pZzSkCB5DpfzikBBdLpSzmnBBRIoGflnBJQYBv9LOeUgAIhvS7nlIACjXRwOGeYgAKbUc5rBBS4hXCuI6DAOsp5CwEFrlHOzQgosKCcjQgocKGcMQIK/aacWxBQ6Cnl3J6AQs8YzpmOgEJfKGdyAgqdJ5y7IqDQXcq5YwIKHaSceQgodIlyZiWg0AnKWYKAQrspZ0ECCi2lnOUJKLSM4Zz7Q0ChLZRz7wgo7D3h3FctDOjw7NfBYPD67EPgewWUVlHOPde2gL5/Xi3ce9P02wWUdlDOdmhXQD89rC47/FuzBxBQ9pxytkqrAnp+VEfzu+OJb+vfHDxt9AgCyr5SzjZqU0C/PBgF88XSJ96NgvrVP5s8hICyd5SzxdoU0NNruayTer/JQwgo+0M5269FAR0+q6qrB+znVfVNk6vxAkp5hnN2R4sCOtrdvHa8vupzNxFQClLOzhFQ2Dnh7KoWBXR0CH9wddSSQ3j2mnJ2XIsCenFyrZb1adE7TR5CQMlDOfuhTQH9eDQq6C9Ln/g06ue1ndIbCSg7ppy90qaA1uOYRsU8/mlQ+3kykr7RKCYBZWeUs49aFdCLt0dXpnIePGn2AAJKcsrZY+0K6MXw1XJCDx43XZFJQElHOWlZQEeG7wevjo+PHw/eBNazE1C2ZzgnM+0LaAPVCqVfEy2mnFwhoHAr4WS1Tgf0OgGlEeXkRgIKKygnmxBQWKacNCCgMKacNJcvoJ8Hg9cfLoa/pX6+RgSUa5STsFwBfVvPu/zqnxdfHhz+svILblcvP7+C5ewIUk62lSmgL2etG1Ww2fIfCwJKGoZzkkqegNargBz++WjUunoBukYreC65dlNjAaUR5SSxLAGt16F7MtqDrFu36s5Gm6q/t9nqS9denID2knCyG1kCejJe9ngS0HoR+UZrIC/bpr5jAtozyslO5Qjo9F4c04COdkejx/DN74F07cUJaE8oJznkCOi0etOAbtfA8+0O4gW085STjNoW0NHe7Da7oALaXcpJfi07hB99+/HxX+PfLaAdpJwUk+si0v15QE+3uIi0NQHtEuWktCwBPZ+Ooa8DOvp4uwvpWxHQLjCck32RJaD16KODF3VAh3+v4gPpExDQVlNO9kyemUiXZmFGp3KmIKDtJJzsp0xz4et90KnwYiIpCGjLKCd7Ldtydp+e1+sxHdx7k/r5GhHQtlBO2sCCyuwX5aRFsgT05eGL1M8SJKD7Szlpn4wD6feBgO4h5aS1Mk7l3AcCuk+Uk7bLtAcqoCwYzklXZDkHWnT25iUCWpRy0jF5rsK/PaoOfzpL/UwBAlqGcNJNWQ7h/3T8+/htjJIS0MyUk07LdBFpi/vAJSWguSgnfZAloI++u+yugHaXctIjZiKRiHLSPwLKtpST3hJQwpSTvhNQGjOcEyYyDWO67IdiS9IL6FaUEy4xjIkNCCesIqDcRDnhBlnOgX4+m/n5eXXw5Oy31M+5MQHdlHLC7bJfRPp4VD1J/ZSbE9BbKSdsLP9V+NOSqysL6HrKCU3lD+hoF7Tc2nYCuoJyQlD+gBZdn15AlyknbKfIHqiAlmU4J6RR4hxo9Y2B9GUoJySVOaDDs79XJe/v0deACifsQomB9K7C56OcsEMFAnpgHGgGygm7l31F+ruPy81D6kVAlROysZxdZygn5Cag7aecUIiAtphyQll5A/r2qKru/ZL6GRvoRkAN54T9kCmg7x7Ws49OS49iantAlRP2Sp6Ano4XUf54VHo95dYGVDhhH2UJaF3OUTXHGR0+q6r7qZ9zY60LqHLCHssS0Mn09zqddy4uzk3l3IRywv7LclfOZ+PznvV+6FPL2d1GOaE1Mk3lnF5CqjsqoGsoJ7RNxoCeTC4fCehVygktlS+g01Og9ZG89UAnlBPaLdM50Orp7BRovSPa94tIhnNCN+S6Cn/45sfxEfywXlD5aern3FjhgCondEqWgM4WBL0/+ajcDmixgAondFGemUiTOUjffBgH9PtiZ0ALBFQ5ocMyzYUfvjv+4c3o1y//ee9N6idsIl9AlRO6z3J2qSkn9IaAJqOc0DfWA92eckJPWQ90C8oJ/WY90ADDOYGa9UCbUE5gifVANyKcwHXWA72ZcgJrWQ90DeUEbmM90DWUE7iN9UABgqwHChBkPVCAIOuBAgRZDxQgyHqgAEGWswMIElCAoHwB/TwYvP5wMfwt9fM1IqBAOrkC+vbbyTp2Xx4cdm5BZaCnMgX05Wwh0C8POrSgMtBv2RZUrg7/fDSd0FluJqeAAgllW1D5yWjns15EZDKvsxQBBdLJEtDJ9PdJQNu5oDLAdRkXVJ4G1GpMQEdkXA90GtCWrAcKcBsBBQhyCA8QlOsi0v15QE9dRAK6IUtAz6dj6OuAnltQGeiILAGtx34evKgDOl6Q3kB6oBPyzESaLUk/Zion0A25FlR+Nu+nxUSAjsi2nN2n5/V6TAdlF6QXUCAhCyoDBGUJ6MvDF6mfJUhAgXQyDqTfBwIKpJNxKuc+EFAgnUx7oMkDOvx18DpweyUBBdLJcg400ezNz2ezZL57OBlR+n3TIfkCCqST5yr826Pq8KezLR94fiZg+HIxKL/hrFABBdLJcgj/p+PfV8tiB/TzgJ7U5fzd8fGjqvG8egEF0sl0EalKGNB6OZLJsfunZ00fS0CBdLIE9NF3l93dKqAnizOq9QzR+41enIACybRoJtI0oJdu63necG0nAQXSaV9AL40qvXmIabXCrl4d0D8CChCUL6DD94PBYJuhTItzoIuJoR+Pml1FElAgnVwBnQ59r6q74eVA64DW5TxfunDkHChQTp6ALq2n3PCy+ZLJaKiv//Dmx/kuaP0pV+GBQvIEdDL0/S+D//r9FgVdHk46Pm4f/uvIOFCgnFx35ZwOfR9PwwyvbTd8/+rR0SKgdVEbPpaAAunkui/8ndW/CRhXdBbQpjdYElAgnUxTOZd2FD8epbqv8fAfjS9ICSiQTv4FlYsuryygQDr5F1QWUKAjci2ovFh17jzN6soxAgqkkyWgXx5WX81OV+7i/h6bE1AgnUwD6Z9XB0/GH316WPQOnQIKrPXvcxt+Q671QMeTiCa/HGy1KuiWL05Agcv+fYUNv7XIivTbrEu/5YsTUGBsi27OCSjQJwmyudCi9UBTEFDopRS7mysIKNBZO+rmnIACXbPrbs4JKNAN2bK5IKBAqxXo5pyAAm1UsptzAgq0x6ps5u/mnIACe2+/srkgoMC+2tduzgkosF/27DD9JgIK7IUWdXNOQIGSWpjNBQEF8mvj7uYKuw3o8NfBKq/T3JUz8uIEFArqSDfndhvQPVrIbvriBBTy61o35wQU2I3OZnMh0yH886o6uPfTYPB/j6qDxw7hocN60M25PBeRTqvqPz7MP7yf+ik3J6CwI33q5lyWgF66FfzJ8k3icxNQSGplNjvfzbkcAR0+W76V8cej6huH8NBq/c7mQqabyi1dNrr8u8wEFLagm1cIKHCznh+m3yTTIfzSac/zyiE8tIBu3i7LRaTTpaGfnx6UvAwvoHAL2WwgS0Dr8fSHL+qPhm+PSo6jF1BYze5mSJ5xoOeTGUjfjf+7dEU+OwGFZbq5nUyrMX18OJ/HefhL6mdsQEDhQjeTybac3fvn347q+fW9N6mfrxEBpcdkMznrgULH6ebuCCh0k25mkC+gn8dLKf+W+umaEVA6bnU2dXNHcgX07bfTa0gHT1I/YRMCSjfJZhmZAvpyaTnl74vNQxJQOkY3C8u2Hmh1cG8w+Pn5UbW8tF12AkoHOEzfG1kC+vFovt85fFl0JL2A0l66uX+yBPTkyoLK5XZBBZTWkc09ZkFl2Ed2N1vBeqCwR3SzXQQUytPNlnIID6XIZuu5iASZ6WZ35LqtcTWbgPS2cltjekk3OyjPQPqTeh3Qn87Ozn5+aCA9vbImm7rZDXkCWt9Wbq7cGVABJRfZ7IdMc+GH88nwByWnwgsou6WbPZNvObtf/3R8fPzD69RP14yAsgMO03vLgsoQpJsIKDQjm8xZkR42YXeTFaxIDzfQTW5iRXq4TjfZiBXpYUY2aciK9PSebhJlMRH6SjfZmuXs6Jd12dRNAiyoTC/IJrsgoHSZbrJTDuHpHofpZOIiEp2hm+RmRXraTjYpxor0tJPdTfaAFelpFd1kn1iRnjbQTfaSFenZX7LJnrOgMntHN2kLAWVf6CatI6CUtTabusn+221AvzyoVjGVE9mkCwSUnHSTTtlxQB99t8pdAe0Xh+l0lHOg7Ixu0nUCSmqySW8IKGnY3aSH8gV0+H4wGLxJ/WwNCWhqukmf5Qrou4fTK/B3f0n9hE0IaCK6CRfZVmN6vjSI6X7qZ2xAQLcim3BJvvVAD373l8F//b5wQQU0QjdhtWwr0v/HZBW7el27pRsk5SagDegm3MI9kbhsfTZ1E67IdFtjd+Xcd7IJzbkvfL/pJmwh033hBXSvOEyHJHKdA13cyfjcOdBSZBPSyhLQ5Z3Oy7ujufUyoLoJO5JnHOinh9Xhi/lH5frZp4DKJuxcpvVAv60H0I9+rX/52nqgO6SbkI8V6btBNqEAAW0zu5tQVAvXAx2e/ToYDF6fRUbjdyOgsgn7oW0Bfb+8rtO9xsuLtjqgugl7pl0B/fTwysmAw4brkrQwoLIJe6tVAT0/Gl/MP54YX9k/eHr7ty1pT0B1E/ZfmwJaX5I6eLH0iXdHTS9I7X1AZRNapE0BPb2WyzqpjZZn3teA6ia0UYsCOny2PKV+4rxqtjbengVUNqHVWhTQVcs43by006oxqLt6dQ3Y3YSOENBsZBO6pkUBHR3CX7ubUgsO4XUTOqtFAa2XFb1Sy/q0aKPFRfMFVDah+9oU0I9Ho4L+svSJT8+a3uJz5wHVTeiRfAH9PBi8/nAx/G2Lhz4dD50//mlQ+3kykr7ZTeZ3FVDZhD7KFdC3305WYfry4PCXlV+wkbdHVy4JHTxp+OLSbq5uQq9lCujL2TJ2l29x3Njw1XJCDx43XZEpyebKJjCWJ6D1sffhn49GAa0v+2x3W/jh+8Gr4+Pjx4M3gYfZZnN1E7gsS0Drqz9PRjuf9ZDNVfOJ8glsrmwCa+S6rfGdi2lA23JbY90EbpMjoNMR8NOAjnZHtzuG30YkoLt8PUCb5QjodL7lNKA3z77csb2YCw90hIACBDmEBwjKdRHp/jygp+24iARwmywBPZ+Ooa8DOvq4XcOYANbIEtB67OfBizqgw79X2w6k34qAAunkmYlU37toMQFzi6mc2xJQIJ1Mc+HrfdDZrdy3WExkawIKpJNtObtPz+v1mA7uvUn9fI0IKJBOmxZUTkBAgXQEFCBIQAGCdhvQS1ffF0zlBLpAQAGCdhzQR9+tcldAgQ5wDhQgSEABggQUIChfQD8PRl7/lvrpmhFQIJ1cAX377WwpkSepn7AJAQXSyRTQl0uDmL4vt5qdgAIJ5Qno6XgdkcHg5+dHVckF6QUUSChLQD8ezfc7hy+LLggqoEA6ue6JdGf1b3ITUCCdjHflnHJXTqAjMt4XfuXvMhNQIB0BBQhyCA8Q5CISQFCWgJ5XVTWbgPR29PHT1M+5MQEF0skzkP6kvp3xT2dnZz8/NJAe6Io8AV26LXxV8AyogAIpZZoLP5xPhj8oORVeQIGE8i1n9+ufjo+Pf3id+umaEVAgHQsqAwRlGQf66+D10nH7r68eGwcKdICZSABBAgoQtOOA/ut45PdH1cHvjmceVgIKdMKOA1ovpXydqZxAF+z6EP5kRT8Pi+2ACiiQ0K4DOhwMBj+PDuF/GsydpX7GBgQUSCf/RaSiBBRIp8A40JIEFEjHTCSAoLwBfXtUVfd+Sf2MDQgokE6mgL57WJ8FPZ2sx1TutvACCiSUJ6Cn48Hzs0GhBa8oCSiQTpaA1uUcVXOc0Xpt5fupn3NjAgqkkyWgp+Nl6Ot03hnfIMlMJKALMt7WuN4PfWoxEaAzMg6kP51cPxJQoCMyBvRkcvlIQIGOyBfQ6SnQ+ki+3H05BRRIJ9M50Orp7BRovSPqIhLQBbmuwh+++XF8BD/8ezXpaBkCCqSTJaCjY/ix+5OPyu2ACiiQUJ6ZSJM5SN98GAf0+4IrMwkokE6mufDDd8c/vBn9+uU/771J/YRNCCiQjuXsAIKyXIV/nfo5wgQUSCfTONC7RQ/cFwQUSCdTQEfKnvycElAgnSznQN89nKykXHQx+jEBBdLJdRX+1beThj7+LfXzNSKgQDr5rsLPGvr1Y+NAgU7IOozp86vJTT0OX5RqqIAC6eQeBzpt6EGh3VABBdLJHNB3z6upMvfmFFAgnZwBffdoegD//nmpggookE62gE73PafH7rPVlXMTUCCdPAF9Pz1yXwwE/XhU5MYeAgqkk28m0ujQ/fLnBBRot1wBvXrZffS5EndGElAgnTwBXTGH8yz1825EQIF0rAcKECSgAEFZA/r+T8ePyy7IJKBAOrsP6PDl0eR6+6fJonb3Cq4lIqBAQjsP6PlRNRmwNLu3cXVYYPjSjIAC6ew6oOMbGo8DelKPBD2r1xJxX3igE3Yc0HrK5uH4tOds6tHo1zLriIwJKJDOjgN6Xs0mHJ1W1f3xByezD0oQUGClf7tkw2/acUDntRztik53PEdNLTEHaUJAgal/u8GGD7HbgC6yuZj7XmgZkQkBhT5L0MxLdhvQS9m8c/VzBQgo9EvqZF6WK6DzU6ACCuzUbpt5Sa6AnsyvvTuEB9K6KZmpm3lJpnOgS7udLiIBWyuVzMt2fxX+af3r4hRo/akEI+mHvw5e/9b82wQU2qrYbuYNdj8OdLy7OQvpZGrS09gjfz6bJfPdZFr9wfdNd2UFFFpkD5N52Y4DWk+AP3xz9nI+nv7Tg/AR/Pw0wPDl7N7I1UHDFgso7LV93M28wa7nwp/PUleXbvhum/sZzwN6Uj/I746PH80et8GLE1DYMy1r5iVZVmMa9e6P9cfjBZma7jTOzQJaN3ly7P7pWdXwir6AQnltTuZlGdYDfXd8/Hhy8rIO6N3wisqzgC5dharXKmk0sV5AoYjuNPOSrCvSD//3YIsBTNOA1tGc78Q2HRMloJDJjclscTMvadE9kaYBvTSTqem0JgGF3elDMi8TUCCsF7uZN2hfQJdmhTafFyqgsKWeJ/OylgW0Luf50oUj50Bh5/q+m3mDdgV05Os/vPlxvgtaf8pVeEhOMzfTuoBOjI/bh/86unkcaLXCrl4dtJxkBrQooKNivn/16GgR0LqoN05rElC4gd3MrbUqoGPjis4CethwWL6A0m+amVb7Arow/EfjWU0CSt9I5i61OaABAkoPaGY2AgrtJ5mFtDWgXx59dzdwZyUBpSs0cx+0NqCxe3sKKO11czI1swQBhf0lmXtOQGGf2M1sFQGFwjSzvQQUspPMrhBQyEEzO0lAYTckswcEFJLRzL5pa0CDBJS0bkmmZnacgEIzksmcgMJt7GayhoDCCprJJgQUJiSTxgSU/rKbyZYElF6RTFISUDrObia7I6B0j2aSiYDSBZJJEQJKS2km5QkorXFbMjWT3ASUfSaZ7DUBZb/YzaRFBJTiJJO2ElAKsJtJNwgoeWgmHSSg7Ipk0nkCSkKaSb8IKFu5NZmaSYcJKE1JJkwJKLezmwkrCSgrSSbcTkCZ0UxoSED7zKE5bEVAe0YyIR0B7Ty7mbArAtpFmglZCGg3SCYUIKCtpZlQmoC2iGTCfhHQ/aaZsMcEdN/cnkzNhD0hoHtAMqGdBLQIu5nQBQKai2RC5wjo7kgmdJyAJqWY0CcCuiXJhP4S0OYkExgT0E1IJrCCgK6hmMBtBHQNyQRuI6AAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEEtDOjw7NfBYPD67EPgewUUSKdtAX3/vFq496bptwsokE67AvrpYXXZ4d+aPYCAAum0KqDnR3U0vzue+Lb+zcHTRo8goEA6bQrolwejYL5Y+sS7UVC/+meThxBQIJ02BfT0Wi7rpN5v8hACCqTTooAOn1XV1QP286r6psnVeAEF0mlRQEe7m9eO11d97iYCCqQjoABBLQro6BD+4OqoJYfwQDktCujFybVa1qdF7zR5CAEF0mlTQD8ejQr6y9InPo36eW2n9EYCCqTTpoDW45hGxTz+aVD7eTKSvtEoJgEFEmpVQC/eHl2ZynnwpNkDCCiQTrsCejF8tZzQg8dNV2QSUCCdlgV0ZPh+8Or4+Pjx4E1gPTsBBdJpX0C3IqBAOgIKECSgAEECChAkoABBnQ5otULp1wR0h4ACBLUooPXy8ytYzg4oREABgloU0Os3NRZQoKQ2BXS8/Gez1ZeuElAgnVYFdOV95RoRUCCddgW08T2QrhJQIJ2WBbS+CdI2B/ECCqTTtoCODuK32QUVUCCdtgX04uPx8V/j3y2gQDqtC+h2BBRIR0ABggQUIEhAAYLaGtAvj767G7gaL6BAOq0NaGxEvYAC6QgoQJCAAgQJKECQgAIECShAkIACBPUuoADppE7bXu/jlf5hA92SvFGpH7BD+n4GwfaXfgVl9X37N+JntF7f30C2v/QrKKvv278RP6P1+v4Gsv2lX0FZfd/+jfgZrdf3N5DtL/0Kyur79m/Ez2i9vr+BbH/pV1BW37d/I35G6/X9DWT7S7+Csvq+/RvxM1qv728g21/6FZTV9+3fiJ/Ren1/A9n+0q+grL5v/0b8jNbr+xvI9pd+BWX1ffs34me0Xt/fQLa/9Csoq+/bvxE/o/X6/gay/aVfQVl93/6N+Bmt1/c3kO0v/QrK6vv2b8TPaL2+v4Fsf+lXUFbft38jfkbr9f0NZPtLv4Ky+r79G/EzWq/vbyDbX/oVlNX37d+In9F6fX8D2f7Sr6Csvm//RvyM1uv7G8j2l34FZfV9+zfiZ7Re399Atr/0Kyir79u/ET+j9fr+BrL9pV9BWX3f/o34GQEECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKDhdU/UAAAfKSURBVECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAnoGp+eH1XVwb1fSr+OQoavvquq6uvebv/Ex6PqaenXUMjwbf0G+O7Jh9IvZM8J6GpvR/msHfyx9CspYrb5VfV96ZdS0JcHVV8D+nH2Bjj8Z+mXst8EdKXzaq6Pf4OWNr+6U/rFlHPS0z/+pX5W1Tf2QW8ioKvUux6Ho6PX9w+r6qv+/RM83vw3F5PtP/hb6ZdTynlf//0cvwEOntQnckYhvV/61ew1AV3ldPYP7/BZH99A5/P9znr7+7oLWlekpwE9ne83nNsFvZmArjDKxmy/a3Qs07830MmiG73c/rHRm+Cr/9PPgC69/5c+ZBUBXWG07zGrRt/fQEs/ip4Z7YU9Pe1nQEf/avb1sKMxAV3hfOm49aSff4dmehvQUUTuX/Q0oOd9PG8VJKArLL+Bevp3aOa8p+dAR0ceo384evqHP97s8UDor5+Ufi37TkBXWP570+9/jUc7oP08g3Ey3u6eBrTe+FPjQDcioCsI6NTwpKc7oNM/9f4G9PfzcaA9HMbXhICuIKATdT97+fdndua3nwGtx65VVT2L9/PLfs+k2ICAriCgY/VfpL4ewE/+3ehxQKdv+vO+vgU2JaArCGjtU2+nIc3//PsZ0HrkyXzoRc9HodxKQFdwFf5isp5IP68gLIZB9vQP/2Tp/d/fHYjNCOgKxoGO21F938sRoBen1WW9C8ipgG5MQFcwE+niZR/DMdX7gC7vQJz2cPubENAV+j4XfvzXppf/boz1PqCjN/188EVfj8A2JaCr9Hw1pnoX5Kt+r0U/0dNzoHU170x2G972dCDbxgR0ldmCmP1dD7S/+5/L+hrQej3l+v3/uc9ncjYjoCv1e0X6y8ewPW5pXwO6/A7o4xmsBgR0tX/1+J5Ik5koAtrjgM7f/9U9/byRgK7R47tyTpZiF9A+B/Ti86tvR3/0d9+Ufh37TkABggQUIEhAAYIEFCBIQAGCBBQgSEABggQUIEhAAYIEFCBIQAGCBBQgSEABggQUIEhAAYIEFCBIQAGCBBQgSEABggQUIEhAAYIEFCBIQAGCBBQgSEABggQUIEhAAYIEFCBIQAGCBBQgSEABggQUIEhAAYIEFCBIQAGCBBQgSEABggQUIEhAAYIEFCBIQAGCBBQgSEABggQUIEhAAYIEFCBIQAGCBBQgSEABggQUIEhAAYIEFCBIQAGCBBQgSEApa/ju0VFVVV//8Mvar3hWffXP8UefXqz5H9dd+dKZLw+qbz7EXihcJ6AU9bau58Q3axI66+TwZXV/5f9Y8S1Xv3RGQElKQCnpvFqyrobTTo6+dtOAXvvSGQElKQGloFHPqsMXddHOXo12RVe3bW1A1xNQ8hBQCjpdiubHUUGfrvoiAWVvCSgFnVQHf5v/ZlTTO6u+SEDZWwJKQZcCOtoFnQb086vvqqo6uDu5kj4J6Oxs6dJO6rSs41+Gr74dfce98XWoS196+bHmAR19U3Vn8tHb+gvuvtBVmhNQCjpduad4urgwX1dtk4D+v6Ol/738pVceaxbQRT8/zr7zcO04KlhHQCmortf3v1355KJ5k7xuENCFeo926UuvPtY0oCv6uXYQAKwnoJQ0DtzB735aimh9ZX4c1fcPq1ntbhzGNA7owZMP9ejP6ZfMvvTaY00CuujnZBhAfRx/tOYMLNxAQClqPpB+fhLyfF6y0d7h/Bznxc0Bne49zq5DnS9CevmxxgEdnsz6WX/B9KLS6P8snY+FjQgoZQ3fPZwdfT++ch1n1LRNAzr9H6NMjnt4/Sr89LHGAV30c/kqVoOL/DAloJT3/tWjxXWeqc+//umo2jSgswquCejiseqA/jj6cHrBaHlU02IQAGxKQNkPn57PTmDO1heZXdjZKqBXHqs+51mbpnL22+UL9bA5AWVfTE9TLl8Y3zqgVx9rXMz/9WB2MX/5fwsozQko5Zxcnrw5+e1kr/Druz/89N8bnwNdF9Brj1V/4s6H89lVp9nXQ4yAUs6VyZuns6Gb0zHtm19EWhfQa481Pel5Mn3i6WchSEApZ3bQPjEJ4VIOz7c9hL/+WNOAzhYuqS/gr1zABDYioJRT92sxg/J03LhF9D49SBfQ2WPNLrvPloE6XVyRXz2tFG4ioBQ0vohz782H2XDQumAnk6gO6wVCx/1bCujlE5Y3BnT867XHWp4LP53aOZ7EdPH5ZWUgPY0JKCW9vXQVfDaL6PLU9llAJ5fMV86FvxrQ2Zdee6z5wM/RV4y/afkr7IDSlIBS1MeHi8D9cfKpl/OZSZMzlPN7Ij27Urn1AZ1/6dXHWoycnx3Enx/pJ2ECSmHvn08W7PzL/PD8XT0v6evHH6ZT2ee3PhrWY+2/X3zn+oAuvvTKYy0CWh+8j5M5HC8Y+vXjq4tCwe0EFCBIQAGCBBQgSEABggQUIEhAAYIEFCBIQAGCBBQgSEABggQUIEhAAYIEFCBIQAGCBBQgSEABggQUIEhAAYIEFCBIQAGCBBQgSEABggQUIEhAAYIEFCBIQAGCBBQgSEABggQUIEhAAYIEFCBIQAGCBBQgSEABggQUIEhAAYIEFCBIQAGCBBQgSEABggQUIEhAAYIEFCBIQAGCBBQgSEABggQUIEhAAYIEFCDo/wPQp7Ejd6q1xQAAAABJRU5ErkJggg==" width="672" /></p>
-</div>
-<div id="the-green-line-shows-the-relationship-between-salt-intake-and-systole-blood-pressure-when-the-moderator-waist-size-is-at-mean.the-red-line-is-for-the-moderator-one-standard-deviation-below-the-mean-and-the-blue-line-is-for-one-standard-deviation-above-mean." class="section level5">
-<h5>The green line shows the relationship between salt intake and systole blood pressure when the moderator waist size is at mean.The red line is for the moderator one standard deviation below the mean and the blue line is for one standard deviation above mean.</h5>
-</div>
-<div id="we-can-see-from-the-plot-that-people-with-a-lower-waist-size-have-a-higher-effect-on-the-systole-blood-pressure-meaning-the-moderation-effect-of-waist-size-on-blood-pressure-through-salt-intake-is-higher-for-people-with-a-lower-waist-size-but-they-are-also-not-significantly-different-between-different-levels-of-waist-sizes." class="section level5">
-<h5>we can see from the plot that people with a lower waist size have a higher effect on the systole blood pressure, meaning the moderation effect of waist size on blood pressure through salt intake is higher for people with a lower waist size, but they are also not significantly different between different levels of waist sizes.</h5>
-<p><br></p>
 </div>
 </div>
 </div>
@@ -3351,31 +3295,31 @@ summary(mediation_DI)</code></pre>
 <pre><code>## [1] &quot;Bootstrap resampling has begun. This process may take a considerable amount of time if the number of replications is large, which is optimal for the bootstrap procedure.&quot;</code></pre>
 <pre class="r"><code>mediation_boot_DI1</code></pre>
 <pre><code>##                                            Estimate CI.Lower_Percentile
-## Indirect.Effect                        0.3765500632        0.2520499617
-## Indirect.Effect.Partially.Standardized 0.0281847931        0.0189932145
-## Index.of.Mediation                     0.0239330262        0.0162227707
-## R2_4.5                                 0.0021491333        0.0007768474
-## R2_4.6                                 0.0005699203        0.0002626982
-## R2_4.7                                 0.0078676552        0.0038575547
-## Ratio.of.Indirect.to.Total.Effect      0.4222366268        0.2674191871
-## Ratio.of.Indirect.to.Direct.Effect     0.7308123818        0.3455724554
-## Success.of.Surrogate.Endpoint          0.3869472836        0.2057668595
-## Residual.Based_Gamma                   0.0043638728        0.0020110757
-## Residual.Based.Standardized_gamma      0.0039579315        0.0018858064
-## SOS                                    0.6689288496        0.4670816644
+## Indirect.Effect                        0.3765500632        0.2530454472
+## Indirect.Effect.Partially.Standardized 0.0281847931        0.0189794502
+## Index.of.Mediation                     0.0239330262        0.0163926830
+## R2_4.5                                 0.0021491333        0.0007989492
+## R2_4.6                                 0.0005699203        0.0002682822
+## R2_4.7                                 0.0078676552        0.0036504219
+## Ratio.of.Indirect.to.Total.Effect      0.4222366268        0.2560462491
+## Ratio.of.Indirect.to.Direct.Effect     0.7308123818        0.3299780085
+## Success.of.Surrogate.Endpoint          0.3869472836        0.2160284702
+## Residual.Based_Gamma                   0.0043638728        0.0018842121
+## Residual.Based.Standardized_gamma      0.0039579315        0.0017377100
+## SOS                                    0.6689288496        0.4499871970
 ##                                        CI.Upper_Percentile
-## Indirect.Effect                                0.504599753
-## Indirect.Effect.Partially.Standardized         0.038188813
-## Index.of.Mediation                             0.032072886
-## R2_4.5                                         0.004004419
-## R2_4.6                                         0.001017537
-## R2_4.7                                         0.013115867
-## Ratio.of.Indirect.to.Total.Effect              0.807206319
-## Ratio.of.Indirect.to.Direct.Effect             2.975104891
-## Success.of.Surrogate.Endpoint                  0.594373775
-## Residual.Based_Gamma                           0.007756926
-## Residual.Based.Standardized_gamma              0.007045705
-## SOS                                            0.950060165</code></pre>
+## Indirect.Effect                                0.511213997
+## Indirect.Effect.Partially.Standardized         0.038407222
+## Index.of.Mediation                             0.031933770
+## R2_4.5                                         0.003871200
+## R2_4.6                                         0.001009469
+## R2_4.7                                         0.013555211
+## Ratio.of.Indirect.to.Total.Effect              0.751500192
+## Ratio.of.Indirect.to.Direct.Effect             2.986510427
+## Success.of.Surrogate.Endpoint                  0.625657826
+## Residual.Based_Gamma                           0.007954188
+## Residual.Based.Standardized_gamma              0.007119252
+## SOS                                            0.939243192</code></pre>
 </div>
 <div id="the-indirect-effect-0.37655-and-its-confidence-interval-is-different-from-zero.-age-is-a-mediator-between-salt-intake-and-diastole-blood-pressure." class="section level5">
 <h5>The indirect effect (0.37655) and its confidence interval is different from zero. Age is a mediator between salt intake and diastole blood pressure.</h5>
@@ -3430,31 +3374,31 @@ summary(mediation_SY)</code></pre>
 <pre><code>## [1] &quot;Bootstrap resampling has begun. This process may take a considerable amount of time if the number of replications is large, which is optimal for the bootstrap procedure.&quot;</code></pre>
 <pre class="r"><code>mediation_boot_SY1</code></pre>
 <pre><code>##                                            Estimate CI.Lower_Percentile
-## Indirect.Effect                         1.054137647        7.138197e-01
-## Indirect.Effect.Partially.Standardized  0.060897024        4.102447e-02
-## Index.of.Mediation                      0.051710512        3.530702e-02
-## R2_4.5                                  0.003086452        2.869752e-04
-## R2_4.6                                  0.002660286        1.242912e-03
-## R2_4.7                                  0.008153615        3.953406e-03
-## Ratio.of.Indirect.to.Total.Effect       0.928416123        6.247903e-01
-## Ratio.of.Indirect.to.Direct.Effect     12.969626170       -8.562873e+01
-## Success.of.Surrogate.Endpoint           0.492651297        2.565355e-01
-## Residual.Based_Gamma                    0.003966790        1.513983e-03
-## Residual.Based.Standardized_gamma       0.003752141        1.372566e-03
-## SOS                                     0.994917800        4.070088e-01
+## Indirect.Effect                         1.054137647        7.179033e-01
+## Indirect.Effect.Partially.Standardized  0.060897024        4.162029e-02
+## Index.of.Mediation                      0.051710512        3.524516e-02
+## R2_4.5                                  0.003086452        3.641101e-04
+## R2_4.6                                  0.002660286        1.240556e-03
+## R2_4.7                                  0.008153615        3.805369e-03
+## Ratio.of.Indirect.to.Total.Effect       0.928416123        6.351427e-01
+## Ratio.of.Indirect.to.Direct.Effect     12.969626170       -8.190133e+01
+## Success.of.Surrogate.Endpoint           0.492651297        2.644942e-01
+## Residual.Based_Gamma                    0.003966790        1.517851e-03
+## Residual.Based.Standardized_gamma       0.003752141        1.366915e-03
+## SOS                                     0.994917800        5.204822e-01
 ##                                        CI.Upper_Percentile
-## Indirect.Effect                                1.441376228
-## Indirect.Effect.Partially.Standardized         0.082406026
-## Index.of.Mediation                             0.070060593
-## R2_4.5                                         0.006973397
-## R2_4.6                                         0.004867771
-## R2_4.7                                         0.014663498
-## Ratio.of.Indirect.to.Total.Effect              1.772531286
-## Ratio.of.Indirect.to.Direct.Effect            43.707141568
-## Success.of.Surrogate.Endpoint                  0.732475017
-## Residual.Based_Gamma                           0.007803196
-## Residual.Based.Standardized_gamma              0.007539703
-## SOS                                            0.999927692</code></pre>
+## Indirect.Effect                                1.391996873
+## Indirect.Effect.Partially.Standardized         0.081056438
+## Index.of.Mediation                             0.068384064
+## R2_4.5                                         0.007054667
+## R2_4.6                                         0.004632642
+## R2_4.7                                         0.014242392
+## Ratio.of.Indirect.to.Total.Effect              1.694892725
+## Ratio.of.Indirect.to.Direct.Effect            52.125691386
+## Success.of.Surrogate.Endpoint                  0.720682784
+## Residual.Based_Gamma                           0.007581153
+## Residual.Based.Standardized_gamma              0.007226060
+## SOS                                            0.999943746</code></pre>
 <div class="figure">
 <img src="data:image/png;base64,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" alt="Fig 3: Direct and indirect effects of the mediation analysis for Diastole" />
 <p class="caption">Fig 3: Direct and indirect effects of the mediation analysis for Diastole</p>
@@ -3805,19 +3749,21 @@ nutr = pd.read_excel(&quot;RawData/Dietary_nutrients_firstday_2015_16.xlsx&quot;
 <h3>Data cleaning</h3>
 <p>We need first clean the raw data and join different dataset.</p>
 <pre class="python"><code># select useful columns
-# ! Note: we need to drop values &#39;9&#39; or &#39;99&#39; which represent &quot;don&#39;t know&quot;
+
 demo=demo.set_index(&#39;SEQN&#39;
-                    ).filter(items=[&#39;RIDAGEYR&#39;]  # &#39;RIAGENDR&#39;,&#39;RIDRETH3&#39;
+                    ).filter(items=[&#39;RIDAGEYR&#39;]  
                     ).dropna()
-# demo[[&#39;RIAGENDR&#39;,&#39;RIDRETH3&#39;]]=demo[[&#39;RIAGENDR&#39;,&#39;RIDRETH3&#39;]].astype(&#39;category&#39;)
 BMI=BMI.set_index(&#39;SEQN&#39;
-                  ).filter(items=[&#39;BMXWAIST&#39;]   # ,&#39;BMXWT&#39;,&#39;BMXHT&#39;
+                  ).filter(items=[&#39;BMXWAIST&#39;]   
                   ).dropna()
-nutr=nutr.set_index(&#39;SEQN&#39;
-                    ).filter(items=[&#39;DBD100&#39;]  #,&#39;DBQ095Z&#39;,&#39;DRQSPREP&#39;
+
+nutr1=nutr.set_index(&#39;SEQN&#39;
+                    ).filter(items=[&#39;DBD100&#39;]
                     ).dropna(
-                    ).query(&#39;DBD100 != 9&#39;
-                    ).astype(&#39;category&#39;)
+                    )
+                    
+nutr=nutr1.query(&#39;DBD100 != 9&#39;
+                ).astype(&#39;category&#39;)
 
 # Calculate mean of blood pressure
 bp=bp.set_index(&#39;SEQN&#39;
@@ -3827,26 +3773,11 @@ bp=bp.assign(SY=bp.filter(regex=&#39;BPXSY*&#39;).mean(axis=1, skipna = True),
              ).filter(items=[&#39;SY&#39;,&#39;DI&#39;]).dropna()
 
 # Merge all data set
+df1=bp.join(demo,how=&#39;inner&#39;).join(BMI,how=&#39;inner&#39;).join(nutr1,how=&#39;inner&#39;)
+df1=df1-df1.mean()
+
+# Categorical treat DBD100 as categorical variable.
 df=bp.join(demo,how=&#39;inner&#39;).join(BMI,how=&#39;inner&#39;).join(nutr,how=&#39;inner&#39;)</code></pre>
-<p>Take a look at the data we are about to work on.</p>
-<pre class="python"><code># Show data summary of numeric variables
-print(df.describe())</code></pre>
-<pre><code>             SY           DI     RIDAGEYR     BMXWAIST
-count  4670.000000  4670.000000  4670.000000  4670.000000
-mean    119.510921    66.050393    38.107281    93.630557
-std      17.292694    13.378804    21.598139    19.019918
-min      74.000000     0.000000     8.000000    46.300000
-25%     107.333333    58.666667    18.000000    79.700000
-50%     116.666667    66.666667    35.000000    93.000000
-75%     128.000000    74.666667    56.000000   105.900000
-max     206.666667   124.000000    80.000000   171.600000</code></pre>
-<pre class="python"><code># Show data summary of categorical variables
-print(df.describe(include=&#39;category&#39;))</code></pre>
-<pre><code>     DBD100
-count   4670.0
-unique     3.0
-top        1.0
-freq    2444.0</code></pre>
 <p>Generate plots show the relationship between salt intake behaviors and blood presure.</p>
 <pre class="python"><code># plot Diastolic and salt intakes
 DI_salt=df[[&#39;DBD100&#39;,&#39;DI&#39;]
@@ -3925,6 +3856,438 @@ plt.show()</code></pre>
 <div id="diastolic-result" class="section level4">
 <h4>Diastolic result</h4>
 <pre class="python"><code># fit ols to Diastolic measurements
+ols_DI=ols(&#39;DI~DBD100&#39;,data=df1).fit()
+# Print the summary
+print(ols_DI.summary())</code></pre>
+<pre><code>                         OLS Regression Results                            
+==============================================================================
+Dep. Variable:                     DI   R-squared:                       0.003
+Model:                            OLS   Adj. R-squared:                  0.003
+Method:                 Least Squares   F-statistic:                     14.87
+Date:                Thu, 12 Dec 2019   Prob (F-statistic):           0.000117
+Time:                        02:02:32   Log-Likelihood:                -18776.
+No. Observations:                4682   AIC:                         3.756e+04
+Df Residuals:                    4680   BIC:                         3.757e+04
+Df Model:                           1                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P&gt;|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept   3.759e-14      0.195   1.93e-13      1.000      -0.383       0.383
+DBD100         0.8862      0.230      3.856      0.000       0.436       1.337
+==============================================================================
+Omnibus:                      523.351   Durbin-Watson:                   2.000
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):             1559.833
+Skew:                          -0.592   Prob(JB):                         0.00
+Kurtosis:                       5.568   Cond. No.                         1.18
+==============================================================================</code></pre>
+</div>
+<div id="systolic-result" class="section level4">
+<h4>Systolic result</h4>
+<pre class="python"><code># fit ols to Systolic measurements
+ols_SY=ols(&#39;SY~DBD100&#39;,data=df1).fit()
+# Print the summary
+print(ols_SY.summary())</code></pre>
+<pre><code>                         OLS Regression Results                            
+==============================================================================
+Dep. Variable:                     SY   R-squared:                       0.003
+Model:                            OLS   Adj. R-squared:                  0.003
+Method:                 Least Squares   F-statistic:                     14.68
+Date:                Thu, 12 Dec 2019   Prob (F-statistic):           0.000129
+Time:                        01:37:13   Log-Likelihood:                -19985.
+No. Observations:                4682   AIC:                         3.997e+04
+Df Residuals:                    4680   BIC:                         3.999e+04
+Df Model:                           1                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P&gt;|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept    119.4778      0.253    472.714      0.000     118.982     119.973
+DBD100         0.9597      0.250      3.831      0.000       0.469       1.451
+==============================================================================
+Omnibus:                      831.965   Durbin-Watson:                   1.965
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):             1619.248
+Skew:                           1.081   Prob(JB):                         0.00
+Kurtosis:                       4.905   Cond. No.                         1.04
+==============================================================================</code></pre>
+<p>From the above results, we know that both models are significant and every coefficients are significant(at the level of 95%).</p>
+</div>
+</div>
+<div id="moderation-effect-of-waist-size" class="section level3">
+<h3>Moderation effect of waist size</h3>
+<p>First, add two columns recording a standiviation above and below of waist size.</p>
+<pre class="python"><code>df1[&#39;waist_sd&#39;] = df1[&#39;BMXWAIST&#39;].std()
+df1[&#39;waist_up&#39;]=df1[&#39;BMXWAIST&#39;]+df1[&#39;waist_sd&#39;]
+df1[&#39;waist_down&#39;]=df1[&#39;BMXWAIST&#39;]-df1[&#39;waist_sd&#39;]</code></pre>
+<div id="diastolic-result-1" class="section level4">
+<h4>Diastolic result</h4>
+<p>Fit model: <code>DI ~ DBD100 + BMXWAIST + DBD100 * BMXWAIST</code></p>
+<pre class="python"><code>moderation_DI = ols(&#39;DI ~ DBD100 + BMXWAIST + DBD100 * BMXWAIST&#39;, data=df1).fit()
+print(moderation_DI.summary())</code></pre>
+<pre><code>                         OLS Regression Results                            
+==============================================================================
+Dep. Variable:                     DI   R-squared:                       0.090
+Model:                            OLS   Adj. R-squared:                  0.090
+Method:                 Least Squares   F-statistic:                     154.6
+Date:                Thu, 12 Dec 2019   Prob (F-statistic):           1.65e-95
+Time:                        02:14:56   Log-Likelihood:                -18563.
+No. Observations:                4682   AIC:                         3.713e+04
+Df Residuals:                    4678   BIC:                         3.716e+04
+Df Model:                           3                                         
+Covariance Type:            nonrobust                                         
+===================================================================================
+                      coef    std err          t      P&gt;|t|      [0.025      0.975]
+-----------------------------------------------------------------------------------
+Intercept           0.0101      0.187      0.054      0.957      -0.356       0.376
+DBD100              0.5903      0.220      2.682      0.007       0.159       1.022
+BMXWAIST            0.2074      0.010     21.095      0.000       0.188       0.227
+DBD100:BMXWAIST    -0.0100      0.012     -0.825      0.409      -0.034       0.014
+==============================================================================
+Omnibus:                      645.708   Durbin-Watson:                   2.006
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):             2203.551
+Skew:                          -0.685   Prob(JB):                         0.00
+Kurtosis:                       6.069   Cond. No.                         22.5
+==============================================================================</code></pre>
+<pre class="python"><code># one standard deviation above mean
+moderation_DI_up = ols(&#39;DI ~ DBD100 + waist_up + DBD100 * waist_up&#39;, data=df1).fit()
+print(moderation_DI_up.summary())</code></pre>
+<pre><code>                         OLS Regression Results                            
+==============================================================================
+Dep. Variable:                     DI   R-squared:                       0.090
+Model:                            OLS   Adj. R-squared:                  0.090
+Method:                 Least Squares   F-statistic:                     154.6
+Date:                Thu, 12 Dec 2019   Prob (F-statistic):           1.65e-95
+Time:                        02:15:04   Log-Likelihood:                -18563.
+No. Observations:                4682   AIC:                         3.713e+04
+Df Residuals:                    4678   BIC:                         3.716e+04
+Df Model:                           3                                         
+Covariance Type:            nonrobust                                         
+===================================================================================
+                      coef    std err          t      P&gt;|t|      [0.025      0.975]
+-----------------------------------------------------------------------------------
+Intercept          -3.9335      0.265    -14.866      0.000      -4.452      -3.415
+DBD100              0.7800      0.313      2.488      0.013       0.165       1.394
+waist_up            0.2074      0.010     21.095      0.000       0.188       0.227
+DBD100:waist_up    -0.0100      0.012     -0.825      0.409      -0.034       0.014
+==============================================================================
+Omnibus:                      645.708   Durbin-Watson:                   2.006
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):             2203.551
+Skew:                          -0.685   Prob(JB):                         0.00
+Kurtosis:                       6.069   Cond. No.                         45.7
+==============================================================================</code></pre>
+<pre class="python"><code># one standard deviation below mean
+moderation_DI_down = ols(&#39;DI ~ DBD100 + waist_down + DBD100 * waist_down&#39;, data=df1).fit()
+print(moderation_DI_down.summary())</code></pre>
+<pre><code>                         OLS Regression Results                            
+==============================================================================
+Dep. Variable:                     DI   R-squared:                       0.090
+Model:                            OLS   Adj. R-squared:                  0.090
+Method:                 Least Squares   F-statistic:                     154.6
+Date:                Thu, 12 Dec 2019   Prob (F-statistic):           1.65e-95
+Time:                        02:15:11   Log-Likelihood:                -18563.
+No. Observations:                4682   AIC:                         3.713e+04
+Df Residuals:                    4678   BIC:                         3.716e+04
+Df Model:                           3                                         
+Covariance Type:            nonrobust                                         
+=====================================================================================
+                        coef    std err          t      P&gt;|t|      [0.025      0.975]
+-------------------------------------------------------------------------------------
+Intercept             3.9537      0.264     14.975      0.000       3.436       4.471
+DBD100                0.4007      0.323      1.240      0.215      -0.233       1.034
+waist_down            0.2074      0.010     21.095      0.000       0.188       0.227
+DBD100:waist_down    -0.0100      0.012     -0.825      0.409      -0.034       0.014
+==============================================================================
+Omnibus:                      645.708   Durbin-Watson:                   2.006
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):             2203.551
+Skew:                          -0.685   Prob(JB):                         0.00
+Kurtosis:                       6.069   Cond. No.                         47.1
+==============================================================================</code></pre>
+<p>For the models above, coefficients for the interaction terms and salt intake itself are not significant(at level of 95%). There are not moderation effect of waist size on salt intake and diastole.</p>
+</div>
+<div id="systolic-result-1" class="section level4">
+<h4>Systolic result</h4>
+<p>Fit model: <code>SY ~ DBD100 + BMXWAIST + DBD100 * BMXWAIST</code></p>
+<pre class="python"><code>moderation_SY = ols(&#39;SY ~ DBD100 + BMXWAIST + DBD100 * BMXWAIST&#39;, data=df1).fit()
+print(moderation_SY.summary())</code></pre>
+<pre><code>                         OLS Regression Results                            
+==============================================================================
+Dep. Variable:                     SY   R-squared:                       0.177
+Model:                            OLS   Adj. R-squared:                  0.176
+Method:                 Least Squares   F-statistic:                     334.6
+Date:                Thu, 12 Dec 2019   Prob (F-statistic):          7.40e-197
+Time:                        02:15:37   Log-Likelihood:                -19537.
+No. Observations:                4682   AIC:                         3.908e+04
+Df Residuals:                    4678   BIC:                         3.911e+04
+Df Model:                           3                                         
+Covariance Type:            nonrobust                                         
+===================================================================================
+                      coef    std err          t      P&gt;|t|      [0.025      0.975]
+-----------------------------------------------------------------------------------
+Intercept          -0.0099      0.230     -0.043      0.966      -0.461       0.441
+DBD100              0.6140      0.271      2.265      0.024       0.083       1.145
+BMXWAIST            0.3802      0.012     31.400      0.000       0.356       0.404
+DBD100:BMXWAIST     0.0098      0.015      0.657      0.511      -0.019       0.039
+==============================================================================
+Omnibus:                     1182.376   Durbin-Watson:                   1.970
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):             3374.829
+Skew:                           1.317   Prob(JB):                         0.00
+Kurtosis:                       6.218   Cond. No.                         22.5
+==============================================================================</code></pre>
+<pre class="python"><code># one standard deviation above mean
+moderation_SY_up = ols(&#39;SY ~ DBD100 + waist_up + DBD100 * waist_up&#39;, data=df1).fit()
+print(moderation_SY_up.summary())</code></pre>
+<pre><code>                         OLS Regression Results                            
+==============================================================================
+Dep. Variable:                     SY   R-squared:                       0.177
+Model:                            OLS   Adj. R-squared:                  0.176
+Method:                 Least Squares   F-statistic:                     334.6
+Date:                Thu, 12 Dec 2019   Prob (F-statistic):          7.40e-197
+Time:                        02:15:58   Log-Likelihood:                -19537.
+No. Observations:                4682   AIC:                         3.908e+04
+Df Residuals:                    4678   BIC:                         3.911e+04
+Df Model:                           3                                         
+Covariance Type:            nonrobust                                         
+===================================================================================
+                      coef    std err          t      P&gt;|t|      [0.025      0.975]
+-----------------------------------------------------------------------------------
+Intercept          -7.2380      0.326    -22.215      0.000      -7.877      -6.599
+DBD100              0.4279      0.386      1.109      0.268      -0.329       1.185
+waist_up            0.3802      0.012     31.400      0.000       0.356       0.404
+DBD100:waist_up     0.0098      0.015      0.657      0.511      -0.019       0.039
+==============================================================================
+Omnibus:                     1182.376   Durbin-Watson:                   1.970
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):             3374.829
+Skew:                           1.317   Prob(JB):                         0.00
+Kurtosis:                       6.218   Cond. No.                         45.7
+==============================================================================</code></pre>
+<pre class="python"><code># one standard deviation below mean
+moderation_SY_down = ols(&#39;SY ~ DBD100 + waist_down + DBD100 * waist_down&#39;, data=df1).fit()
+print(moderation_SY_down.summary())</code></pre>
+<pre><code>                         OLS Regression Results                            
+==============================================================================
+Dep. Variable:                     SY   R-squared:                       0.177
+Model:                            OLS   Adj. R-squared:                  0.176
+Method:                 Least Squares   F-statistic:                     334.6
+Date:                Thu, 12 Dec 2019   Prob (F-statistic):          7.40e-197
+Time:                        02:16:32   Log-Likelihood:                -19537.
+No. Observations:                4682   AIC:                         3.908e+04
+Df Residuals:                    4678   BIC:                         3.911e+04
+Df Model:                           3                                         
+Covariance Type:            nonrobust                                         
+=====================================================================================
+                        coef    std err          t      P&gt;|t|      [0.025      0.975]
+-------------------------------------------------------------------------------------
+Intercept             7.2183      0.325     22.203      0.000       6.581       7.856
+DBD100                0.8001      0.398      2.011      0.044       0.020       1.580
+waist_down            0.3802      0.012     31.400      0.000       0.356       0.404
+DBD100:waist_down     0.0098      0.015      0.657      0.511      -0.019       0.039
+==============================================================================
+Omnibus:                     1182.376   Durbin-Watson:                   1.970
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):             3374.829
+Skew:                           1.317   Prob(JB):                         0.00
+Kurtosis:                       6.218   Cond. No.                         47.1
+==============================================================================</code></pre>
+<p>For the models above, coefficients for the interation terms and salt intake itself are not significant(at level of 95%). There are not moderation effect of waist size on salt intake and diastole.</p>
+</div>
+</div>
+<div id="mediation-effect-of-age" class="section level3">
+<h3>Mediation effect of age</h3>
+<p>Fit model: <code>RIDAGEYR ~ DBD100</code> to see if there are relationships between age and salt intake</p>
+<pre class="python"><code># test if there is relationship between age and salt intake.
+age_D = ols(&#39;RIDAGEYR ~ DBD100&#39;, data=df1).fit()
+print(age_D.summary())</code></pre>
+<pre><code>                         OLS Regression Results                            
+==============================================================================
+Dep. Variable:               RIDAGEYR   R-squared:                       0.008
+Model:                            OLS   Adj. R-squared:                  0.008
+Method:                 Least Squares   F-statistic:                     38.72
+Date:                Thu, 12 Dec 2019   Prob (F-statistic):           5.31e-10
+Time:                        02:20:09   Log-Likelihood:                -21011.
+No. Observations:                4682   AIC:                         4.203e+04
+Df Residuals:                    4680   BIC:                         4.204e+04
+Df Model:                           1                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P&gt;|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept  -8.743e-16      0.314  -2.78e-15      1.000      -0.616       0.616
+DBD100         2.3047      0.370      6.223      0.000       1.579       3.031
+==============================================================================
+Omnibus:                     1898.788   Durbin-Watson:                   2.043
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              326.001
+Skew:                           0.345   Prob(JB):                     1.62e-71
+Kurtosis:                       1.907   Cond. No.                         1.18
+==============================================================================</code></pre>
+<p>The model is significant. There are relationships between age and salt intake behavior.</p>
+<div id="diastolic-result-2" class="section level4">
+<h4>Diastolic result</h4>
+<p>Fit model: <code>DI ~ DBD100 + RIDAGEYR</code>.</p>
+<pre class="python"><code>mediation_DI = ols(&#39;DI ~ DBD100 + RIDAGEYR&#39;, data=df1).fit()
+print(mediation_DI.summary())</code></pre>
+<pre><code>                         OLS Regression Results                            
+==============================================================================
+Dep. Variable:                     DI   R-squared:                       0.072
+Model:                            OLS   Adj. R-squared:                  0.072
+Method:                 Least Squares   F-statistic:                     182.8
+Date:                Thu, 12 Dec 2019   Prob (F-statistic):           3.64e-77
+Time:                        02:20:17   Log-Likelihood:                -18608.
+No. Observations:                4682   AIC:                         3.722e+04
+Df Residuals:                    4679   BIC:                         3.724e+04
+Df Model:                           2                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P&gt;|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept   3.759e-14      0.188      2e-13      1.000      -0.369       0.369
+DBD100         0.5091      0.223      2.287      0.022       0.073       0.946
+RIDAGEYR       0.1636      0.009     18.698      0.000       0.146       0.181
+==============================================================================
+Omnibus:                      725.164   Durbin-Watson:                   2.008
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):             2678.882
+Skew:                          -0.745   Prob(JB):                         0.00
+Kurtosis:                       6.393   Cond. No.                         25.5
+==============================================================================</code></pre>
+<p>The model is significant. Age might be a mediator between salt intake and diastolic.</p>
+<pre class="python"><code># origin model and mediator model
+med_model_DI=sm.OLS.from_formula(&#39;DI ~ RIDAGEYR+DBD100&#39;, data=df1)
+mediator_DI=sm.OLS.from_formula(&#39;RIDAGEYR ~ DBD100&#39;, data=df1)
+
+# origin model and mediator model
+med_DI = Mediation(med_model_DI,mediator_DI,&#39;DBD100&#39;,&#39;RIDAGEYR&#39;).fit()
+print(med_DI.summary())</code></pre>
+<pre><code>                       Estimate  Lower CI bound  Upper CI bound  P-value
+ACME (control)            0.378793        0.198924        0.563067    0.000
+ACME (treated)            0.378793        0.198924        0.563067    0.000
+ADE (control)             0.493689        0.059676        0.900952    0.026
+ADE (treated)             0.493689        0.059676        0.900952    0.026
+Total effect              0.872482        0.416557        1.328894    0.000
+Prop. mediated (control)  0.426604        0.245650        0.855243    0.000
+Prop. mediated (treated)  0.426604        0.245650        0.855243    0.000
+ACME (average)            0.378793        0.198924        0.563067    0.000
+ADE (average)             0.493689        0.059676        0.900952    0.026
+Prop. mediated (average)  0.426604        0.245650        0.855243    0.000</code></pre>
+<p>All the mediation effect(ACME) are significant(at level of 95%). Which means that age is a mediator between salt intake and diastolic.</p>
+</div>
+<div id="systolic-result-2" class="section level4">
+<h4>Systolic result</h4>
+<p>Fit model: <code>SY ~ DBD100 + RIDAGEYR</code>.</p>
+<pre class="python"><code>mediation_SY = ols(&#39;SY ~ DBD100 + RIDAGEYR&#39;, data=df1).fit()
+print(mediation_SY.summary())</code></pre>
+<pre><code>                         OLS Regression Results                            
+==============================================================================
+Dep. Variable:                     SY   R-squared:                       0.327
+Model:                            OLS   Adj. R-squared:                  0.326
+Method:                 Least Squares   F-statistic:                     1134.
+Date:                Thu, 12 Dec 2019   Prob (F-statistic):               0.00
+Time:                        02:23:41   Log-Likelihood:                -19067.
+No. Observations:                4682   AIC:                         3.814e+04
+Df Residuals:                    4679   BIC:                         3.816e+04
+Df Model:                           2                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P&gt;|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept  -2.212e-14      0.208  -1.07e-13      1.000      -0.407       0.407
+DBD100         0.0853      0.246      0.348      0.728      -0.396       0.567
+RIDAGEYR       0.4575      0.010     47.405      0.000       0.439       0.476
+==============================================================================
+Omnibus:                      584.285   Durbin-Watson:                   1.955
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):             1238.816
+Skew:                           0.763   Prob(JB):                    9.87e-270
+Kurtosis:                       5.005   Cond. No.                         25.5
+==============================================================================</code></pre>
+<p>The model is significant. Even thought the coefficients of salt intake is not significant(at level of 95%). Age might be a mediator between salt intake and systolic.</p>
+<pre class="python"><code># origin model and mediator model
+med_model_SY=sm.OLS.from_formula(&#39;SY ~ RIDAGEYR+DBD100&#39;, data=df1)
+mediator_SY=sm.OLS.from_formula(&#39;RIDAGEYR ~ DBD100&#39;, data=df1)
+
+# origin model and mediator model
+med_SY = Mediation(med_model_SY,mediator_SY,&#39;DBD100&#39;,&#39;RIDAGEYR&#39;).fit()
+print(med_SY.summary())</code></pre>
+<pre><code>                       Estimate  Lower CI bound  Upper CI bound  P-value
+ACME (control)            1.034208        0.525030        1.529603    0.000
+ACME (treated)            1.034208        0.525030        1.529603    0.000
+ADE (control)             0.093089       -0.367313        0.540152    0.720
+ADE (treated)             0.093089       -0.367313        0.540152    0.720
+Total effect              1.127297        0.430358        1.775847    0.004
+Prop. mediated (control)  0.918998        0.604010        1.648115    0.004
+Prop. mediated (treated)  0.918998        0.604010        1.648115    0.004
+ACME (average)            1.034208        0.525030        1.529603    0.000
+ADE (average)             0.093089       -0.367313        0.540152    0.720
+Prop. mediated (average)  0.918998        0.604010        1.648115    0.004</code></pre>
+<p>All the mediation effect(ACME) are significant. Which means that age is a mediator between salt intake and systolic.</p>
+</div>
+</div>
+</div>
+</div>
+<div id="additional-analysis" class="section level1 tabset">
+<h1>Additional analysis</h1>
+<div id="r-1" class="section level2">
+<h2>R</h2>
+<div id="simple-slope-analysis-for-diastole-blood-pressure" class="section level4">
+<h4>Simple Slope analysis for diastole blood pressure</h4>
+<div id="we-find-beta0-and-beta1-values-of-the-independent-variable-dbd100-salt-intake-from-the-three-regression-models-1-with-the-moderator-held-at-mean-2-with-the-moderator-held-at-one-standard-deviation-below-mean-3-with-the-moderator-held-at-one-standard-deviation-above-mean." class="section level5">
+<h5>We find beta0 and beta1 values of the independent variable DBD100 (salt intake) from the three regression models: (1) with the moderator held at mean (2) with the moderator held at one standard deviation below mean (3) with the moderator held at one standard deviation above mean.</h5>
+</div>
+<div id="then-for-each-of-these-three-models-we-predict-the-dependent-variable-y-beta0-beta1-x-here-y-is-blood-pressure-di-and-x-is-the-salt-intake-dbd100.-by-analysing-the-characteristic-of-y-at-three-levels-of-the-moderator-we-can-compare-the-behaviors-of-moderator-at-three-levels.-in-our-case-we-are-seeing-if-people-with-waist-size-one-standard-deviation-below-mean-and-one-standard-deviation-above-mean-have-different-blood-pressure-characteristics-compared-to-people-with-waist-size-at-mean." class="section level5">
+<h5>Then, for each of these three models, we predict the dependent variable Y = beta0 + beta1 * X (here Y is blood pressure DI and X is the salt intake DBD100). By analysing the characteristic of Y at three levels of the moderator, we can compare the behaviors of moderator at three levels. In our case, we are seeing if people with waist size one standard deviation below mean and one standard deviation above mean have different blood pressure characteristics compared to people with waist size at mean.</h5>
+<pre class="r"><code># moderator is at mean: b0 = 0.010034, b1 = 0.596273
+meanDI = moderation_DI$coefficients[1] + moderation_DI$coefficients[2] * data$DBD100
+
+# moderator is one standard deviation above mean: b0 = -3.928731, b1 = 0.785543
+highDI = moderation_DI_high$coefficients[1] + moderation_DI_high$coefficients[2] * data$DBD100
+
+# moderator is one standard deviation below mean: bo = 3.948800, b1 = 0.407004
+lowDI = moderation_DI_low$coefficients[1] + moderation_DI_low$coefficients[2] * data$DBD100
+
+# plot the three dependent values vs salt intake
+plot(data$DBD100, meanDI, type = &quot;l&quot;, col = &quot;green&quot;, ylim = c(-5, 7), xlab = &quot;Salt intake&quot;, ylab = &quot;Diastole blood pressure&quot;)
+lines(data$DBD100, lowDI, col = &quot;red&quot;)
+lines(data$DBD100, highDI, col = &quot;blue&quot;)</code></pre>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABUAAAAPACAMAAADDuCPrAAAA3lBMVEUAAAAAADoAAGYAAP8AOjoAOmYAOpAAZmYAZrYA/wA6AAA6OgA6Ojo6OmY6ZmY6ZpA6ZrY6kLY6kNtmAABmADpmOgBmOjpmZjpmZmZmZpBmkLZmkNtmtrZmtttmtv+QOgCQZgCQZjqQZmaQkDqQkGaQkJCQkLaQtraQttuQ2/+2ZgC2Zjq2kDq2kGa2kJC2tpC2tra2ttu225C227a229u22/+2///bkDrbkGbbtmbbtpDbtrbb25Db27bb29vb2//b/7bb////AAD/tmb/25D/27b/29v//7b//9v///9Avo+oAAAACXBIWXMAAB2HAAAdhwGP5fFlAAAgAElEQVR4nO3de2Pb1L6gYYVNmBJaymlPIbCn7S4zZ1NSeghz2h1ahjI96cX+/l9oLPkSJ7UT62dp6bKe5w+SQGJbwX27JC0tFVMAQoquXwDAUAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIE9TugBUBjmk9U44/YoK5/28C4NN6oph+wSS38hQFkS0ABggQUIEhAAYIEFCBIQAGCBBQgSEABggQUIEhAAYIEFCBIQAGCBBQgSEABggQUIEhAAYIEFCBIQAGCBBQgSEABggQUIEhAAYIEFCBIQAGCBBQgSEABlv57YcdvF1CAi3QK6HYCClwWKueCgAJ5+u990jknoEBmGijngoAC2WisnAsCCoxf0+VcEFBgxJrbXd9EQIExarecCwIKjEuKci4IKDASCcu5IKDA0CXZXd9EQIHB6qycCwIKDFDH5VwQUGBI+lHOBQEFBqHr3fVNBBTotz6Wc0FAgb7qbzkXBBTond6Xc0FAgf7o8e76JgIK9MGwyrkgoECnBlnOBQEFujGw3fVNBBRIbATlXBBQIJnRlHNBQIH2ja2cCwIKtGg8u+ubCCjQhnGXc0FAgWblUM4FAQUaklE5FwQU2FcWu+ubCCgQlm05FwQUCMi8nAsCCtShnGsEFNhJ7rvrmww2oB/+OH3xtvZPCSjUppxbDSygf3772b9mHybPj4rS4dOaPy+gUINy3mBQAZ08KYoyoJPHxdI39UahAgq7UM7dDCmgVTdnAa0+HhwfH5fD0Fu1HkJA4Vp212sZUkDPZ738t7fzj/fKfzH5ZRbSn+s8hIDCFsoZMKSAniy6eXIx7jypOQQVULhKOeMGFNCP9+fDzeXH0ruj4os6R0EFFFbsru9tWAGtTsEvP06vfL7hpWzQ1quD4VDOpgwwoJPHAgoxytmsAQW0PPn+qPzk5GIX/rywCw87UM5WDCig07P5LNDywOfizFHZ1Ht1HkJAyY3d9TYNKaCz/fXi8OW0Kul8GtMz05hgC+VMYEgBnZ6XM+fv/PTmzS+zkv7w65OjouYAVEDJgXImM6iAljvvV9Trp4AyasqZ2rACulpFZMFiIlCyu96RgQV05sOvx9/enrnz/U+WsyN3ytmt4QV0LwLKWChnHwgoDIty9oiAwkDYXe8fAYW+U87eElDoL+XsOQGFHlLOYRBQ6BO764MioNAPyjlAAgodU87hElDoit31wRNQSE45x0JAISHlHBcBhRSUc5QEFFpld33MBBTaoZwZEFBomnJmQ0ChMcqZGwGF/dldz5SAwh6UM28CCiHKiYBCXcrJioDCjuyuc5WAwk2Uky0EFLZTTq4loLCBcrILAYV1dtepQUBhTjmpTUDJnnISJaDky+46exJQMqScNENAyYpy0iQBJQ/KSQsElJGzu057BJSxUk5aJ6CMj3KSiIAyIspJWgLKGNhdpxMCyqApJ10SUAZKOemegDI0yklvCCiDYXedvhFQ+k856SkBpc+Uk14TUHpJORkCAaVf7K4zIAJKXygngyOgdE45GSoBpTt21xk4AaUDysk4CChJKSdjIqCkoZyMkIDSMrvrjJeA0hblZPQElOYpJ5kQUBqknORFQGmC3XWyJKDsRTnJmYASpJyQLqAfTk9/ezud/NX089UioA1QTlhIFdBXXxVF8dm/ph/vH75s+hlrENB92F2HyxIF9FlRLANaHPzc9FPuTkBDlBM2ShPQs1k9D//jaBbQyeOi+OJt08+5MwGtSTnhGkkC+u6oKB7OBp+zgFYFfdT0c+5MQHelnHCzJAE9KYpb00VAp+fVFx0R0BvZXYedpQjobNBZHvdcBHQ2HO1uH15Ar6GcUFOKgH68X54+WgZ08VU3BHQT5YQYAc2Z3XXYi134LCknNCHVSaR7q4CeOYnUJeWEa31Z2fGbkwT0fDGHvgzo7HPTmLqgnHCTL1d2/IEkAS3nfh48LQM6+aUwkT4xu+tws9rtrKS5Eunj/eKCSzkTUU7YSSyepUTXwpdj0AWLibRPOWE38XZWki1n9/5JuR7Twd0XTT9fLWMPqHLCrr7cM54lCyqPg911qKGBdlaSBPTZ4dOmnyVofAFVTqiliYHnSsKJ9H0wpoAqJ9TUZDsrCS/l7INRBFQ5obbG21lJNAJtIaCTP8p7LNU07IDaXYeARnfaL0tyDLSVqzdD49qBBlQ5Iaa9dlbSnIV/dVQc/vSm2efJI6DKCUEtDjxXkuzC/3j8XbEuuEP/4c26P2cBfTH7WOs+ycMJqHJCXIJ2VhKdRCoaCOgnDxN4sAEE1O467CPFwHMlSUC/vX3ZHQHdRDlhPynbWRnSlUivjori4Hjpu6Pi4OvZx+/rnIrvZ0CVE/aVvJ2VIQV0+v7x2lokO5xE2jRgbe/VBdhdh/0l3Wm/bFABnU5/nw07/z7/dNABVU5oRHftrAwsoNP3D4rii2oQOtBpTMoJzehw4LmSaBrTZbUOW159sF+K4uDhdHgBVU5oTA/aWRnQNKald7NB6N23wwmo3XVoUB8GnisDDOh08mx+i6W+B1Q5oVG9amclyTHQi0uIfn0y2/+ud/HQJuWEpq+P+htQ5YSG9a6dleQnkd4dFQ/3f5L3j2Mj2bYDqpzQuP4NPFfSn4U/a2Z15d+PehVQu+vQhv62s5I+oLMhaCNr273/MXA2v/nNVU5oR48HnivpA9rp+vRNbq5yQkuG0M5KJyPQgQdUOaE9g4lnqYtjoMUXe0yk389+m2t3Hdo0qHZWEgd08uaXoo37e+wquLnKCS0bXDsrXUyk7/Aex7U3VzmhbcMbeK50ENCDBuaBRu2+ucoJ7RtwOyvJV6S/88Pe1yHtoX5A23w1kLOhx7M0tOXs9tT9cnbAKNpZEVAgpdHEsySgQCKjamclbUDLVZTuvrzmG9omoNCN0bWzkiigrx+UVx+ddT2LSUAhvfENPFfSBPSsWjnp3VEj6ynvQ0AhpRG3s5IkoO/mS89VGZ08Lop7TT/nzgQUUhl7PEtJAjq//L1M563p9HyAl3ICdeTQzkqSu3I+ro57luPQRyNazg7YIJt4lhJdyrk4hVR2VEBhpLJqZyVhQE/mp48EFMYnv3ZW0gV0cQi03JMf6nqgwAaZxrOU6Bho8Wh5CLQciDqJBOOQcTsrqc7CH774R7UHPykXVH7U9HPuTEChKbnHs5QkoMsFQe/NP+tuACqg0ATtXEhzJdL8GqQv3lYB/aazI6ACCvv6UjzXJLoWfvL6+PsXs48f//3ui6afsA4BhTjtvMpydsDNtHMjAQWuJ55bWQ8U2Eo7r2c9UGATZ4t2YD1Q4Crt3JH1QIE1Bp51WA8UWNDOuqwHCmhnkPVAIXN22uOsBwoZ0879WA8U8mTg2QDrgUJ+tLMh1gOFrBh4Nsl6oJAN7Wya9UAhB9rZCuuBwsjZaW+P5exgxLSzXQIK42TgmUC6gH44Pf3t7XTyV9PPV4uAkgXtTCRVQF99NV/H7uP9QwsqQ3sMPFNKFNBny4VAP963oDK0QzuTS7agcnH4H0eLCzq7u5JTQBkr7exEsgWVH84Gn+UiIvPrOrsioIyPgWd3kgR0fvn7PKAWVIbmaGe3Ei6ovAio1ZigCQaePZBwPdBFQK0HCnvSzr4QUBgU8ewTu/AwFNrZO6lOIt1bBfTMSSSoTTt7KUlAzxdz6MuAnltQGWox8OyvJAEt534ePC0DWi1IbyI97EY7ey7NlUjLJekrLuWEHYjnAKRaUPnxqp8WE4EbaOdQJFvO7v2Tcj2mg24XpBdQek88h8SCytAX2jk4SQL67PBp088SJKD0lHYOUsKJ9H0goPSPgedwJbyUsw8ElF7RzoFLNAIVULhCPEcgyTHQTq/evERA6QPtHIs0Z+FfHRWHP71p+pkCBJSuieeYJNmF//H4u2Kd5ezIknaOTqKTSIWAkjXtHKckAf329mV3BJSMiOd4uRIJ2qOdIyeg0A7xzICAQuO0MxfpAjr58/T0tOupTAJKy74Uz5ykCujrB4sz8He6XA5UQGmTdmYnTUDX1lOu7i/XGQGlHdqZpzQBPSnXUv76n6f/+V3HBRVQmiee+Up1V87im/md5CbPOr0pkoDSKO3MXKr7wt/a/EVqAkpTnC0i2aWca4POd0d73Nd48vzb21//8+LH6y41KqA0QTuZS7+g8j7LK/9+NL8x8g/LhAooiRl4sib9gsp7BPRsdSZ/OYYVUBLSTq5ItaDyo9UX5+FjoLOd/+Lw6Zs3z8qP82wKKGloJ5skCejHB8Vny/nze9zf42w58nz/YFlQAaV1dtrZKtFE+ifFwcPqs1n7orOYytn4jy4+rVoqoLRKO7lWqvVAywOXn88/HARXBV2PZVnQW9ObAlpsUO85yZeBJzfrZEX62Lr0l2JZPuY9AaUd2sluhhrQ8ozSwc924WmagSc1DGg90LVjoKXzWYJfCigN0k5qGlBAr95efvblZ/8loDRCO4kYUkDLeaB3/7r4+qT+kQAB5RN22gkbUkCrK5HWe/lMQNmPdrKXQQV0+uroci9nXwsoMQae7G9YAZ1OXn9/aSWnybMjAaU27aQZAwvovgQ0ewaeNEhAyYZ2spO/zez4rQJKFrSTnfxtYcdvF1DGzsCTHdWs51RAGTftZEf141kSUEbKwJOdxeo5FVDGSDvZXTiepXYDOvnjdJPfwnfl3PvFCejYiSc17FXPadsBbWghuwZfnICOmHZSx77xLAkoo6Cd1NJEPafJduGfFMXB3Z9OT//3UXHwg114mmTgST0NxbOU5iTSWVH829vVp/eafsrdCei4aCd1NVjPaaKAXroV/MmldeUTE9DxEE/qajaepRQBnTxev5Xxu6PF3d27IKCjoJ3U13w9p8luKrd22qjubYwaJaCDJ57U10o8SwLKYGgnEa3Vc5psF37tsOd5YReeurSTkDbjWUpyEulsbern+/tdnoYX0AEST2Laruc0UUDL+fSHT8vPJrXvYtQsAR0W7SQoQTxLaeaBns+vQLpd/XPtjHxyAjoc4klUonpOk63G9O7B6jrOw5dNP2MNAjoI2klYuniWki1n9+eTr2b1/Pzui6afrxYB7T3xJC5tPafWA6VHtJM9JI9nSUDpA+1kL53Uc5oyoB+qpZT/avrp6hHQHhJP9tJVPEupAvrqq8U5pIOHTT9hHQLaL9rJnrqs5zRZQJ+tLaf8TWfXIQlon4gne+o4nqVk64EWB3dPT399clSsL22XnID2gnaytx7Uc5oooO+OVuPOybNOZ9ILaNe+FE/21o94lpIE9OTKgsrdDUEFtEvaSQP6U8+pBZVJQztpQq/iWbIeKG0TTxrRu3pOBZRWaSfN+Fsf6zm1C09bnC2iKT2NZ8lJJJqnnTSlr0PPhVS3NS6WFyC9KtzWeMwMPGlOv+NZSjOR/qRcB/SnN2/e/PrARPrx0k6a0/Oh50KagJa3lVvp7giogLZGO2nSIOJZSnQt/GR1MfxBl5fCC2gL7LTTqGEMPRfSLWf3x4/Hx8ff/9b009UjoM3STpo1pHiWLKhMjIEnDRvU0HNBQKlPO2naAONZsiI9tRh40rghDj0XrEjPzrST5g03niUr0rML7aQFAx56LliRnhvYaacVg49nyYr0XEM7acXwh54LFhNhMwNPWjKWeJYsZ8entJOWjGbouWBBZS4x8KQ1I4tnSUBZ0k7aM7ah54JdeEraSYvGGc+Sk0jZM/CkTSMdei5YkT5r2kmrRh3PkhXpc2XgSbvGPfRcsCJ9hrSTtuUQz5IV6TMjnrQul3pOrUifE+2kfRnFs2RB5TxoJwlkVs+pgGbAwJMU8otnSUDHTDtJI896TtsO6Mf7xSYu5UxAPEkji+lK2wjoCGknqeQcz1LLAf329iZ3BLQ14kkqWQ89FxwDHQ/tJB3xrAjoKGgnCRl6rgjo4IknKYnnunQBnfx5enr6oulnq2lkAdVOkjL0vCpVQF8/WJyBv/Oy6SesY0QBFU/SEs8NEq3G9GRtEtO9pp+xhnEEVDtJzNBzi3TrgR58/c/T//yu44IOP6DiSWriuV2yFen/bb6KXbmu3doNklIbdEC1k+QMPa/nnkiDoJ10QDxvlOi2xu7KGSeedMDQcyfuC99n2kknxHNXie4LL6C1iSedMPSsI9Ux0Is7GZ87BnoT7aQj4llTkoCuDzovD0dT631AvxRPOmLoGZBmHuj7B8Xh09Vne/Zz8uaP09PT395EzkT1OqDaSWfEMybReqBflRPoZx/LD5/vsx7on+vXNN2tfWl9XwOqnXTH0DNuWCvSv39w5ZEOf6754noYUPGkQ+K5l0EF9PyoGsgez1Wj2oNHN//Y+ovrV0C1ky4Zeu5tSOuBljk+eLr2L14f1Y1xfwKqnXRLPJswpICefZLLMqm1libpR0C1k24ZejZlQAGdPF6fTjp3XtS7LrTzgBp40jXxbNCAArrpEqbrL2vadPy1rVe3A+2ka4aeDRPQJLST7oln8wYU0Nku/CcriQ5gF1476QFDz3YMKKDlJfVXalkeFq11YX3igIonfSCerRlSQN8dzQq6fk+694/rLm+fLqDaSS8YerZqSAEt5zHNinn802np1/lM+no3WEoTUO2kH8SzbYMK6PTV0ZVTQgcP6z1A6wHVTnrC0DOFYQV0Onm+ntCDH+quyNRqQMWTvlDPRAYW0JnJn6fPj4+Pfzh9EVjPrq2Aaie9IZ4JpQvoh9PT395OJ381/Xy1tBBQ7aRH1DOtVAF99dV8FaaP9w9fbvyGNBreXO2kR8QzvUQBfbZcxu7yLY6Ta25zDTzpFfXsRJqAlvOPDv/jaBbQcup7d7eFb2hztZNeEc/OJAloOQP+4WzwWV62vmlNpXT23lztpGfUs0upbmt8a7oI6HBva6yd9I14di1FQBergCwCOhuOdrcPH91c8aR31LMHUgR0sebcIqDXr0DXssDmaif9I549IaDX0U56SD37wy78FtpJH4lnv6Q6iXRvFdCzYZxEEk96Rz17J0lAzxdz6MuAzj4f8jQm6IZ49lKSgJZzPw+elgGd/FKMYCI9pKWefZXmSqTy/u0Xi9D93PRT7k5AGRrx7LNE18KXY9CFMS0mAu1Sz55Ltpzd+yflekwHd180/Xy1CCiDIZ4DMLwFlfcioAyDeg6DgELfiOdgCCj0iaHnoLQb0Etn3y8M5lJOSEo8h0ZAoRcMPYeo5YB+e3uTOwIK68RzoBwDhW4Zeg6YgEKHxHPYBBQ6Yug5fOkC+uF05re/mn66egSUnhDPUUgV0FdfLZcSedj0E9YhoPSAoedoJAros7VJTN90t5qdgNI59RyTNAE9q9YROT399clR0eWC9AJKp8RzbJIE9N3Ratw5edbpgqACSmfUc4RS3RPp1uYvUhNQOiGeI5XwrpwLA7krJzRFPccr4X3hN36VmICSlniOm4BCW9Rz9OzCQxvEMwtOIkHj1DMXSQJ6XhTF8gKkV7PPHzX9nDsTUNomnjlJM5H+pLyd8U9v3rz59YGJ9IyYemYmTUDXbgtfdHgEVEBpkXhmKNG18JPVxfAHXV4KL6C0RD3zlG45uz9+PD4+/v63pp+uHgGleeKZLwsqwz7UM2tJ5oH+cfrb2n77H89/MA+UMRDP7LkSCULUEwGFAPFkruWA/n48891RcfD18dKDQkAZMvVkpeWAlkspf8qlnAyUeHJJ27vwJxv6edjZAFRA2YN6clXbAZ2cnp7+OtuF/+l05U3Tz1iDgBIjnmyS/iRSpwSUAPVkiw7mgXZJQKlJPLmGK5FgK/XkemkD+uqoKO6+bPoZaxBQdiWe3CxRQF8/KI+Cns3XY/q56afcnYCyE/VkJ2kCelZNnl9OCu3wjJKAciPxZGdJAlqWc1bNKqPl2sr3mn7OnQko11NP6kgS0LNqGfoynbeqGyS5Eok++pt6UlPC2xqX49BHFhOhn8STgIQT6c/m548ElL4x9CQoYUBP5qePBJReEU/i0gV0cQi03JPv7r6cAso6Q0/2k+gYaPFoeQi0HIg6iUQPiCd7S3UW/vDFP6o9+Mkvxbyj3RBQKoaeNCJJQGf78JV788+6G4AKKFNDT5qT5kqk+TVIX7ytAvpNhyszCWjuDD1pUqJr4Sevj79/Mfv48d/vvmj6CesQ0KyJJw2znB15MPSkBQJKBsSTdnQS0DfmgZKMoSftSXUM9NfVfeFvf+VKJFIRT1qVJqDnl28PL6AkYOhJ65KtB7rurl14WiaepJDqSqTi7q/3i4P/+fxBURx0dyGSgOZBPUkk1bXw96qL4B8tF1fuioCOnniSUKLVmMqFQM+qjM5XFomaPP/29tf/vAhw3bXxBHTc1JO0Eq4HuriXxz639Ph9fjD14IdlQgWUJfEkvYQBXSwEOvsqug9/tjoNtXwEAaWinnQi0THQxVL0i4AGpzGVJ/MPn75586z8OH8IAUU86U6Ss/An1THQi44GA7o6//T+wbKgApo79aRLqaYxlYc956fhz6On4ddOP5WfVg8ioDkTT7qWbEHlWe9m6fzsxf+9Hz2JtB7L5Q2WBDRb6kkPJLqUs1jeVq46if5z6IEvxbJs8j0BzZR40hOJFhN5/aA6/Pmg6ufD2ANfjuW7ozLEApof9aQ/Ei9n9/r4+Ie/gg98ZQp+Oap9KaB5EU/6ZUgLKp9dPno6+/Kz/xLQfKgnvTOkgJbzQO+ujV9Pblobr9igtVdHmyxNRy8NKaDVlUjrvXwmoFkQT/qq3YDOD1Eubwu//4LKr44u/+zsa7vw42boSZ8NK6DTyevvL03Cnzw7EtDxEk96ruWAfnv7zr/Kf152xy09uImhJwMwqGOg+xPQYRBPhmGoAZ2PbWsT0P4z9GQ4BhvQ2JpOAtpz4smgJArom9OZ36LXIG0goONj6MngpAjo6wer8+93XjT0LAI6MuLJELUf0HcPLk1hOnzZyLMI6IgYejJUrQf01bybt+8c3/5qvphdI7eFF9CxEE8GrO2AnpfN/GZ58PP9k/hyoJcJ6BgYejJwLQe0vAjpUjDLBUGiN+W88sACOmziyfC1HNDzTwacZUEb2IkX0EEz9GQcWg7oSXXjjemVfxW7J1ITBLQHxJPRaDegk8efHvEM35WzCQLaMUNPRqX11Zg+Cei7oz1WY9qXgHZJPBmbFMvZXRY8etkMAe2KoSdjJKC0TzwZKQGlXYaejJiA0iLxZNwElJYYejJ+AkobxJMstD+N6afTy341jWnkDD3JRusB3URAx0s8yYmA0hhDT3LT8qWcf5xu8ptLOcdHPMnQUG8qFySgrTD0JFMCyp7Uk3wJKHsQT/ImoESpJ9kTUCLEE6YCSoB6wpyAUot4wgUBZXfqCZcIKLsRT/iEgLID9YRNBJQbiCdsI6BcRz3hGgLKNuIJNxBQNlJPuJmA8inxhJ0IKJcZesLOBJQ14gl1CCgLhp5Ql4BSEk8IEFAMPSFIQDMnnhAnoBkz9IT9CGiuxBP2JqA5MvSERghodsQTmiKgWTH0hCYJaD7EExomoJlQT2iegGZAPKEdAjp26gmtEdAxE09olYCOlnpC2wR0lExXghQEdHzEExIR0HEx9ISEBHRExBPSEtCRMPSE9AR0DMQTOiGgg6ee0BUBHTTxhC4J6HCpJ3RMQIdJPKEHBHSA1BP6QUAHRjyhPwR0SNQTekVAh0I8oXcEdBDUE/pIQHtPPKGvBLTf1BN6TED7Szyh5wS0p9QT+k9A+0g8YRAEtG8MPWEwhhvQyR+nv72t+0N9D6h4wpAMN6Af7xef/avuD/U5oIaeMDQC2g/iCQM0pIB+eLPuz1lAX8w+/lXnIXoZUENPGKgBBXQ25Nyk1jC0fwEVTxguAe2QoScM24ACOn11VBQHx0vfHRUHX88+fl/nVHyPAiqeMHhDCuj0/eOiOHy5+GLIJ5EMPWEUBhXQ6fT32bDz7/NPBxtQ9YSxGFhAp+8fFMUX1SB0kAEVTxiToQV0OvmlKA4eTocYUPWEkRlcQKfTd7NB6N23QwuoeML4DDCg08mz2SD06Q4B3TTrqfVXt4GhJ4zTEAM6n9D09dEwAiqeMFrDDGg1oanmHPpK4oAaesKoDTSg1YSmngdUPGHsBhvQ6fsf612EVEkVUENPyMFwAxqSJKDiCZkYakA/fnv7Tu0d+AQBNfSEjAw2oJFZoG0HVDwhLwLaEENPyI+ANkE8IUsCujf1hFwJ6F7EE3ImoHHqCZkT0BjxBAQ0Qj2B0lADGrT/5oonsCSgdagnsEZAdyWewBUCuhP1BD4loDcST2AzAb2eegJbCeh24glcS0C3UE/gJh6xhf8AAAn2SURBVAK6hXgCNxFQgCABBQgSUIAgAQUIElCAIAEFCBJQgCABBQgSUIAgAQUIElCAIAEFCBJQgCABBQgSUIAgAQUIElCAIAEFCBJQgCABBQgSUIAgAQUIElCAIAEFCBJQgCABBQgSUIAgAQUIElCAIAEFCBJQgCABBQgSUIAgAQUIElCAIAEFCBJQgCABBQgSUIAgAQUIElCAIAEFCBJQgCABBQgSUIAgAQUIyi6gAM1pvFFNP2CTuv5lA+PSeKOafsARyf0Igu3v+hV0K/ft34nf0Xa5v4Fsf9evoFu5b/9O/I62y/0NZPu7fgXdyn37d+J3tF3ubyDb3/Ur6Fbu278Tv6Ptcn8D2f6uX0G3ct/+nfgdbZf7G8j2d/0KupX79u/E72i73N9Atr/rV9Ct3Ld/J35H2+X+BrL9Xb+CbuW+/TvxO9ou9zeQ7e/6FXQr9+3fid/Rdrm/gWx/16+gW7lv/078jrbL/Q1k+7t+Bd3Kfft34ne0Xe5vINvf9SvoVu7bvxO/o+1yfwPZ/q5fQbdy3/6d+B1tl/sbyPZ3/Qq6lfv278TvaLvc30C2v+tX0K3ct38nfkfb5f4Gsv1dv4Ju5b79O/E72i73N5Dt7/oVdCv37d+J39F2ub+BbH/Xr6BbuW//TvyOtsv9DWT7u34F3cp9+3fidwQQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgW7x/clQUB3dfdv06OjJ5frsois+z3f65d0fFo65fQ0cmr8o3wO2Hb7t+IT0noJu9muWzdPD3rl9JJ5abXxTfdP1SOvTxfpFrQN8t3wCH/+r6pfSbgG50Xqzk+CdobfOLW12/mO6cZPq/f62fRfGFMeh1BHSTcuhxONt7/fNBUXyW31/B1ea/mM63/+Dnrl9OV85z/fuzegMcPCwP5MxCeq/rV9NrArrJ2fIv3snjHN9A56txZ7n9uQ5By4pkGtCz1bjh3BD0egK6wSwby3HXbF8mvzfQyUU3stz+yuxN8Nn/yjOga+//tU/ZREA3mI09ltXI/Q209qvIzGwU9ugsz4DO/tbMdbejNgHd4Hxtv/Ukzz9DS9kGdBaRe9NMA3qe43GrIAHdYP0NlOmfoaXzTI+BzvY8Zn9xZPo/v9rsaiL05w+7fi19J6AbrP+5yftv49kANM8jGCfVdmca0HLjz8wD3YmAbiCgC5OTTAegi//r+Qb0u9U80Ayn8dUhoBsI6FzZzyz//CyP/OYZ0HLuWlGUV/F+eJb3lRQ7ENANBLRS/kHKdQd+/vdGxgFdvOnPc30L7EpANxDQ0vtsL0Na/f/PM6DlzJPV1IvMZ6HcSEA3cBZ+Ol9PJM8zCBfTIDP9n3+y9v7PdwCxGwHdwDzQqh3FN1nOAJ2eFZdlF5AzAd2ZgG7gSqTpsxzDsZB9QNcHEGcZbn8dArpB7tfCV39ssvx7o5J9QGdv+tXki1z3wHYloJtkvhpTOQT5LO+16OcyPQZaVvPWfNjwKtOJbDsT0E2WC2Lmux5ovuPPdbkGtFxPuXz/f8j5SM5uBHSjvFekv7wPm3FLcw3o+jsgxyNYNQjoZr9nfE+k+ZUoAppxQFfv/+Kufl5LQLfI+K6c86XYBTTngE4/PP9q9r/+zouuX0ffCShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECSjdmrz+9qgois+/f7n1Ox4Xn/2r+uz90y3/4VNXvnXp4/3ii7exFwqfElA69aqs59wXWxK67OTkWXFv43/Y8CNXv3VJQGmUgNKl82LNthouOjn73l0D+sm3LgkojRJQOjTrWXH4tCzam+ezoejmtm0N6HYCShoCSofO1qL5blbQR5u+SUDpLQGlQyfFwc+rL2Y1vbXpmwSU3hJQOnQpoLMh6CKgH57fLori4M78TPo8oMujpWuD1EVZqw+T51/NfuJudR7q0rdefqxVQGc/VNyaf/aq/IY7T3WV+gSUDp1tHCmeXZyYL6u2S0D/z9Haf17/1iuPtQzoRT/fLX/ycOs8KthGQOlQWa9v/rryLy+aN8/rDgG9UI5o17716mMtArqhn1snAcB2AkqXqsAdfP3TWkTLM/NVVP98UCxrd+00piqgBw/flrM/F9+y/NZPHmse0It+zqcBlPvxR1uOwMI1BJROrSbSrw5Cnq9KNhsdro5xTq8P6GL0uDwPdX4R0suPVQV0crLsZ/kNi5NKs/+ydjwWdiKgdGvy+sFy7/uHK+dxZk3bNaCL/zDLZNXDT8/CLx6rCuhFP9fPYtU4yQ8LAkr3/nz+7cV5noUPf/x4VOwa0GUFtwT04rHKgP5j9unihNH6rKaLSQCwKwGlH94/WR7AXK4vsjyxs1dArzxWecyztEjl8sv1E/WwOwGlLxaHKddPjO8d0KuPVRXzf9xfnsxf/88CSn0CSndOLl+8Of9yPir8/M73P/2/nY+BbgvoJ49V/otbb8+XZ52W3w8xAkp3rly8ebacurmY0777SaRtAf3ksRYHPU8WT7z4txAkoHRnudM+Nw/hWg7P992F//SxFgFdLlxSnsDfuIAJ7ERA6U7Zr4srKM+qxl1E7/395gK6fKzlafflMlBnF2fkN19WCtcRUDpUncS5++LtcjpoWbCTeVQn5QKhVf/WAnr5gOW1Aa0+fvJY69fCLy7trC5imn54VphIT20CSpdeXToLvryK6PKl7cuAzk+Zb7wW/mpAl9/6yWOtJn7OvqP6ofXvMAClLgGlU+8eXATu7/N/9Wx1ZdL8COXqnkiPr1Rue0BX33r1sS5mzi934s+P9JMwAaVjfz6ZL9j5z9Xu+evyuqTPf3i7uJR9deujSTnX/puLn9we0ItvvfJYFwEtd96rZE6qBUM//+HqolBwMwEFCBJQgCABBQgSUIAgAQUIElCAIAEFCBJQgCABBQgSUIAgAQUIElCAIAEFCBJQgCABBQgSUIAgAQUIElCAIAEFCBJQgCABBQgSUIAgAQUIElCAIAEFCBJQgCABBQgSUIAgAQUIElCAIAEFCBJQgCABBQgSUIAgAQUIElCAIAEFCBJQgCABBQgSUIAgAQUIElCAIAEFCBJQgCABBQgSUIAgAQUIElCAIAEFCPr/HEsLoqKwg9sAAAAASUVORK5CYII=" width="672" /></p>
+</div>
+<div id="the-green-line-shows-the-relationship-between-salt-intake-and-diastole-blood-pressure-when-the-moderator-waist-size-is-at-mean.the-red-line-is-for-the-moderator-one-standard-deviation-below-the-mean-snd-the-blue-line-is-for-one-standard-deviation-above-mean." class="section level5">
+<h5>The green line shows the relationship between salt intake and diastole blood pressure when the moderator waist size is at mean.The red line is for the moderator one standard deviation below the mean snd the blue line is for one standard deviation above mean.</h5>
+</div>
+<div id="we-can-see-from-the-plot-that-people-with-a-higher-waist-size-have-a-higher-effect-on-the-blood-pressure-meaning-the-moderation-effect-of-waist-size-on-blood-pressure-through-salt-intake-is-higher-for-people-with-a-higher-waist-size-but-they-are-not-significantly-different-between-different-levels-of-waist-sizes." class="section level5">
+<h5>we can see from the plot that people with a higher waist size have a higher effect on the blood pressure, meaning the moderation effect of waist size on blood pressure through salt intake is higher for people with a higher waist size, but they are not significantly different between different levels of waist sizes.</h5>
+</div>
+</div>
+<div id="simple-slope-analysis-for-systole-blood-pressure" class="section level4">
+<h4>Simple slope analysis for systole blood pressure</h4>
+<div id="the-method-is-the-same-as-diastole-blood-pressure." class="section level5">
+<h5>The method is the same as diastole blood pressure.</h5>
+<pre class="r"><code># moderator is at mean: b0 = -0.009924, b1 = 0.610168
+meanSY = moderation_SY$coefficients[1] + moderation_SY$coefficients[2] * data$DBD100
+
+# moderator is one standard deviation above mean: b0 = -7.230880, b1 = 0.422982
+highSY = moderation_SY_high$coefficients[1] + moderation_SY_high$coefficients[2] * data$DBD100
+
+# moderator is one standard deviation below mean: bo = 7.221033, b1 = 0.797353
+lowSY = moderation_SY_low$coefficients[1] + moderation_SY_low$coefficients[2] * data$DBD100
+
+# plot the three dependent values vs salt intake
+plot(data$DBD100, meanSY, type = &quot;l&quot;, col = &quot;green&quot;, ylim = c(-10, 15), xlab = &quot;Salt intake&quot;, ylab = &quot;Systole blood pressure&quot;)
+lines(data$DBD100, lowSY, col = &quot;red&quot;)
+lines(data$DBD100, highSY, col = &quot;blue&quot;)</code></pre>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABUAAAAPACAMAAADDuCPrAAAA4VBMVEUAAAAAADoAAGYAAP8AOjoAOmYAOpAAZmYAZrYA/wA6AAA6OgA6Ojo6OmY6ZmY6ZpA6ZrY6kLY6kNtmAABmADpmOgBmOjpmZjpmZmZmZpBmkJBmkLZmkNtmtttmtv+QOgCQZgCQZjqQZmaQZpCQkDqQkGaQkJCQkLaQtraQttuQtv+Q2/+2ZgC2Zjq2kDq2kGa2kJC2kLa2tpC2tra2ttu225C229u22/+2///bkDrbkGbbtmbbtpDbtrbb27bb29vb2//b/7bb////AAD/tmb/25D/27b/29v//7b//9v///9wV3/IAAAACXBIWXMAAB2HAAAdhwGP5fFlAAAgAElEQVR4nO3d/WMT153o4XE2zmWdULKwUKcUCL33tqE1ZRtxSV0IzrLmRf7//6Cr0bttydZ8dXSOZuZ5fgjGsSWNER/m5Zwz1QUAIVXpFwDQVgIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAAQQIKECSgAEECChAkoABBAgoQJKAA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" width="672" /></p>
+</div>
+<div id="the-green-line-shows-the-relationship-between-salt-intake-and-systole-blood-pressure-when-the-moderator-waist-size-is-at-mean.the-red-line-is-for-the-moderator-one-standard-deviation-below-the-mean-and-the-blue-line-is-for-one-standard-deviation-above-mean." class="section level5">
+<h5>The green line shows the relationship between salt intake and systole blood pressure when the moderator waist size is at mean.The red line is for the moderator one standard deviation below the mean and the blue line is for one standard deviation above mean.</h5>
+</div>
+<div id="we-can-see-from-the-plot-that-people-with-a-lower-waist-size-have-a-higher-effect-on-the-systole-blood-pressure-meaning-the-moderation-effect-of-waist-size-on-blood-pressure-through-salt-intake-is-higher-for-people-with-a-lower-waist-size-but-they-are-also-not-significantly-different-between-different-levels-of-waist-sizes." class="section level5">
+<h5>we can see from the plot that people with a lower waist size have a higher effect on the systole blood pressure, meaning the moderation effect of waist size on blood pressure through salt intake is higher for people with a lower waist size, but they are also not significantly different between different levels of waist sizes.</h5>
+</div>
+</div>
+</div>
+<div id="python-1" class="section level2">
+<h2>Python</h2>
+<div id="treat-salt-intakes-as-categorical-variable" class="section level3">
+<h3>Treat salt intakes as categorical variable</h3>
+<p>Fit the ordinary least square to the data, and do mediate and moderate analysis treat salt intake as categorical variable.</p>
+<div id="diastolic-result-ols" class="section level4">
+<h4>Diastolic result (ols)</h4>
+<pre class="python"><code># fit ols to Diastolic measurements
 ols_DI=ols(&#39;DI~DBD100&#39;,data=df).fit()
 # Print the summary
 print(ols_DI.summary())</code></pre>
@@ -3956,8 +4319,8 @@ Kurtosis:                       5.570   Cond. No.                         3.29
 DBD100       2.0    2852.76590  1426.382950  7.992829  0.000343
 Residual  4667.0  832862.70838   178.457833       NaN       NaN</code></pre>
 </div>
-<div id="systolic-result" class="section level4">
-<h4>Systolic result</h4>
+<div id="systolic-result-ols" class="section level4">
+<h4>Systolic result (ols)</h4>
 <pre class="python"><code># fit ols to Systolic measurements
 ols_SY=ols(&#39;SY~DBD100&#39;,data=df).fit()
 # Print the summary
@@ -3991,15 +4354,12 @@ DBD100       2.0  5.269709e+03  2634.854509  8.840718  0.000147
 Residual  4667.0  1.390935e+06   298.036262       NaN       NaN</code></pre>
 <p>From the above results, we know that both models are significant and every coefficients are significant(at the level of 95%).</p>
 </div>
-</div>
-<div id="moderation-effect-of-waist-size" class="section level3">
-<h3>Moderation effect of waist size</h3>
+<div id="diastolic-result-moderation" class="section level4">
+<h4>Diastolic result (moderation)</h4>
 <p>First, add two columns recording a standiviation above and below of waist size.</p>
 <pre class="python"><code>df[&#39;waist_sd&#39;] = df[&#39;BMXWAIST&#39;].std()
 df[&#39;waist_up&#39;]=df[&#39;BMXWAIST&#39;]+df[&#39;waist_sd&#39;]
 df[&#39;waist_down&#39;]=df[&#39;BMXWAIST&#39;]-df[&#39;waist_sd&#39;]</code></pre>
-<div id="diastolic-result-1" class="section level4">
-<h4>Diastolic result</h4>
 <p>Fit model: <code>DI ~ DBD100 + BMXWAIST + DBD100 * BMXWAIST</code></p>
 <pre class="python"><code>moderation_DI = ols(&#39;DI ~ DBD100 + BMXWAIST + DBD100 * BMXWAIST&#39;, data=df).fit()
 print(moderation_DI.summary())</code></pre>
@@ -4095,8 +4455,8 @@ Kurtosis:                       6.057   Cond. No.                     1.06e+03
 ==============================================================================</code></pre>
 <p>For the models above, coefficients for the interaction terms and salt intake itself are not significant(at level of 95%). There are not moderation effect of waist size on salt intake and diastole.</p>
 </div>
-<div id="systolic-result-1" class="section level4">
-<h4>Systolic result</h4>
+<div id="systolic-result-moderation" class="section level4">
+<h4>Systolic result (moderation)</h4>
 <p>Fit model: <code>SY ~ DBD100 + BMXWAIST + DBD100 * BMXWAIST</code></p>
 <pre class="python"><code>moderation_SY = ols(&#39;SY ~ DBD100 + BMXWAIST + DBD100 * BMXWAIST&#39;, data=df).fit()
 print(moderation_SY.summary())</code></pre>
@@ -4198,10 +4558,8 @@ Kurtosis:                       6.236   Cond. No.                     1.06e+03
 ==============================================================================</code></pre>
 <p>For the models above, coefficients for the interation terms and salt intake itself are not significant(at level of 95%). There are not moderation effect of waist size on salt intake and diastole.</p>
 </div>
-</div>
-<div id="mediation-effect-of-age" class="section level3">
-<h3>Mediation effect of age</h3>
-<p>Fit model: <code>RIDAGEYR ~ DBD100</code> to see if there are relationships between age and salt intake</p>
+<div id="diastolic-result-mediation" class="section level4">
+<h4>Diastolic result (mediation)</h4>
 <pre class="python"><code># test if there is relationship between age and salt intake.
 age_D = ols(&#39;RIDAGEYR ~ DBD100&#39;, data=df).fit()
 print(age_D.summary())</code></pre>
@@ -4229,8 +4587,6 @@ Skew:                           0.347   Prob(JB):                     1.63e-71
 Kurtosis:                       1.908   Cond. No.                         3.29
 ==============================================================================</code></pre>
 <p>The model is significant. There are relationships between age and salt intake behavior.</p>
-<div id="diastolic-result-2" class="section level4">
-<h4>Diastolic result</h4>
 <p>Fit model: <code>DI ~ DBD100 + RIDAGEYR</code>.</p>
 <pre class="python"><code>mediation_DI = ols(&#39;DI ~ DBD100 + RIDAGEYR&#39;, data=df).fit()
 print(mediation_DI.summary())</code></pre>
@@ -4290,8 +4646,8 @@ ADE (average)             1.689822        0.133945        3.195800    0.038
 Prop. mediated (average)  0.439429        0.262442        0.890685    0.002</code></pre>
 <p>All the mediation effect(ACME) are significant(at level of 95%). Which means that age is a mediator between salt intake and diastolic.</p>
 </div>
-<div id="systolic-result-2" class="section level4">
-<h4>Systolic result</h4>
+<div id="systolic-result-mediation" class="section level4">
+<h4>Systolic result (mediation)</h4>
 <p>Fit model: <code>SY ~ DBD100 + RIDAGEYR</code>.</p>
 <pre class="python"><code>mediation_SY = ols(&#39;SY ~ DBD100 + RIDAGEYR&#39;, data=df).fit()
 print(mediation_SY.summary())</code></pre>
@@ -4351,10 +4707,15 @@ ADE (average)             0.547837       -1.021655        2.148920    0.506
 Prop. mediated (average)  0.878754        0.617803        1.427143    0.000</code></pre>
 <p>All the mediation effect(ACME) are significant. Which means that age is a mediator between salt intake and systolic.</p>
 </div>
-</div>
-<div id="summary" class="section level3">
-<h3>Summary</h3>
+<div id="summary" class="section level4">
+<h4>Summary</h4>
 <p>From the analysis above, we know that the salt intake behavior have significant influence on people’s blood pressure (both diastolic and systolic). The influence of salt intake behavior on blood pressure(both diastolic and systolic) is not modirated by waist size. Age is a Mediator between salt intake behavior and blood pressure(both diastolic and systolic).</p>
+<p>Our independent variable is the salt intake behavior of each subject. We can either treat this as a categorical variable with three levels (“Rarely”, “Occasionally” or “Very often” to add salt), or we can treat this variable as numeric, representing the relative frequency of adding salt to food at the table.</p>
+<p>The conclusion obtained from treated salt intake differently are the same. There are some differences exist since we added extra degrees of freedom. However, if our independent variable is of two levels, treating it as categorical variable or as numeric variable are essentially the same.</p>
+<p>When we fit a least square model for <code>DI ~ DBD100</code>, the coefficient of numeric variable is significant (for both diastolic and systolic). The two coefficients of factor variable of 3 levels are both significant (for both diastolic and systolic), and the effect of independent variable on blood pressure are significant from the result of anova analysis.</p>
+<p>When we analyse the moderation effect of waist size on the relationship between salt intake behavior and blood pressure, both analyses showed that the interactions between waist size and salt intake are not siginificant. The main difference is that anova of categorical data shows that salt intake behavior have significant influence on blood pressure, while regression results shows that salt intake behavior do not have significant influence on blood pressure. But this difference will not affect the result since there are no moderation effect of waist size.</p>
+<p>When we analyse the moderation effect of waist size on the relationship between salt intake behavior and blood pressure, we show that age is a mediator between salt intake and blood pressure (for both diastolic and systolic). The mediation (indirect) effect is significant whether we treat salt intake as categorical or numeric. For direct effect, there are difference between diastolic and systole. The direct effect of salt intake on systole is not significant while the direct effect of salt intake on diastolic is significant.</p>
+</div>
 </div>
 </div>
 </div>
@@ -4377,15 +4738,6 @@ Prop. mediated (average)  0.878754        0.617803        1.427143    0.000</cod
 <h4>Mediation results for systole:</h4>
 <p>Mediation analysis performed to analyze the mediating effect of age on the relationship between salt intake and systolic blood pressure was significant, <span class="math inline">\(F(2,4679) = 1133\)</span>, <span class="math inline">\(p &lt;0.001\)</span>, <span class="math inline">\(R^2 = 0.32\)</span>, indicating that there exists a positive relationship between salt intake and blood pressure. More importantly, there exists a positive, significant indirect effect in the relationship between salt intake and diastolic blood pressure, <span class="math inline">\(b = 1.05\)</span>, 95% CI (0.71, 1.40), <span class="math inline">\(p &lt; 0.001\)</span>, indicating a mediating effect of age on the effect of salt intake and systolic blood pressure.</p>
 </div>
-</div>
-<div id="discussion" class="section level1">
-<h1>Discussion</h1>
-<p>Our independent variable is the salt intake behavior of each subject. We can either treat this as a categorical variable with three levels (“Rarely”, “Occasionally” or “Very often” to add salt), or we can treat this variable as numeric, representing the relative frequency of adding salt to food at the table.</p>
-<p>For R and SAS, we implemented the analysis methods by treating the variable “the frequency of add salt to food at table” as numeric. For Python, we implemented the analysis methods by treating the variable “the frequency of add salt to food at table” as categorical. Treating “the frequency of add salt to food at table” as categorical variable may lose some information on the relative salt intake frequency difference between subject, while treating it as a numeric variable may lead to misspecified frequency difference between subject.</p>
-<p>For R and SAS the results of the analysis are same. The conclusion obtained from all three different implementation are the same. There are some differences between R, SAS and Python implementations since we treated independent variables differently and added extra degrees of freedom. However, if our independent variable is of two levels, treating it as categorical variable or as numeric variable are essentially the same.</p>
-<p>When we fit a least square model for <code>DI ~ DBD100</code>, the coefficient of numeric variable is significant (for both diastolic and systolic). The two coefficients of factor variable of 3 levels are both significant (for both diastolic and systolic), and the effect of independent variable on blood pressure are significant from the result of anova analysis.</p>
-<p>When we analyse the moderation effect of waist size on the relationship between salt intake behavior and blood pressure, all analysis showed that the interactions between waist size and salt intake are not siginificant. The main difference is that anova of categorical data shows that salt intake behavior have significant influence on blood pressure, while regression results shows that salt intake behavior do not have significant influence on blood pressure. But this difference will not affect the result since there are no moderation effect of waist size.</p>
-<p>When we analyse the moderation effect of waist size on the relationship between salt intake behavior and blood pressure, we show that age is a mediator between salt intake and blood pressure (for both diastolic and systolic). The mediation (indirect) effect is significant whether we treat salt intake as categorical or numeric. For direct effect, there are difference between diastolic and systole. The direct effect of salt intake on systole is not significant while the direct effect of salt intake on diastolic is significant.</p>
 </div>
 <div id="references" class="section level1">
 <h1>References</h1>

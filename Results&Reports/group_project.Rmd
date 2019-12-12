@@ -25,7 +25,7 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
-knitr::opts_knit$set(root.dir = normalizePath('C:/Users/13063/Documents/GitHub/stats506'))
+knitr::opts_knit$set(root.dir = normalizePath('D:/STAT506/Group project/stats506'))
 #libraries:
 #library(SASxport)
 library(tidyverse)
@@ -33,7 +33,7 @@ library(data.table)
 library(MBESS)
 library(kableExtra)
 # set working directory
-setwd("C:/Users/13063/Documents/GitHub/stats506")
+setwd("D:/STAT506/Group project/stats506")
 
 ```
 
@@ -70,7 +70,7 @@ data.table(Variables = name, Descriptions = description, Datasets = dataset) %>%
   knitr::kable(align = "l") %>%
   kable_styling(bootstrap_options = c("striped", "hover"), latex_options = c("hold_position", "scale_down"), position = "left")
 ```
-<br>
+
 
 # Methods
 
@@ -86,9 +86,9 @@ First, we need to illustrate that X affects Y. If not, there is no need to media
 
 We use R, Python and SAS to perform the analysis.
 
-<br>
+
   
-# Moderation and Mediation {.tabset}
+# Core Analysis: Moderation and Mediation {.tabset}
 
 
 ## R
@@ -102,7 +102,7 @@ BMI<-readxl::read_xlsx('RawData/Body_measures_2015_16.xlsx')
 blood_pressure<-readxl::read_xlsx('RawData/Blood_Pressure_2015_16.xlsx')
 nutrients_1day<-readxl::read_xlsx('RawData/Dietary_nutrients_firstday_2015_16.xlsx')
 ```
-<br>
+
   
 ### Data processing
   
@@ -169,6 +169,8 @@ qqline(model_SY$residuals, col = "blue")
 data[c("RIDAGEYR", "BMXWAIST", "DBD100", "DI", "SY")] = 
   lapply(data[c("RIDAGEYR", "BMXWAIST", "DBD100", "DI", "SY")],  
          function(x) scale(x, center=TRUE, scale=FALSE))
+
+summary(data)
 ```
 <br>
   
@@ -230,36 +232,8 @@ summary(moderation_DI_low)
 
 
 ##### Since the regression coefficient for the interation term is not significant with p value 0.41, there does not exist a significant moderation effect. The effect of salt intake on diastole blood pressure may not depend on waist size.
-<br>
-  
-#### Simple Slope analysis for diastole blood pressure
-<br>
-  
-##### We find beta0 and beta1 values of the independent variable DBD100 (salt intake) from the three regression models: (1) with the moderator held at mean (2) with the moderator held at one standard deviation below mean (3) with the moderator held at one standard deviation above mean.
-  
-##### Then, for each of these three models, we predict the dependent variable Y = beta0 + beta1 * X (here Y is blood pressure DI and X is the salt intake DBD100). By analysing the characteristic of Y at three levels of the moderator, we can compare the behaviors of moderator at three levels. In our case, we are seeing if people with waist size one standard deviation below mean and one standard deviation above mean have different blood pressure characteristics compared to people with waist size at mean.
-<br>
-  
-```{r}
-# moderator is at mean: b0 = 0.010034, b1 = 0.596273
-meanDI = moderation_DI$coefficients[1] + moderation_DI$coefficients[2] * data$DBD100
 
-# moderator is one standard deviation above mean: b0 = -3.928731, b1 = 0.785543
-highDI = moderation_DI_high$coefficients[1] + moderation_DI_high$coefficients[2] * data$DBD100
 
-# moderator is one standard deviation below mean: bo = 3.948800, b1 = 0.407004
-lowDI = moderation_DI_low$coefficients[1] + moderation_DI_low$coefficients[2] * data$DBD100
-
-# plot the three dependent values vs salt intake
-plot(data$DBD100, meanDI, type = "l", col = "green", ylim = c(-5, 7), xlab = "Salt intake", ylab = "Diastole blood pressure")
-lines(data$DBD100, lowDI, col = "red")
-lines(data$DBD100, highDI, col = "blue")
-```
-
-#####  The green line shows the relationship between salt intake and diastole blood pressure when the moderator waist size is at mean.The red line is for the moderator one standard deviation below the mean snd the blue line is for one standard deviation above mean.
-
-##### we can see from the plot that people with a higher waist size have a higher effect on the blood pressure, meaning the moderation effect of waist size on blood pressure through salt intake is higher for people with a higher waist size, but they are not significantly different between different levels of waist sizes.
-<br>
   
 #### Moderation at mean for systole blood pressure
   
@@ -267,7 +241,7 @@ lines(data$DBD100, highDI, col = "blue")
 moderation_SY = lm(SY ~ DBD100 + BMXWAIST + DBD100 * BMXWAIST, data)
 summary(moderation_SY)
 ```
-<br>
+
   
 #### Moderation at one standard deviation above mean for systole blood pressure
   
@@ -288,34 +262,8 @@ summary(moderation_SY_low)
 
 
 ##### Since the regression coefficient for the interation term is not significant with p value 0.51, there does not exist a significant moderation effect. The effect of salt intake on systole blood pressure may not depend on waist size as well.
-<br>
-  
-#### Simple slope analysis for systole blood pressure
-<br>
-  
-##### The method is the same as diastole blood pressure.
-  
-```{r}
 
-# moderator is at mean: b0 = -0.009924, b1 = 0.610168
-meanSY = moderation_SY$coefficients[1] + moderation_SY$coefficients[2] * data$DBD100
 
-# moderator is one standard deviation above mean: b0 = -7.230880, b1 = 0.422982
-highSY = moderation_SY_high$coefficients[1] + moderation_SY_high$coefficients[2] * data$DBD100
-
-# moderator is one standard deviation below mean: bo = 7.221033, b1 = 0.797353
-lowSY = moderation_SY_low$coefficients[1] + moderation_SY_low$coefficients[2] * data$DBD100
-
-# plot the three dependent values vs salt intake
-plot(data$DBD100, meanSY, type = "l", col = "green", ylim = c(-10, 15), xlab = "Salt intake", ylab = "Systole blood pressure")
-lines(data$DBD100, lowSY, col = "red")
-lines(data$DBD100, highSY, col = "blue")
-```
-
-#####  The green line shows the relationship between salt intake and systole blood pressure when the moderator waist size is at mean.The red line is for the moderator one standard deviation below the mean and the blue line is for one standard deviation above mean.
-
-##### we can see from the plot that people with a lower waist size have a higher effect on the systole blood pressure, meaning the moderation effect of waist size on blood pressure through salt intake is higher for people with a lower waist size, but they are also not significantly different between different levels of waist sizes.
-<br>
   
 ### Mediation Part
   
@@ -803,19 +751,21 @@ We need first clean the raw data and join different dataset.
 
 ```python
 # select useful columns
-# ! Note: we need to drop values '9' or '99' which represent "don't know"
+
 demo=demo.set_index('SEQN'
-                    ).filter(items=['RIDAGEYR']  # 'RIAGENDR','RIDRETH3'
+                    ).filter(items=['RIDAGEYR']  
                     ).dropna()
-# demo[['RIAGENDR','RIDRETH3']]=demo[['RIAGENDR','RIDRETH3']].astype('category')
 BMI=BMI.set_index('SEQN'
-                  ).filter(items=['BMXWAIST']   # ,'BMXWT','BMXHT'
+                  ).filter(items=['BMXWAIST']   
                   ).dropna()
-nutr=nutr.set_index('SEQN'
-                    ).filter(items=['DBD100']  #,'DBQ095Z','DRQSPREP'
+
+nutr1=nutr.set_index('SEQN'
+                    ).filter(items=['DBD100']
                     ).dropna(
-                    ).query('DBD100 != 9'
-                    ).astype('category')
+                    )
+                    
+nutr=nutr1.query('DBD100 != 9'
+                ).astype('category')
 
 # Calculate mean of blood pressure
 bp=bp.set_index('SEQN'
@@ -825,40 +775,12 @@ bp=bp.assign(SY=bp.filter(regex='BPXSY*').mean(axis=1, skipna = True),
              ).filter(items=['SY','DI']).dropna()
 
 # Merge all data set
+df1=bp.join(demo,how='inner').join(BMI,how='inner').join(nutr1,how='inner')
+df1=df1-df1.mean()
+
+# Categorical treat DBD100 as categorical variable.
 df=bp.join(demo,how='inner').join(BMI,how='inner').join(nutr,how='inner')
 ```
-
-Take a look at the data we are about to work on.
-
-
-```python
-# Show data summary of numeric variables
-print(df.describe())
-```
-
-                    SY           DI     RIDAGEYR     BMXWAIST
-    count  4670.000000  4670.000000  4670.000000  4670.000000
-    mean    119.510921    66.050393    38.107281    93.630557
-    std      17.292694    13.378804    21.598139    19.019918
-    min      74.000000     0.000000     8.000000    46.300000
-    25%     107.333333    58.666667    18.000000    79.700000
-    50%     116.666667    66.666667    35.000000    93.000000
-    75%     128.000000    74.666667    56.000000   105.900000
-    max     206.666667   124.000000    80.000000   171.600000
-    
-
-
-```python
-# Show data summary of categorical variables
-print(df.describe(include='category'))
-```
-
-            DBD100
-    count   4670.0
-    unique     3.0
-    top        1.0
-    freq    2444.0
-    
 
 Generate plots show the relationship between salt intake behaviors and blood presure.
 
@@ -960,6 +882,7 @@ plt.show()
 ![](figures_for_report/output_14_0.png)
 
 
+
 ### Fit OLS
 
 Now fit the ordinary least square to the data.
@@ -967,6 +890,550 @@ The models used are:
 `DI ~ DBD100` and `SY ~ DBD100`
 
 #### Diastolic result
+
+
+```python
+# fit ols to Diastolic measurements
+ols_DI=ols('DI~DBD100',data=df1).fit()
+# Print the summary
+print(ols_DI.summary())
+```
+
+                                OLS Regression Results                            
+    ==============================================================================
+    Dep. Variable:                     DI   R-squared:                       0.003
+    Model:                            OLS   Adj. R-squared:                  0.003
+    Method:                 Least Squares   F-statistic:                     14.87
+    Date:                Thu, 12 Dec 2019   Prob (F-statistic):           0.000117
+    Time:                        02:02:32   Log-Likelihood:                -18776.
+    No. Observations:                4682   AIC:                         3.756e+04
+    Df Residuals:                    4680   BIC:                         3.757e+04
+    Df Model:                           1                                         
+    Covariance Type:            nonrobust                                         
+    ==============================================================================
+                     coef    std err          t      P>|t|      [0.025      0.975]
+    ------------------------------------------------------------------------------
+    Intercept   3.759e-14      0.195   1.93e-13      1.000      -0.383       0.383
+    DBD100         0.8862      0.230      3.856      0.000       0.436       1.337
+    ==============================================================================
+    Omnibus:                      523.351   Durbin-Watson:                   2.000
+    Prob(Omnibus):                  0.000   Jarque-Bera (JB):             1559.833
+    Skew:                          -0.592   Prob(JB):                         0.00
+    Kurtosis:                       5.568   Cond. No.                         1.18
+    ==============================================================================
+    
+
+    
+
+#### Systolic result
+
+
+```python
+# fit ols to Systolic measurements
+ols_SY=ols('SY~DBD100',data=df1).fit()
+# Print the summary
+print(ols_SY.summary())
+```
+
+                                OLS Regression Results                            
+    ==============================================================================
+    Dep. Variable:                     SY   R-squared:                       0.003
+    Model:                            OLS   Adj. R-squared:                  0.003
+    Method:                 Least Squares   F-statistic:                     14.68
+    Date:                Thu, 12 Dec 2019   Prob (F-statistic):           0.000129
+    Time:                        01:37:13   Log-Likelihood:                -19985.
+    No. Observations:                4682   AIC:                         3.997e+04
+    Df Residuals:                    4680   BIC:                         3.999e+04
+    Df Model:                           1                                         
+    Covariance Type:            nonrobust                                         
+    ==============================================================================
+                     coef    std err          t      P>|t|      [0.025      0.975]
+    ------------------------------------------------------------------------------
+    Intercept    119.4778      0.253    472.714      0.000     118.982     119.973
+    DBD100         0.9597      0.250      3.831      0.000       0.469       1.451
+    ==============================================================================
+    Omnibus:                      831.965   Durbin-Watson:                   1.965
+    Prob(Omnibus):                  0.000   Jarque-Bera (JB):             1619.248
+    Skew:                           1.081   Prob(JB):                         0.00
+    Kurtosis:                       4.905   Cond. No.                         1.04
+    ==============================================================================
+
+    
+
+From the above results, we know that both models are significant and every coefficients are significant(at the level of 95%).
+
+### Moderation effect of waist size
+
+
+First, add two columns recording a standiviation above and below  of waist size.
+
+
+```python
+df1['waist_sd'] = df1['BMXWAIST'].std()
+df1['waist_up']=df1['BMXWAIST']+df1['waist_sd']
+df1['waist_down']=df1['BMXWAIST']-df1['waist_sd']
+```
+
+#### Diastolic result
+
+Fit model: `DI ~ DBD100 + BMXWAIST + DBD100 * BMXWAIST`
+
+
+```python
+moderation_DI = ols('DI ~ DBD100 + BMXWAIST + DBD100 * BMXWAIST', data=df1).fit()
+print(moderation_DI.summary())
+```
+
+                                OLS Regression Results                            
+    ==============================================================================
+    Dep. Variable:                     DI   R-squared:                       0.090
+    Model:                            OLS   Adj. R-squared:                  0.090
+    Method:                 Least Squares   F-statistic:                     154.6
+    Date:                Thu, 12 Dec 2019   Prob (F-statistic):           1.65e-95
+    Time:                        02:14:56   Log-Likelihood:                -18563.
+    No. Observations:                4682   AIC:                         3.713e+04
+    Df Residuals:                    4678   BIC:                         3.716e+04
+    Df Model:                           3                                         
+    Covariance Type:            nonrobust                                         
+    ===================================================================================
+                          coef    std err          t      P>|t|      [0.025      0.975]
+    -----------------------------------------------------------------------------------
+    Intercept           0.0101      0.187      0.054      0.957      -0.356       0.376
+    DBD100              0.5903      0.220      2.682      0.007       0.159       1.022
+    BMXWAIST            0.2074      0.010     21.095      0.000       0.188       0.227
+    DBD100:BMXWAIST    -0.0100      0.012     -0.825      0.409      -0.034       0.014
+    ==============================================================================
+    Omnibus:                      645.708   Durbin-Watson:                   2.006
+    Prob(Omnibus):                  0.000   Jarque-Bera (JB):             2203.551
+    Skew:                          -0.685   Prob(JB):                         0.00
+    Kurtosis:                       6.069   Cond. No.                         22.5
+    ==============================================================================
+    
+
+
+```python
+# one standard deviation above mean
+moderation_DI_up = ols('DI ~ DBD100 + waist_up + DBD100 * waist_up', data=df1).fit()
+print(moderation_DI_up.summary())
+```
+
+                                OLS Regression Results                            
+    ==============================================================================
+    Dep. Variable:                     DI   R-squared:                       0.090
+    Model:                            OLS   Adj. R-squared:                  0.090
+    Method:                 Least Squares   F-statistic:                     154.6
+    Date:                Thu, 12 Dec 2019   Prob (F-statistic):           1.65e-95
+    Time:                        02:15:04   Log-Likelihood:                -18563.
+    No. Observations:                4682   AIC:                         3.713e+04
+    Df Residuals:                    4678   BIC:                         3.716e+04
+    Df Model:                           3                                         
+    Covariance Type:            nonrobust                                         
+    ===================================================================================
+                          coef    std err          t      P>|t|      [0.025      0.975]
+    -----------------------------------------------------------------------------------
+    Intercept          -3.9335      0.265    -14.866      0.000      -4.452      -3.415
+    DBD100              0.7800      0.313      2.488      0.013       0.165       1.394
+    waist_up            0.2074      0.010     21.095      0.000       0.188       0.227
+    DBD100:waist_up    -0.0100      0.012     -0.825      0.409      -0.034       0.014
+    ==============================================================================
+    Omnibus:                      645.708   Durbin-Watson:                   2.006
+    Prob(Omnibus):                  0.000   Jarque-Bera (JB):             2203.551
+    Skew:                          -0.685   Prob(JB):                         0.00
+    Kurtosis:                       6.069   Cond. No.                         45.7
+    ==============================================================================
+    
+
+
+```python
+# one standard deviation below mean
+moderation_DI_down = ols('DI ~ DBD100 + waist_down + DBD100 * waist_down', data=df1).fit()
+print(moderation_DI_down.summary())
+```
+
+                                OLS Regression Results                            
+    ==============================================================================
+    Dep. Variable:                     DI   R-squared:                       0.090
+    Model:                            OLS   Adj. R-squared:                  0.090
+    Method:                 Least Squares   F-statistic:                     154.6
+    Date:                Thu, 12 Dec 2019   Prob (F-statistic):           1.65e-95
+    Time:                        02:15:11   Log-Likelihood:                -18563.
+    No. Observations:                4682   AIC:                         3.713e+04
+    Df Residuals:                    4678   BIC:                         3.716e+04
+    Df Model:                           3                                         
+    Covariance Type:            nonrobust                                         
+    =====================================================================================
+                            coef    std err          t      P>|t|      [0.025      0.975]
+    -------------------------------------------------------------------------------------
+    Intercept             3.9537      0.264     14.975      0.000       3.436       4.471
+    DBD100                0.4007      0.323      1.240      0.215      -0.233       1.034
+    waist_down            0.2074      0.010     21.095      0.000       0.188       0.227
+    DBD100:waist_down    -0.0100      0.012     -0.825      0.409      -0.034       0.014
+    ==============================================================================
+    Omnibus:                      645.708   Durbin-Watson:                   2.006
+    Prob(Omnibus):                  0.000   Jarque-Bera (JB):             2203.551
+    Skew:                          -0.685   Prob(JB):                         0.00
+    Kurtosis:                       6.069   Cond. No.                         47.1
+    ==============================================================================
+    
+
+
+For the models above, coefficients for the interaction terms and salt intake itself are not significant(at level of 95%).
+There are not moderation effect of waist size on salt intake and diastole.
+
+#### Systolic result
+
+Fit model: `SY ~ DBD100 + BMXWAIST + DBD100 * BMXWAIST`
+
+
+```python
+moderation_SY = ols('SY ~ DBD100 + BMXWAIST + DBD100 * BMXWAIST', data=df1).fit()
+print(moderation_SY.summary())
+```
+
+                                OLS Regression Results                            
+    ==============================================================================
+    Dep. Variable:                     SY   R-squared:                       0.177
+    Model:                            OLS   Adj. R-squared:                  0.176
+    Method:                 Least Squares   F-statistic:                     334.6
+    Date:                Thu, 12 Dec 2019   Prob (F-statistic):          7.40e-197
+    Time:                        02:15:37   Log-Likelihood:                -19537.
+    No. Observations:                4682   AIC:                         3.908e+04
+    Df Residuals:                    4678   BIC:                         3.911e+04
+    Df Model:                           3                                         
+    Covariance Type:            nonrobust                                         
+    ===================================================================================
+                          coef    std err          t      P>|t|      [0.025      0.975]
+    -----------------------------------------------------------------------------------
+    Intercept          -0.0099      0.230     -0.043      0.966      -0.461       0.441
+    DBD100              0.6140      0.271      2.265      0.024       0.083       1.145
+    BMXWAIST            0.3802      0.012     31.400      0.000       0.356       0.404
+    DBD100:BMXWAIST     0.0098      0.015      0.657      0.511      -0.019       0.039
+    ==============================================================================
+    Omnibus:                     1182.376   Durbin-Watson:                   1.970
+    Prob(Omnibus):                  0.000   Jarque-Bera (JB):             3374.829
+    Skew:                           1.317   Prob(JB):                         0.00
+    Kurtosis:                       6.218   Cond. No.                         22.5
+    ==============================================================================
+    
+  
+
+
+```python
+# one standard deviation above mean
+moderation_SY_up = ols('SY ~ DBD100 + waist_up + DBD100 * waist_up', data=df1).fit()
+print(moderation_SY_up.summary())
+```
+
+                                OLS Regression Results                            
+    ==============================================================================
+    Dep. Variable:                     SY   R-squared:                       0.177
+    Model:                            OLS   Adj. R-squared:                  0.176
+    Method:                 Least Squares   F-statistic:                     334.6
+    Date:                Thu, 12 Dec 2019   Prob (F-statistic):          7.40e-197
+    Time:                        02:15:58   Log-Likelihood:                -19537.
+    No. Observations:                4682   AIC:                         3.908e+04
+    Df Residuals:                    4678   BIC:                         3.911e+04
+    Df Model:                           3                                         
+    Covariance Type:            nonrobust                                         
+    ===================================================================================
+                          coef    std err          t      P>|t|      [0.025      0.975]
+    -----------------------------------------------------------------------------------
+    Intercept          -7.2380      0.326    -22.215      0.000      -7.877      -6.599
+    DBD100              0.4279      0.386      1.109      0.268      -0.329       1.185
+    waist_up            0.3802      0.012     31.400      0.000       0.356       0.404
+    DBD100:waist_up     0.0098      0.015      0.657      0.511      -0.019       0.039
+    ==============================================================================
+    Omnibus:                     1182.376   Durbin-Watson:                   1.970
+    Prob(Omnibus):                  0.000   Jarque-Bera (JB):             3374.829
+    Skew:                           1.317   Prob(JB):                         0.00
+    Kurtosis:                       6.218   Cond. No.                         45.7
+    ==============================================================================
+    
+
+
+
+```python
+# one standard deviation below mean
+moderation_SY_down = ols('SY ~ DBD100 + waist_down + DBD100 * waist_down', data=df1).fit()
+print(moderation_SY_down.summary())
+```
+
+                                OLS Regression Results                            
+    ==============================================================================
+    Dep. Variable:                     SY   R-squared:                       0.177
+    Model:                            OLS   Adj. R-squared:                  0.176
+    Method:                 Least Squares   F-statistic:                     334.6
+    Date:                Thu, 12 Dec 2019   Prob (F-statistic):          7.40e-197
+    Time:                        02:16:32   Log-Likelihood:                -19537.
+    No. Observations:                4682   AIC:                         3.908e+04
+    Df Residuals:                    4678   BIC:                         3.911e+04
+    Df Model:                           3                                         
+    Covariance Type:            nonrobust                                         
+    =====================================================================================
+                            coef    std err          t      P>|t|      [0.025      0.975]
+    -------------------------------------------------------------------------------------
+    Intercept             7.2183      0.325     22.203      0.000       6.581       7.856
+    DBD100                0.8001      0.398      2.011      0.044       0.020       1.580
+    waist_down            0.3802      0.012     31.400      0.000       0.356       0.404
+    DBD100:waist_down     0.0098      0.015      0.657      0.511      -0.019       0.039
+    ==============================================================================
+    Omnibus:                     1182.376   Durbin-Watson:                   1.970
+    Prob(Omnibus):                  0.000   Jarque-Bera (JB):             3374.829
+    Skew:                           1.317   Prob(JB):                         0.00
+    Kurtosis:                       6.218   Cond. No.                         47.1
+    ==============================================================================
+    
+
+
+
+For the models above, coefficients for the interation terms and salt intake itself are not significant(at level of 95%). 
+There are not moderation effect of waist size on salt intake and diastole.
+
+### Mediation effect of age
+
+Fit model: `RIDAGEYR ~ DBD100` to see if there are relationships between age and salt intake
+
+
+```python
+# test if there is relationship between age and salt intake.
+age_D = ols('RIDAGEYR ~ DBD100', data=df1).fit()
+print(age_D.summary())
+```
+
+                                OLS Regression Results                            
+    ==============================================================================
+    Dep. Variable:               RIDAGEYR   R-squared:                       0.008
+    Model:                            OLS   Adj. R-squared:                  0.008
+    Method:                 Least Squares   F-statistic:                     38.72
+    Date:                Thu, 12 Dec 2019   Prob (F-statistic):           5.31e-10
+    Time:                        02:20:09   Log-Likelihood:                -21011.
+    No. Observations:                4682   AIC:                         4.203e+04
+    Df Residuals:                    4680   BIC:                         4.204e+04
+    Df Model:                           1                                         
+    Covariance Type:            nonrobust                                         
+    ==============================================================================
+                     coef    std err          t      P>|t|      [0.025      0.975]
+    ------------------------------------------------------------------------------
+    Intercept  -8.743e-16      0.314  -2.78e-15      1.000      -0.616       0.616
+    DBD100         2.3047      0.370      6.223      0.000       1.579       3.031
+    ==============================================================================
+    Omnibus:                     1898.788   Durbin-Watson:                   2.043
+    Prob(Omnibus):                  0.000   Jarque-Bera (JB):              326.001
+    Skew:                           0.345   Prob(JB):                     1.62e-71
+    Kurtosis:                       1.907   Cond. No.                         1.18
+    ==============================================================================
+    
+
+
+The model is significant. There are relationships between age and salt intake behavior.
+
+#### Diastolic result
+
+Fit model: `DI ~ DBD100 + RIDAGEYR`.
+
+
+```python
+mediation_DI = ols('DI ~ DBD100 + RIDAGEYR', data=df1).fit()
+print(mediation_DI.summary())
+```
+
+                                OLS Regression Results                            
+    ==============================================================================
+    Dep. Variable:                     DI   R-squared:                       0.072
+    Model:                            OLS   Adj. R-squared:                  0.072
+    Method:                 Least Squares   F-statistic:                     182.8
+    Date:                Thu, 12 Dec 2019   Prob (F-statistic):           3.64e-77
+    Time:                        02:20:17   Log-Likelihood:                -18608.
+    No. Observations:                4682   AIC:                         3.722e+04
+    Df Residuals:                    4679   BIC:                         3.724e+04
+    Df Model:                           2                                         
+    Covariance Type:            nonrobust                                         
+    ==============================================================================
+                     coef    std err          t      P>|t|      [0.025      0.975]
+    ------------------------------------------------------------------------------
+    Intercept   3.759e-14      0.188      2e-13      1.000      -0.369       0.369
+    DBD100         0.5091      0.223      2.287      0.022       0.073       0.946
+    RIDAGEYR       0.1636      0.009     18.698      0.000       0.146       0.181
+    ==============================================================================
+    Omnibus:                      725.164   Durbin-Watson:                   2.008
+    Prob(Omnibus):                  0.000   Jarque-Bera (JB):             2678.882
+    Skew:                          -0.745   Prob(JB):                         0.00
+    Kurtosis:                       6.393   Cond. No.                         25.5
+    ==============================================================================
+    
+
+The model is significant. Age might be a mediator between salt intake and diastolic.
+
+
+```python
+# origin model and mediator model
+med_model_DI=sm.OLS.from_formula('DI ~ RIDAGEYR+DBD100', data=df1)
+mediator_DI=sm.OLS.from_formula('RIDAGEYR ~ DBD100', data=df1)
+
+# origin model and mediator model
+med_DI = Mediation(med_model_DI,mediator_DI,'DBD100','RIDAGEYR').fit()
+print(med_DI.summary())
+```
+
+                              Estimate  Lower CI bound  Upper CI bound  P-value
+    ACME (control)            0.378793        0.198924        0.563067    0.000
+    ACME (treated)            0.378793        0.198924        0.563067    0.000
+    ADE (control)             0.493689        0.059676        0.900952    0.026
+    ADE (treated)             0.493689        0.059676        0.900952    0.026
+    Total effect              0.872482        0.416557        1.328894    0.000
+    Prop. mediated (control)  0.426604        0.245650        0.855243    0.000
+    Prop. mediated (treated)  0.426604        0.245650        0.855243    0.000
+    ACME (average)            0.378793        0.198924        0.563067    0.000
+    ADE (average)             0.493689        0.059676        0.900952    0.026
+    Prop. mediated (average)  0.426604        0.245650        0.855243    0.000
+    
+
+All the mediation effect(ACME) are significant(at level of 95%).
+Which means that age is a mediator between salt intake and diastolic.
+
+#### Systolic result
+
+Fit model: `SY ~ DBD100 + RIDAGEYR`.
+
+
+```python
+mediation_SY = ols('SY ~ DBD100 + RIDAGEYR', data=df1).fit()
+print(mediation_SY.summary())
+```
+
+                                OLS Regression Results                            
+    ==============================================================================
+    Dep. Variable:                     SY   R-squared:                       0.327
+    Model:                            OLS   Adj. R-squared:                  0.326
+    Method:                 Least Squares   F-statistic:                     1134.
+    Date:                Thu, 12 Dec 2019   Prob (F-statistic):               0.00
+    Time:                        02:23:41   Log-Likelihood:                -19067.
+    No. Observations:                4682   AIC:                         3.814e+04
+    Df Residuals:                    4679   BIC:                         3.816e+04
+    Df Model:                           2                                         
+    Covariance Type:            nonrobust                                         
+    ==============================================================================
+                     coef    std err          t      P>|t|      [0.025      0.975]
+    ------------------------------------------------------------------------------
+    Intercept  -2.212e-14      0.208  -1.07e-13      1.000      -0.407       0.407
+    DBD100         0.0853      0.246      0.348      0.728      -0.396       0.567
+    RIDAGEYR       0.4575      0.010     47.405      0.000       0.439       0.476
+    ==============================================================================
+    Omnibus:                      584.285   Durbin-Watson:                   1.955
+    Prob(Omnibus):                  0.000   Jarque-Bera (JB):             1238.816
+    Skew:                           0.763   Prob(JB):                    9.87e-270
+    Kurtosis:                       5.005   Cond. No.                         25.5
+    ==============================================================================
+    
+
+
+The model is significant. 
+Even thought the coefficients of salt intake is not significant(at level of 95%).
+Age might be a mediator between salt intake and systolic.
+
+
+```python
+# origin model and mediator model
+med_model_SY=sm.OLS.from_formula('SY ~ RIDAGEYR+DBD100', data=df1)
+mediator_SY=sm.OLS.from_formula('RIDAGEYR ~ DBD100', data=df1)
+
+# origin model and mediator model
+med_SY = Mediation(med_model_SY,mediator_SY,'DBD100','RIDAGEYR').fit()
+print(med_SY.summary())
+```
+
+                              Estimate  Lower CI bound  Upper CI bound  P-value
+    ACME (control)            1.034208        0.525030        1.529603    0.000
+    ACME (treated)            1.034208        0.525030        1.529603    0.000
+    ADE (control)             0.093089       -0.367313        0.540152    0.720
+    ADE (treated)             0.093089       -0.367313        0.540152    0.720
+    Total effect              1.127297        0.430358        1.775847    0.004
+    Prop. mediated (control)  0.918998        0.604010        1.648115    0.004
+    Prop. mediated (treated)  0.918998        0.604010        1.648115    0.004
+    ACME (average)            1.034208        0.525030        1.529603    0.000
+    ADE (average)             0.093089       -0.367313        0.540152    0.720
+    Prop. mediated (average)  0.918998        0.604010        1.648115    0.004
+    
+
+All the mediation effect(ACME) are significant.
+Which means that age is a mediator between salt intake and systolic.
+
+
+
+# Additional Analysis {.tabset}
+
+## R
+
+
+#### Simple Slope analysis for diastole blood pressure
+
+  
+##### We find beta0 and beta1 values of the independent variable DBD100 (salt intake) from the three regression models: (1) with the moderator held at mean (2) with the moderator held at one standard deviation below mean (3) with the moderator held at one standard deviation above mean.
+  
+##### Then, for each of these three models, we predict the dependent variable Y = beta0 + beta1 * X (here Y is blood pressure DI and X is the salt intake DBD100). By analysing the characteristic of Y at three levels of the moderator, we can compare the behaviors of moderator at three levels. In our case, we are seeing if people with waist size one standard deviation below mean and one standard deviation above mean have different blood pressure characteristics compared to people with waist size at mean.
+
+  
+```{r}
+# moderator is at mean: b0 = 0.010034, b1 = 0.596273
+meanDI = moderation_DI$coefficients[1] + moderation_DI$coefficients[2] * data$DBD100
+
+# moderator is one standard deviation above mean: b0 = -3.928731, b1 = 0.785543
+highDI = moderation_DI_high$coefficients[1] + moderation_DI_high$coefficients[2] * data$DBD100
+
+# moderator is one standard deviation below mean: bo = 3.948800, b1 = 0.407004
+lowDI = moderation_DI_low$coefficients[1] + moderation_DI_low$coefficients[2] * data$DBD100
+
+# plot the three dependent values vs salt intake
+plot(data$DBD100, meanDI, type = "l", col = "green", ylim = c(-5, 7), xlab = "Salt intake", ylab = "Diastole blood pressure")
+lines(data$DBD100, lowDI, col = "red")
+lines(data$DBD100, highDI, col = "blue")
+```
+
+#####  The green line shows the relationship between salt intake and diastole blood pressure when the moderator waist size is at mean.The red line is for the moderator one standard deviation below the mean snd the blue line is for one standard deviation above mean.
+
+##### we can see from the plot that people with a higher waist size have a higher effect on the blood pressure, meaning the moderation effect of waist size on blood pressure through salt intake is higher for people with a higher waist size, but they are not significantly different between different levels of waist sizes.
+
+
+  
+#### Simple slope analysis for systole blood pressure
+
+  
+##### The method is the same as diastole blood pressure.
+  
+```{r}
+
+# moderator is at mean: b0 = -0.009924, b1 = 0.610168
+meanSY = moderation_SY$coefficients[1] + moderation_SY$coefficients[2] * data$DBD100
+
+# moderator is one standard deviation above mean: b0 = -7.230880, b1 = 0.422982
+highSY = moderation_SY_high$coefficients[1] + moderation_SY_high$coefficients[2] * data$DBD100
+
+# moderator is one standard deviation below mean: bo = 7.221033, b1 = 0.797353
+lowSY = moderation_SY_low$coefficients[1] + moderation_SY_low$coefficients[2] * data$DBD100
+
+# plot the three dependent values vs salt intake
+plot(data$DBD100, meanSY, type = "l", col = "green", ylim = c(-10, 15), xlab = "Salt intake", ylab = "Systole blood pressure")
+lines(data$DBD100, lowSY, col = "red")
+lines(data$DBD100, highSY, col = "blue")
+```
+
+#####  The green line shows the relationship between salt intake and systole blood pressure when the moderator waist size is at mean.The red line is for the moderator one standard deviation below the mean and the blue line is for one standard deviation above mean.
+
+##### we can see from the plot that people with a lower waist size have a higher effect on the systole blood pressure, meaning the moderation effect of waist size on blood pressure through salt intake is higher for people with a lower waist size, but they are also not significantly different between different levels of waist sizes.
+
+
+
+
+
+## Python
+### Treat salt intakes as categorical variable
+
+Fit the ordinary least square to the data,
+and do mediate and moderate analysis treat
+salt intake as categorical variable.
+
+
+#### Diastolic result (ols)
 
 
 ```python
@@ -1011,7 +1478,7 @@ print(anova_lm(ols_DI))
     Residual  4667.0  832862.70838   178.457833       NaN       NaN
     
 
-#### Systolic result
+#### Systolic result (ols)
 
 
 ```python
@@ -1058,8 +1525,7 @@ print(anova_lm(ols_SY))
 
 From the above results, we know that both models are significant and every coefficients are significant(at the level of 95%).
 
-### Moderation effect of waist size
-
+#### Diastolic result (moderation)
 
 First, add two columns recording a standiviation above and below  of waist size.
 
@@ -1070,7 +1536,6 @@ df['waist_up']=df['BMXWAIST']+df['waist_sd']
 df['waist_down']=df['BMXWAIST']-df['waist_sd']
 ```
 
-#### Diastolic result
 
 Fit model: `DI ~ DBD100 + BMXWAIST + DBD100 * BMXWAIST`
 
@@ -1193,7 +1658,7 @@ print(moderation_DI_down.summary())
 For the models above, coefficients for the interaction terms and salt intake itself are not significant(at level of 95%).
 There are not moderation effect of waist size on salt intake and diastole.
 
-#### Systolic result
+#### Systolic result (moderation)
 
 Fit model: `SY ~ DBD100 + BMXWAIST + DBD100 * BMXWAIST`
 
@@ -1324,9 +1789,8 @@ print(moderation_SY_down.summary())
 For the models above, coefficients for the interation terms and salt intake itself are not significant(at level of 95%). 
 There are not moderation effect of waist size on salt intake and diastole.
 
-### Mediation effect of age
+#### Diastolic result (mediation)
 
-Fit model: `RIDAGEYR ~ DBD100` to see if there are relationships between age and salt intake
 
 
 ```python
@@ -1363,7 +1827,6 @@ print(age_D.summary())
 
 The model is significant. There are relationships between age and salt intake behavior.
 
-#### Diastolic result
 
 Fit model: `DI ~ DBD100 + RIDAGEYR`.
 
@@ -1446,7 +1909,7 @@ print(med_DI.summary())
 All the mediation effect(ACME) are significant(at level of 95%).
 Which means that age is a mediator between salt intake and diastolic.
 
-#### Systolic result
+#### Systolic result (mediation)
 
 Fit model: `SY ~ DBD100 + RIDAGEYR`.
 
@@ -1530,12 +1993,43 @@ print(med_SY.summary())
 All the mediation effect(ACME) are significant.
 Which means that age is a mediator between salt intake and systolic.
 
-### Summary
+#### Summary
 
 From the analysis above, we know that the salt intake behavior have significant influence on people's blood pressure
 (both diastolic and systolic).
 The influence of salt intake behavior on blood pressure(both diastolic and systolic) is not modirated by waist size.
 Age is a Mediator between salt intake behavior and blood pressure(both diastolic and systolic).
+
+Our independent variable is the salt intake behavior of each subject.
+We can either treat this as a categorical variable with three levels
+("Rarely", "Occasionally" or "Very often" to add salt), or we can treat 
+this variable as numeric, representing the relative frequency of 
+adding salt to food at the table.
+
+
+The conclusion obtained from treated salt intake differently are the same. There are some differences exist since we added extra degrees of freedom.
+However, if our independent variable is of two levels, treating it as categorical variable or as numeric 
+variable are essentially the same.  
+
+When we fit a least square model for `DI ~ DBD100`, the coefficient of numeric variable is significant
+(for both diastolic and systolic).
+The two coefficients of factor variable of 3 levels are both significant
+(for both diastolic and systolic), and the effect of independent variable on blood pressure 
+are significant from the result of anova analysis.
+
+When we analyse the moderation effect of waist size on the relationship between salt intake behavior
+and blood pressure, both analyses showed that the interactions between waist size and salt intake are
+not siginificant. The main difference is that anova of categorical data shows that salt intake behavior
+have significant influence on blood pressure, while regression results shows that salt intake behavior
+do not have significant influence on blood pressure. But this difference will not affect the result since
+there are no moderation effect of waist size.
+
+When we analyse the moderation effect of waist size on the relationship between salt intake behavior
+and blood pressure, we show that age is a mediator between salt intake and blood pressure
+(for both diastolic and systolic).
+The mediation (indirect) effect is significant whether we treat salt intake as categorical or numeric.
+For direct effect, there are difference between diastolic and systole. The direct effect of salt intake
+on systole is not significant while the direct effect of salt intake on diastolic is significant.
 
 
 # Results
@@ -1559,49 +2053,6 @@ Mediation analysis performed to analyze the mediating effect of age on the relat
 
 Mediation analysis performed to analyze the mediating effect of age on the relationship between salt intake and systolic blood pressure was significant, $F(2,4679) = 1133$, $p <0.001$, $R^2 = 0.32$, indicating that there exists a positive relationship between salt intake and blood pressure. More importantly, there exists a positive, significant indirect effect in the relationship between salt intake and diastolic blood pressure, $b = 1.05$, 95% CI (0.71, 1.40), $p < 0.001$, indicating a mediating effect of age on the effect of salt intake and systolic blood pressure. 
 
-
-# Discussion
-
-
-Our independent variable is the salt intake behavior of each subject.
-We can either treat this as a categorical variable with three levels
-("Rarely", "Occasionally" or "Very often" to add salt), or we can treat 
-this variable as numeric, representing the relative frequency of 
-adding salt to food at the table.
-
-For R and SAS, we implemented the analysis methods by treating the variable 
-"the frequency of add salt to food at table" as numeric.
-For Python, we implemented the analysis methods by treating the variable 
-"the frequency of add salt to food at table" as categorical.
-Treating "the frequency of add salt to food at table" as categorical variable
-may lose some information on the relative salt intake frequency difference between subject,
-while treating it as a numeric variable may lead to misspecified frequency difference between subject.
-
-For R and SAS the results of the analysis are same. The conclusion obtained from all three different 
-implementation are the same. There are some differences between R, SAS and Python implementations since we 
-treated independent variables differently and added extra degrees of freedom.
-However, if our independent variable is of two levels, treating it as categorical variable or as numeric 
-variable are essentially the same.  
-
-When we fit a least square model for `DI ~ DBD100`, the coefficient of numeric variable is significant
-(for both diastolic and systolic).
-The two coefficients of factor variable of 3 levels are both significant
-(for both diastolic and systolic), and the effect of independent variable on blood pressure 
-are significant from the result of anova analysis.
-
-When we analyse the moderation effect of waist size on the relationship between salt intake behavior
-and blood pressure, all analysis showed that the interactions between waist size and salt intake are
-not siginificant. The main difference is that anova of categorical data shows that salt intake behavior
-have significant influence on blood pressure, while regression results shows that salt intake behavior
-do not have significant influence on blood pressure. But this difference will not affect the result since
-there are no moderation effect of waist size.
-
-When we analyse the moderation effect of waist size on the relationship between salt intake behavior
-and blood pressure, we show that age is a mediator between salt intake and blood pressure
-(for both diastolic and systolic).
-The mediation (indirect) effect is significant whether we treat salt intake as categorical or numeric.
-For direct effect, there are difference between diastolic and systole. The direct effect of salt intake
-on systole is not significant while the direct effect of salt intake on diastolic is significant.
 
 
 
